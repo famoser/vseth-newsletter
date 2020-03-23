@@ -37,6 +37,8 @@ class EntryController extends BaseController
      */
     public function newAction(Organisation $organisation, Request $request)
     {
+        $this->denyAccessUnlessGranted(BaseVoter::VIEW, $organisation);
+
         //create the event
         $entry = new Entry();
         $entry->setOrganisation($organisation);
