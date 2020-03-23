@@ -1,0 +1,30 @@
+$font-family-sans-serif: "Source Sans Pro", -apple-system, BlinkMacSystemFont, 'Open Sans', "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif
+$primary: #009FE3
+@import '~bootstrap/scss/bootstrap'
+
+html, body
+  height: 100%
+
+body
+  background-image: url("../images/light_grey.png")
+  background-repeat: repeat repeat
+
+h3
+  color: $primary
+
+// pixel perfect alignment
+.display-3, .display-4
+  position: relative
+  left: -7px
+
+textarea
+  min-height: 6em
+
+// add * at the end at required form fields
+label.required:after
+  content: '*'
+  color: $danger
+  font-size: 1.2em
+
+label.checkbox-custom:after
+  content: ''

@@ -1,0 +1,129 @@
+{% extends 'single_content_base.html.twig' %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "payment" %}
+
+{% block single_content %}
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm-9">
+
+                <p class="lead">
+                    {{ "index.billing_period"|trans }}: {{ setting.periodStart|dateFormat }}
+                    - {{ setting.periodEnd|dateFormat }}
+                    <br/>
+                    {{ "category"|trans({}, "entity_user") }}: {{ user.category|categoryText }}
+                    <br/>
+                    <b>{{ "index.total"|trans }}: CHF {{ bill.total }}.00</b>
+                </p>
+
+            </div>
+
+            <div class="col-sm-3">
+                <p class="text-right">
+                    <a class="btn btn-primary btn-lg" href="{{ path('payment_confirm', {"user": user.id}) }}">
+                        {{ "index.pay"|trans }}
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h3>{{ "entity.plural"|trans({}, "entity_reservation") }}</h3>
+    <p>{{ "index.reservation.help"|trans }}</p>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ "index.period"|trans }}</th>
+            <th>{{ "room"|trans({}, "model_reservation") }}</th>
+            <th>{{ "price_per_hour"|trans({}, "model_reservation") }}</th>
+            <th class="minimal-width">{{ "price"|trans({}, "model_reservation") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for reservation in bill.reservations %}
+            <tr>
+                <td>{{ reservation.startAt|dateTimeFormat }} - {{ reservation.endAt|dateTimeFormat }}</td>
+                <td>{{ reservation.room }}</td>
+                <td>{{ reservation.pricePerHour }}</td>
+                <td>{{ reservation.total }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="table-active"><b>{{ bill.reservationsSubtotal }}</b></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h3>{{ "model.plural"|trans({}, "model_subscription") }}</h3>
+    <p>{{ "index.base_fee.help"|trans }}</p>
+    {% if user.lastPayedPeriodicFeeEnd is not null %}
+        <p>{{ "last_payed_periodic_feed_end"|trans({}, "entity_user") }}:
+            {{ user.lastPayedPeriodicFeeEnd|dateFormat }}</p>
+    {% endif %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>{{ "index.period"|trans }}</th>
+            <th class="minimal-width">{{ "price"|trans({}, "model_subscription") }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for subscription in bill.subscriptions %}
+            <tr>
+                <td>{{ subscription.startAt|dateFormat }} - {{ subscription.endAt|dateFormat }}</td>
+                <td>{{ subscription.price }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td></td>
+            <td class="table-active"><b>{{ bill.subscriptionsSubtotal }}</b></td>
+        </tr>
+        </tbody>
+    </table>
+
+    {% if bill.billFee > 0 or bill.discount > 0 %}
+        <h3>{{ "index.fees.title"|trans }}</h3>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ "index.fees.name"|trans }}</th>
+                <th>{{ "index.fees.description"|trans }}</th>
+                <th class="minimal-width">{{ "index.fees.price"|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if bill.billFee > 0 %}
+                <tr>
+                    <td>{{ "index.fees.bill_fee"|trans }}</td>
+                    <td>{{ "index.fees.bill_fee_help"|trans }}</td>
+                    <td>{{ bill.billFee }}</td>
+                </tr>
+            {% endif %}
+
+            {% if bill.discount > 0 %}
+                <tr>
+                    <td>{{ "index.fees.discount"|trans }}</td>
+                    <td>{{ bill.discountDescription }}</td>
+                    <td>-{{ bill.discount }}</td>
+                </tr>
+            {% endif %}
+
+            </tbody>
+        </table>
+    {% endif %}
+
+    <hr/>
+    <p class="mt-8">
+        {{ "index.help"|trans }}:
+        <a href="mailto:{{ reply_email }}">{{ reply_email }}</a>
+    </p>
+
+
+{% endblock %}
+

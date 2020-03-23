@@ -1,0 +1,13 @@
+parameters:
+  APP_ENV: '%env(APP_ENV)%'
+  APP_SECRET: '%env(APP_SECRET)%'
+  DATABASE_URL: '%env(DATABASE_URL)%'
+  MAILER_URL: '%env(MAILER_URL)%'
+  REPLY_EMAIL: '%env(REPLY_EMAIL)%'
+  ADMIN_PASSWORD: '%env(ADMIN_PASSWORD)%'
+  PAYREXX_INSTANCE: '%env(PAYREXX_INSTANCE)%'
+  PAYREXX_SECRET: '%env(PAYREXX_SECRET)%'
+  PAYREXX_PSP: '%env(PAYREXX_PSP)%'
+  PUBLIC_DIR: "%kernel.project_dir%/public"
+  UPLOAD_DIR: "%kernel.project_dir%/var/upload"
+  MAILER_BATCH_SIZE: '%env(MAILER_BATCH_SIZE)%'

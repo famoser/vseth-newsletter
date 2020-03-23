@@ -1,0 +1,9 @@
+twig:
+  paths: ['%kernel.project_dir%/templates']
+  debug: '%kernel.debug%'
+  strict_variables: '%kernel.debug%'
+  form_themes:
+    ['bundles/TwigBridge/Form/form_layout.html.twig','bundles/TwigBridge/Form/fields.html.twig']
+  globals:
+    reply_email: '%env(REPLY_EMAIL)%'
+    payrexx_instance: '%env(PAYREXX_INSTANCE)%'

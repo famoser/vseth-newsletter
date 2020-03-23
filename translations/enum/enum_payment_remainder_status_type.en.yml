@@ -1,0 +1,6 @@
+none: '-'
+sent: "sent"
+seen: 'seen'
+payment_started: "started"
+payment_successful: "successful"
+payment_aborted: "aborted"

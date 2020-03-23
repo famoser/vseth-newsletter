@@ -1,0 +1,15 @@
+index:
+  title: "Bill music rooms"
+  description: "bill reservations within specific time period"
+  no_users: "no users added"
+  view_invoice: 'view invoice_id'
+  view_transaction: 'view transaction_id'
+  no_payment_remainder_yet: 'preview the list of users & check if the numbers make sense. if they do, create a payment remainder which sends a payment link to the users'
+  payment_remainder_not_sent: 'Not all users have received their remainder email yet. Please be careful; sending a malformed email to user_count people is embarrassing! Therefore test the email first. If all went well, send the remainder to all. Maximum emails sent at one time are mailer_batch_size.'
+  with_owed_amount: 'unpayed'
+  without_owed_amount: 'payed'
+  owed_amount_total: 'user_count users need to pay CHF total.00'
+  payed_amount_total: 'user_count users payed CHF total.00'
+  discount_total: 'user_count users received a discount of CHF total.00'
+  start_next_period: 'start next dunning phase'
+  previous: 'previous'

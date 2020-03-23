@@ -1,0 +1,171 @@
+{
+  "start_text": "We need your feedback so we can further improve this course in the next semester. Thank you for your help!",
+  "end_text": "Thank you for your help!",
+  "questions": [
+    {
+      "category": "lecture",
+      "type": "choice",
+      "title": "the lecturer",
+      "choices": [
+        {
+          "title": "explained well",
+          "off_feedback_inspiration": "how can the lecturer improve his explanations?"
+        },
+        {
+          "title": "spoke clearly and understandable"
+        },
+        {
+          "title": "seemed confident and well prepared"
+        }
+      ]
+    },
+    {
+      "category": "lecture",
+      "type": "choice",
+      "title": "the lecture",
+      "choices": [
+        {
+          "title": "was clearly structured",
+          "off_feedback_inspiration": "how can we improve the structure of the lecture?"
+        },
+        {
+          "title": "contained information useful to me",
+          "off_feedback_inspiration": "what would have been useful for you to learn today?",
+          "on_feedback_inspiration": "what is the most useful thing you have learned today?"
+        },
+        {
+          "title": "did not contain terminology unknown to me",
+          "off_feedback_inspiration": "which term(s) should we explain the next time?"
+        }
+      ]
+    },
+    {
+      "category": "lecture",
+      "type": "slider",
+      "title": "next semester, the lecture should be",
+      "min": "faster",
+      "center": "the same",
+      "max": "more detailed",
+      "start_value": 50
+    },
+    {
+      "category": "lecture",
+      "type": "open_feedback",
+      "title": "open feedback",
+      "private": true
+    },
+    {
+      "category": "exercise",
+      "type": "choice",
+      "title": "the questions",
+      "choices": [
+        {
+          "title": "were clearly formulated",
+          "off_feedback_inspiration": "can you tell us of a specific poorly formulated question?"
+        },
+        {
+          "title": "were solvable given the material from the lecture",
+          "off_feedback_inspiration": "how can we prepare you better for the exercises?"
+        },
+        {
+          "title": "helped to improve my skills",
+          "on_feedback_inspiration": "which question did you like best?"
+        }
+      ]
+    },
+    {
+      "category": "exercise",
+      "type": "choice",
+      "title": "the solutions",
+      "choices": [
+        {
+          "title": "were easy understandable",
+          "off_feedback_inspiration": "how can we improve our solutions?"
+        }
+      ]
+    },
+    {
+      "category": "exercise",
+      "type": "slider",
+      "title": "next semester, additional exercises should be",
+      "min": "easier",
+      "center": "harder",
+      "max": "way harder!",
+      "start_value": 25,
+      "value_high_text": "JOIN US, we need you! At the end of the questionnaire, you can leave us your E-Mail :)"
+    },
+    {
+      "category": "exercise",
+      "type": "slider",
+      "title": "next semester, the focus should be",
+      "min": "more lecture",
+      "center": "the same",
+      "max": "more exercises",
+      "start_value": 50,
+      "requires_category": "lecture"
+    },
+    {
+      "category": "exercise",
+      "type": "open_feedback",
+      "title": "open feedback",
+      "private": true
+    },
+    {
+      "category": "event",
+      "type": "choice",
+      "title": "the event",
+      "choices": [
+        {
+          "title": "was well organized",
+          "off_feedback_inspiration": "how can we improve our organisation?"
+        },
+        {
+          "title": "fulfilled my expectations",
+          "off_feedback_inspiration": "what should have been included in the event which wasn't?"
+        },
+        {
+          "title": "will be recommended by me to others"
+        }
+      ]
+    },
+    {
+      "category": "event",
+      "type": "event_list",
+      "title": "other courses/events I'll visit",
+      "lot_selected_text": "Wow, we will see us often! Why not leave us your E-Mail at the end? We'd love to get to know you!"
+    },
+    {
+      "category": "event",
+      "type": "academic_background",
+      "title": "your background",
+      "fields": [
+        "Architecture and Civil Engineering",
+        "Mechanical Engineering",
+        "Electrical Engineering and Information Technology",
+        "Computer Science",
+        "Materials Science",
+        "Natural Sciences and Mathematics",
+        "System-oriented Natural Sciences",
+        "Management and Social Sciences",
+        "Other"
+      ],
+      "institutions": [
+        "ETH",
+        "UZH",
+        "other"
+      ]
+    },
+    {
+      "category": "event",
+      "type": "open_feedback",
+      "title": "open feedback",
+      "private": true
+    },
+    {
+      "category": "event",
+      "type": "email",
+      "title": "your email, if you want to get to know TheAlt better",
+      "private": true
+    }
+  ]
+}

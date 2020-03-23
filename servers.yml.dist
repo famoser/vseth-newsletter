@@ -1,0 +1,18 @@
+.base: &base
+  hostname: newsletter.vseth.famoser.ch
+  user: USER
+  http_user: USER
+  branch: master
+  deploy_path: ~/www/newsletter.vseth.famoser.ch/{{stage}}
+  sshOptions:
+    StrictHostKeyChecking: no
+
+dev:
+  <<: *base
+  stage: dev
+  branch: master
+
+production:
+  <<: *base
+  stage: production
+  branch: master

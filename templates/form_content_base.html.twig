@@ -1,0 +1,16 @@
+{% extends 'single_content_base.html.twig' %}
+
+{% block single_content %}
+    <div class="row">
+        <div class="col-md-6">
+            {% block form_content %}
+                {{ form(form) }}
+            {% endblock %}
+        </div>
+        <div class="col-md-6">
+            {% block form_description %}
+
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}

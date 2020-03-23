@@ -1,0 +1,18 @@
+[
+  {
+    "email": "peter.mueller@invalid.ch",
+    "givenName": "Peter",
+    "familyName": "Müller",
+    "address": "Rämistrasse 101\n8006 Zürich",
+    "phone": "07900000000",
+    "category": 3,
+    "discount": 10,
+    "discountDescription": "Zwei Reservationen gratis",
+    "lastPayedPeriodicFeeEnd": "2018-09-23T00:00:00.000Z",
+    "amountOwed": 200,
+    "amountOwedWithFees": 180,
+    "invoiceHash": null,
+    "paymentRemainderStatus": 0,
+    "paymentRemainderStatusAt": null
+  }
+]

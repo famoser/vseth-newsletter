@@ -1,0 +1,9 @@
+login:
+  title: 'Login'
+  description: 'welcome back!'
+  password_helper: 'Consult the wiki if you need help'
+  password_config: 'Password wrong? It is defined in the file located at WEBPAGE_ROOT/../.env.'
+  do_login: "login"
+  error:
+    login_failed: 'login failed'
+    invalid_auth_code: 'The authentication code is invalid. Double-check the URL is correct or request a new code at <a href="mailto:ia@vseth.ethz.ch">ia@vseth.ethz.ch</a>.'

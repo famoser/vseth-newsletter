@@ -1,0 +1,23 @@
+{% extends "form_content_base.html.twig" %}
+
+{% block title %}{{ "edit_discount.title"|trans }}{% endblock %}
+{% block description %}{{ "edit_discount.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_user" %}
+
+
+{% block form_description %}
+    <p>
+        {{ user.givenName }} {{ user.familyName }} <br/>
+        {{ user.address|nl2br }}
+    </p>
+    <p>
+        {{ user.email }}<br/>
+        {{ user.phone }}
+    </p>
+    <p>
+        {{ "category"|trans({}, "entity_user") }}: {{ user.category|categoryText }}<br/>
+        {{ "entity.plural"|trans({}, "entity_reservation") }}: {{ user.reservations|length }}<br/>
+        {{ "amount_owed"|trans({}, "entity_user") }}: {{ user.amountOwed }}
+    </p>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "large_content_base.html.twig" %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration" %}
+
+{% block pre_large_content %}
+    <div class="container card mb-4">
+        <div class="card-body">
+            {% if payment_remainder is null %}
+                <div class="alert alert-info">
+                    <p>{{ "index.no_payment_remainder_yet"|trans }}:
+                        <a href="{{ path("administration_payment_remainder_new") }}">{{ "new.title"|trans({}, "administration_payment_remainder") }}</a>.
+                    </p>
+                </div>
+            {% else %}
+                <h2>{{ "entity.name"|trans({}, "entity_payment_remainder") }}</h2>
+                <div class="row">
+                    <div class="col">
+                        <p>
+                            <b>{{ "name"|trans({}, "entity_payment_remainder") }}</b><br/>
+                            {{ payment_remainder.name }}
+                            <br/>
+                            <a href="{{ path("administration_payment_remainder_edit", {paymentRemainder: payment_remainder.id}) }}">
+                                {{ "edit.title"|trans({}, "administration_payment_remainder") }}
+                            </a>
+                            <br/>
+                            <a href="{{ path("administration_payment_remainder_send_test") }}">
+                                {{ "send_test.title"|trans({}, "administration_payment_remainder") }}</a>
+                        </p>
+                    </div>
+                    <div class="col">
+                        <p>
+                            <b>{{ "fee"|trans({}, "entity_payment_remainder") }}</b><br/>
+                            CHF {{ payment_remainder.fee }}.00
+                        </p>
+                    </div>
+                    <div class="col">
+                        <p>
+                            <b>{{ "due_at"|trans({}, "entity_payment_remainder") }}</b><br/>
+                            {{ payment_remainder.dueAt|dateFormat }}
+                            <br/>
+                            <a href="{{ path("administration_payment_remainder_new") }}">
+                                {{ "index.start_next_period"|trans }}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <p>
+                </p>
+                {% if not payment_remainder.sentToAll %}
+                    <p class="alert alert-warning">
+                        {{ "index.payment_remainder_not_sent"|trans({user_count: users|length, mailer_batch_size: mailer_batch_size}) }}
+                    </p>
+                    <a class="btn btn-warning"
+                       href="{{ path("administration_payment_remainder_send") }}">{{ "send.title"|trans({}, "administration_payment_remainder") }}</a>
+                {% endif %}
+                <hr/>
+                <p>
+                    {{ "index.owed_amount_total"|trans({user_count: payment_statistics.owedAmountUserCount, total: payment_statistics.owedAmountTotal}) }}
+                    <br/>
+                    {{ "index.payed_amount_total"|trans({user_count: payment_statistics.payedAmountUserCount, total: payment_statistics.payedAmountTotal}) }}
+                    <br/>
+                    {{ "index.discount_total"|trans({user_count: payment_statistics.discountUserCount, total: payment_statistics.discountTotal}) }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block large_content %}
+    <table class="table table-striped sortable">
+        <thead>
+        <tr>
+            <th>{{ "email"|trans({}, "entity_user") }}</th>
+            <th>{{ "given_name"|trans({}, "entity_user") }}</th>
+            <th>{{ "family_name"|trans({}, "entity_user") }}</th>
+            <th>{{ "phone"|trans({}, "entity_user") }}</th>
+            <th>{{ "category"|trans({}, "entity_user") }}</th>
+            <th>{{ "amount_owed"|trans({}, "entity_user") }}</th>
+            <th>{{ "discount"|trans({}, "entity_user") }}</th>
+            {% if payment_remainder is not null %}
+                <th>{{ "payment_remainder_status"|trans({}, "entity_user") }}</th>
+                <th class="minimal-width"></th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.email }}</td>
+                <td>{{ user.givenName }}</td>
+                <td>{{ user.familyName }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.category|categoryText }}</td>
+                <td>{{ user.amountOwed }}</td>
+                <td>{{ user.discount }}
+                    <a href="{{ path("administration_user_edit_discount", {"user" : user.id}) }}">
+                        <i class="fal fa-pencil"></i>
+                    </a>
+                </td>
+                {% if payment_remainder is not null %}
+                    <td>
+                        {% if (user.paymentRemainderStatus != 0) %}
+                            {{ user.paymentRemainderStatus|paymentRemainderStatusText }}
+                        {% endif %}
+
+                        {% if user.paymentRemainderStatus == 3 %}
+                            <br/>
+                            <a href="{{ user.invoiceLink }}"
+                               target="_blank">{{ "index.view_invoice"|trans({invoice_id: user.invoiceId}) }}</a>
+                            |
+                            <a href="{{ path("administration_user_close_invoice", {user: user.id}) }}">{{ "close_invoice.title"|trans({invoice_id: user.invoiceId }, "administration_user") }}</a>
+                        {% endif %}
+
+                        {% if user.paymentRemainderStatus == 4 %}
+                            <br/>
+                            <a href="https://{{ payrexx_instance }}.payrexx.com/cadmin/index.php?cmd=checkout&act=payments&id={{ user.transactionId }}"
+                               target="_blank">{{ "index.view_transaction"|trans({transaction_id: user.transactionId }) }}</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            {% if user.paymentRemainderStatus != 4 %}
+                                <a class="btn btn-outline-secondary"
+                                   href="{{ path('administration_user_send_payment_remainder', {user: user.id}) }}">
+                                    <i class="fal fa-envelope"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if user.paymentRemainderStatus != 0 %}
+                                <a class="btn btn-outline-secondary"
+                                   href="{{ path("payment_index", {"user" : user.id}) }}">
+                                    <i class="fal fa-user"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

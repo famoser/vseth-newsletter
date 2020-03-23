@@ -1,0 +1,16 @@
+{% extends "form_content_base.html.twig" %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_import" %}
+
+{% block form_description %}
+    <p>
+        {{ "index.help"|trans }}
+    </p>
+
+    <p>
+        {{ server_limit_info }}
+    </p>
+{% endblock %}
