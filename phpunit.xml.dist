@@ -17,9 +17,6 @@
         <env name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/data.db"/>
         <env name="MAILER_URL" value="null://localhost"/>
         <env name="REPLY_EMAIL" value="info@example.com"/>
-        <env name="PAYREXX_INSTANCE" value="instance"/>
-        <env name="PAYREXX_SECRET" value="secret"/>
-        <env name="PAYREXX_PSP" value="1"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
         <env name="ADMIN_PASSWORD" value="text"/>
     </php>

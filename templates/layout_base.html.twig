@@ -100,11 +100,13 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <ul class="navbar-nav">
                         {{ own_macros.menu_entry("index.title"|trans({}, "administration"), path("administration")) }}
+                        {{ own_macros.menu_entry("index.title"|trans({}, "administration_organisation"), path("administration_organisations")) }}
                     </ul>
+                {% elseif is_granted('ROLE_ORGANISATION') %}
                 {% endif %}
 
                 <ul class="navbar-nav ml-auto">
-                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_USER') %}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ORGANISATION') %}
                         {{ own_macros.menu_icon_entry("fas fa-sign-out", path("login_logout")) }}
                     {% else %}
                         {{ own_macros.menu_icon_entry("fas fa-sign-in", path("login")) }}
@@ -115,7 +117,7 @@
     </nav>
 </header>
 
-<div class="mt-3">
+<div class="content-wrapper mt-3">
     {% if app.session.flashbag.keys|length > 0 %}
         <div class="container">
             <div class="row">
@@ -171,7 +173,7 @@
             <div class="col">
                 <p class="text-right text-secondary mt-4">
                     {{ "base.created_by"|trans({}, "layout") }} <a href="https://famoser.ch" target="_blank">famoser.ch</a><br/>
-                    {{ "base.source_code_on"|trans({}, "layout") }} <a href="https://github.com/famoser/vseth-musikzimmer-pay" target="_blank">github</a>
+                    {{ "base.source_code_on"|trans({}, "layout") }} <a href="https://github.com/famoser/vseth-semesterly-reports" target="_blank">github</a>
                 </p>
             </div>
         </div>

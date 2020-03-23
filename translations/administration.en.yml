@@ -1,15 +1,53 @@
 index:
-  title: "Bill music rooms"
-  description: "bill reservations within specific time period"
-  no_users: "no users added"
-  view_invoice: 'view invoice_id'
-  view_transaction: 'view transaction_id'
-  no_payment_remainder_yet: 'preview the list of users & check if the numbers make sense. if they do, create a payment remainder which sends a payment link to the users'
-  payment_remainder_not_sent: 'Not all users have received their remainder email yet. Please be careful; sending a malformed email to user_count people is embarrassing! Therefore test the email first. If all went well, send the remainder to all. Maximum emails sent at one time are mailer_batch_size.'
-  with_owed_amount: 'unpayed'
-  without_owed_amount: 'payed'
-  owed_amount_total: 'user_count users need to pay CHF total.00'
-  payed_amount_total: 'user_count users payed CHF total.00'
-  discount_total: 'user_count users received a discount of CHF total.00'
-  start_next_period: 'start next dunning phase'
-  previous: 'previous'
+  title: 'overview'
+  description: 'semester reports of active organisations of %current_semester%'
+  no_organisations_added_yet: 'no organisations added yet'
+  export_authentication_links: 'Export authentication links'
+  summary:
+    event_count: '#events'
+    budget_sum: 'total budget'
+    requested_financial_support: 'requested financial support'
+  no_missing_organisations: 'all active organisations have submitted their semester report.'
+  missing: 'missing semester report'
+  submitted: 'submitted semester reports'
+  no_submitted_reports_yet: 'no semester reports have been submitted yet'
+  currency: 'CHF'
+
+
+send_reminder:
+  title: 'send reminder'
+  description: 'send all organisation which have not submitted a report so far a reminder'
+  error:
+    no_url_placeholder: 'please include (url) somewhere in your text.'
+    no_name_placeholder: 'please include (name) somewhere in your text.'
+  success:
+    sent: 'sent E-Mail to %count% organisations.'
+  default:
+    subject: 'Semesterly Report / Semesteragenda'
+    body: |
+      Hi (name)
+
+      Please fill out your semesterly report.
+      It is the base upon which VSETH can renew you recognisation status so you can keep using our services.
+      Your personal link: (url)
+
+      In case of questions please write ia@vseth.ethz.ch.
+
+      Best regards
+      Florian
+
+
+      Hallo (name)
+
+      Bitte fülle wie jedes Semester wieder die Semesteragenda aus.
+      Diese ist die Grundlage, dass der VSETH die Anerkennung erneut durchführen kann, und ihr weiterhin unsere Dienstleistungen nutzen könnt.
+      Euer persönlicher Link: (url)
+
+      Bei Fragen sind wir wie immer für euch da unter ia@vseth.ethz.ch.
+
+      Liebe Grüsse
+      Florian
+
+
+  help: 'For each organisation a separate E-Mail will be sent. The (name) placeholder will be replaced with the name of the recipient organisation, the (url) placeholder with the link to their semesterly report.'
+  send: 'send'

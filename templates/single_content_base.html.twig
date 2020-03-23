@@ -7,6 +7,11 @@
                 <h1>{{ block("title") }}</h1>
                 <p class="lead">{% block description %}{% endblock %}</p>
             </div>
+
+            {% block pre_single_content %}
+
+            {% endblock %}
+
             <div class="card pl-4 pr-4">
                 <div class="card-body pl-1 pr-1">
                     {% block single_content %}

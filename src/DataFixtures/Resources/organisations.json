@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Zero Waste",
+    "email": "zerowaste@vseth.ethz.ch",
+    "category": 4,
+    "authenticationCode": "kasc"
+  },
+  {
+    "name": "SSC",
+    "email": "ssc@vseth.ethz.ch",
+    "category": 1,
+    "authenticationCode": "abcd"
+  },
+  {
+    "name": "VIS",
+    "email": "vis@vseth.ethz.ch",
+    "category": 2,
+    "authenticationCode": "1234"
+  },
+  {
+    "name": "Z&H",
+    "email": "zh@vseth.ethz.ch",
+    "category": 3,
+    "authenticationCode": "1234"
+  }
+]

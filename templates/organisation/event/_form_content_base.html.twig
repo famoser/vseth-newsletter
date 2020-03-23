@@ -1,0 +1,93 @@
+{% extends "single_content_base.html.twig" %}
+
+{% form_theme form _self %}
+
+{% trans_default_domain "organisation_event" %}
+
+{% block single_content %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <div class="form-group">
+                {{ form_row(form.semester) }}
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.nameDe) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.descriptionDe) }}
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.nameEn) }}
+            </div>
+            <div class="form-group">
+                {{ form_row(form.descriptionEn) }}
+            </div>
+        </div>
+    </div>
+    <small class="form-text text-muted external-help">
+        {{ "new.help.start_end_time"|trans }}
+    </small>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_row(form.location) }}
+                <small class="form-text text-muted external-help">
+                    {{ "new.help.location"|trans }}
+                    <a href="{{ "new.help.location_link"|trans }}" target="_blank"><i class="fas fa-link"></i></a>
+                </small>
+            </div>
+        </div>
+    </div>
+    <hr/>
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.startDate) }}
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.endDate) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                {{ form_row(form.showInCalender) }}
+            </div>
+        </div>
+    </div>
+    <small class="form-text text-muted external-help">
+        {{ "new.help.start_end_time"|trans }}
+    </small>
+    <hr/>
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.revenue) }}
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.expenditure) }}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        {{ form_row(form.needFinancialSupport) }}
+        <small class="form-text text-muted external-help">
+            {{ "new.help.need_financial_support"|trans }}
+            <a href="{{ "new.help.need_financial_support_link"|trans }}" target="_blank"><i class="fas fa-link"></i></a>
+        </small>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

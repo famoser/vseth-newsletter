@@ -1,0 +1,11 @@
+entity:
+  name: 'Semester Report'
+
+general_conformity: "You still conform to the application criterias"
+statutes_conformity: "Your statutes were unchanged last semester"
+ci_conformity: "You uphold the CI-Guidelines"
+added_all_events: "You added all your events (below)"
+
+political_events_description: "Events with political content"
+comments: "Comments"
+submitted_date_time: 'submitted at'

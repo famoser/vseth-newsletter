@@ -1,0 +1,116 @@
+{% macro events(organisation, showEditButtons = false, internalFields = false) %}
+    {% if organisation.events|length == 0 %}
+        <p>{{ "view.no_events_added_yet"|trans({}, "organisation") }}</p>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ "semester"|trans({}, "entity_event") }}</th>
+                <th>{{ "name"|trans({}, "entity_event") }}</th>
+                {% if internalFields %}
+                    <th>{{ "description"|trans({}, "entity_event") }}</th>
+                    <th>{{ "start_date"|trans({}, "entity_event") }}</th>
+                    <th>{{ "end_date"|trans({}, "entity_event") }}</th>
+                {% endif %}
+                <th>{{ "location"|trans({}, "entity_event") }}</th>
+                {% if internalFields %}
+                    <th>{{ "budget"|trans({}, "entity_event") }}</th>
+                    <th>{{ "need_financial_support"|trans({}, "entity_event") }}</th>
+                {% else %}
+                    <th>{{ "start_date"|trans({}, "entity_event") }}</th>
+                {% endif %}
+                {% if showEditButtons %}
+                    <th class="minimal-width"></th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for event in organisation.events %}
+                <tr>
+                    <td>{{ event.semesterName }}</td>
+                    <td>{{ event.name }}</td>
+                    {% if internalFields %}
+                        <td>{{ event.description }}</td>
+                        <td>{{ event.startDate|dateTimeFormat }}</td>
+                        <td>{{ event.endDate|dateTimeFormat }}</td>
+                    {% endif %}
+                    <td>{{ event.location }}</td>
+                    {% if internalFields %}
+                        <td>+{{ event.revenue }} / -{{ event.expenditure }} </td>
+                        <td>{{ event.needFinancialSupport|booleanFormat }}</td>
+                    {% else %}
+                        <td>{{ event.startDate|dateTimeFormat }}</td>
+                    {% endif %}
+                    {% if showEditButtons %}
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-light"
+                                   href="{{ path("organisation_event_copy", {"organisation" : organisation.id, "event": event.id}) }}">
+                                    <i class="fal fa-copy"></i>
+                                </a>
+                                <a class="btn btn-secondary"
+                                   href="{{ path("organisation_event_edit", {"organisation" : organisation.id, "event": event.id}) }}">
+                                    <i class="fal fa-pencil"></i>
+                                </a>
+                                <a class="btn btn-danger"
+                                   href="{{ path("organisation_event_remove", {"organisation" : organisation.id, "event": event.id}) }}">
+                                    <i class="fal fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endmacro %}
+
+{% macro organisations(organisations) %}
+    <table class="table table-striped sortable">
+        <thead>
+        <tr>
+            <th class="minimal-width">{{ "relation_since_semester"|trans({}, "entity_organisation") }}</th>
+            <th>{{ "name"|trans({}, "entity_organisation") }}</th>
+            <th>{{ "login_url"|trans({}, "entity_organisation") }}</th>
+            <th class="minimal-width"></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for organisation in organisations %}
+            <tr>
+                <td>{{ organisation.relationSinceSemester|semesterFormat }}</td>
+                <td><a href="mailto:{{ organisation.email }}">{{ organisation.name }}</a></td>
+                <td>
+                    {{ path('login_code', { "code": organisation.authenticationCode}, true) }}
+                    <a class="btn btn-outline-inverse btn-sm pl-2"
+                       href="{{ path("administration_organisation_reset_authentication_code", {"organisation" : organisation.id}) }}">
+                        <i class="fal fa-redo"></i>
+                    </a>
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-secondary"
+                           href="{{ path("administration_organisation_edit", {"organisation" : organisation.id}) }}">
+                            <i class="fal fa-pencil"></i>
+                        </a>
+                        {% if organisation.hiddenAt is null %}
+                            <a class="btn btn-warning"
+                               href="{{ path("administration_organisation_hide", {"organisation" : organisation.id}) }}">
+                                <i class="fal fa-eye-slash"></i>
+                            </a>
+                        {% else %}
+                            <a class="btn btn-warning"
+                               href="{{ path("administration_organisation_unhide", {"organisation" : organisation.id}) }}">
+                                <i class="fal fa-eye"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}

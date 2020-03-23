@@ -1,0 +1,17 @@
+{% extends "single_content_base.html.twig" %}
+
+{% import 'shared/tables.html.twig' as tables %}
+
+{% block title %}{{ "hidden.title"|trans }}{% endblock %}
+{% block description %}{{ "hidden.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_organisation" %}
+
+{% block single_content %}
+    <p>{{ "hidden.help"|trans }}</p>
+    {% if organisations|length == 0 %}
+        <p>{{ "hidden.no_organisations_hidden_yet"|trans }}</p>
+    {% else %}
+        {{ tables.organisations(organisations) }}
+    {% endif %}
+{% endblock %}

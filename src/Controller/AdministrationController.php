@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the vseth-musikzimmer-pay project.
+ * This file is part of the vseth-newsletter project.
  *
  * (c) Florian Moser <git@famoser.ch>
  *
@@ -12,10 +12,7 @@
 namespace App\Controller;
 
 use App\Controller\Administration\Base\BaseController;
-use App\Entity\PaymentRemainder;
-use App\Entity\User;
-use App\Model\PaymentStatistics;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use App\Entity\Newsletter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,25 +26,19 @@ class AdministrationController extends BaseController
      *
      * @return Response
      */
-    public function indexAction(ParameterBagInterface $parameterBag)
+    public function indexAction()
     {
-        /** @var User[] $users */
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy([], ['email' => 'ASC']);
-
-        if (\count($users) === 0) {
-            return $this->redirectToRoute('administration_import');
-        }
-
-        $activePaymentRemainder = $this->getDoctrine()->getRepository(PaymentRemainder::class)->findActive();
-        $paymentStatistics = new PaymentStatistics();
-        if ($activePaymentRemainder !== null) {
-            foreach ($users as $user) {
-                $paymentStatistics->registerUser($user, $activePaymentRemainder->getFee());
+        $allNewsletters = $this->getDoctrine()->getRepository(Newsletter::class)->findAll();
+        $futureNewsletters = [];
+        $sentNewsletters = [];
+        foreach ($allNewsletters as $newsletter) {
+            if ($newsletter->getSentAt() === null) {
+                $futureNewsletters[] = $newsletter;
+            } else {
+                $sentNewsletters[] = $newsletter;
             }
         }
 
-        $mailerBatchSize = $parameterBag->get('MAILER_BATCH_SIZE');
-
-        return $this->render('administration.twig', ['users' => $users, 'payment_remainder' => $activePaymentRemainder, 'payment_statistics' => $paymentStatistics, 'mailer_batch_size' => $mailerBatchSize]);
+        return $this->render('administration.html.twig', ['future_newsletters' => $futureNewsletters, 'sent_newsletters' => $sentNewsletters]);
     }
 }

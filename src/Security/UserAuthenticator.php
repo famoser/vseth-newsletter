@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the vseth-musikzimmer-pay project.
+ * This file is part of the vseth-newsletter project.
  *
  * (c) Florian Moser <git@famoser.ch>
  *

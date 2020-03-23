@@ -1,0 +1,83 @@
+{% extends 'single_content_base.html.twig' %}
+
+{% import 'shared/tables.html.twig' as tables %}
+
+{% block title %}{{ "view.title"|trans }}{% endblock %}
+{% block description %}{{ "view.description"|trans }}{% endblock %}
+
+{% trans_default_domain "organisation" %}
+
+{% block single_content %}
+    <h2>{{ "view.hi"|trans }} {{ organisation.name }}</h2>
+
+    <p>{{ "view.welcome.thanks"|trans }}<br/>
+        {{ "view.welcome.todo"|trans }}
+    </p>
+    <ol>
+        <li>{{ "view.welcome.step_1"|trans }}</li>
+        <li>{{ "view.welcome.step_2"|trans }}</li>
+    </ol>
+
+    <p>
+        {{ "view.welcome.evaluation"|trans }}
+        <a href="{{ "view.welcome_help_link"|trans }}"><i class="fas fa-link"></i></a>
+    </p>
+
+    <hr/>
+    <h3>{{ "entity.name"|trans({}, "entity_semester_report") }}</h3>
+    {% if submit_semester_report is defined %}
+
+        {{ form_start(submit_semester_report) }}
+
+        {{ form_row(submit_semester_report.generalConformity) }}
+        <small class="form-text text-muted external-help">
+            {{ "view.help.application_criteria"|trans }}
+            <a href="{{ "view.help.application_criteria_link"|trans }}" target="_blank"><i class="fas fa-link"></i></a>
+        </small>
+
+        {{ form_row(submit_semester_report.statutesConformity) }}
+        <small class="form-text text-muted external-help">
+            {{ "view.help.statute_changes_sent"|trans }}
+            <a href="mailto:ia@vseth.ethz.ch" target="_blank">ia@vseth.ethz.ch</a>
+        </small>
+
+        {{ form_row(submit_semester_report.ciConformity) }}
+        <small class="form-text text-muted external-help">
+            {{ "view.help.ci_guidelines"|trans }}
+            <a href="{{ "view.help.ci_guidelines_link"|trans }}" target="_blank"><i class="fas fa-link"></i></a>
+        </small>
+
+        {{ form_row(submit_semester_report.addedAllEvents) }}
+
+        {{ form_row(submit_semester_report.politicalEventsDescription) }}
+        <small class="form-text text-muted external-help">
+            {{ "view.help.political_events"|trans }}
+            <a href="{{ "view.help.political_events_link"|trans }}" target="_blank"><i class="fas fa-link"></i></a>
+        </small>
+
+        {{ form_row(submit_semester_report.comments) }}
+        <small class="form-text text-muted external-help">
+            {{ "view.help.comments"|trans }}
+        </small>
+
+        {{ form_end(submit_semester_report) }}
+    {% else %}
+        <p class="alert alert-success">{{ "view.semester_report_submitted"|trans }}</p>
+    {% endif %}
+
+    <hr/>
+    <h3>{{ "entity.plural"|trans({}, "entity_event") }}</h3>
+    <div class="btn-group mb-2">
+        <a class="btn btn-secondary"
+           href="{{ path("organisation_event_new", {"organisation": organisation.id}) }}">
+            {{ "new.title"|trans({}, "organisation_event") }}
+        </a>
+    </div>
+
+    {{ tables.events(organisation, true) }}
+
+    <p class="text-secondary">
+        {{ "view.calender_help"|trans }}
+    </p>
+{% endblock %}
+

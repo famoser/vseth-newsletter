@@ -1,8 +1,0 @@
-index:
-  title: "Import"
-  description: "Import data & setup application."
-  server_limits: "The server is set to accept at most upload_max_filesize upload max filesize and post_max_size post max size. Ask the server admin to change the php.ini values if this is not enough."
-  help: "You can only import once."
-  success: "Imported user_count users, reservation_count reservations and determined a total owed amount of owed_amount."
-  error:
-    already_imported: "Import already processed. You must use a fresh installation of the application if you need to import more / different data."

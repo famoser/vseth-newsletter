@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the vseth-musikzimmer-pay project.
+ * This file is part of the vseth-newsletter project.
  *
  * (c) Florian Moser <git@famoser.ch>
  *
@@ -11,8 +11,8 @@
 
 namespace App\Security;
 
-use App\Entity\User;
-use App\Model\UserModel;
+use App\Entity\Organisation;
+use App\Model\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -55,7 +55,7 @@ class UserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        if (!$user instanceof UserModel) {
+        if (!$user instanceof User) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
@@ -72,18 +72,18 @@ class UserProvider implements UserProviderInterface
      *
      * @throws UsernameNotFoundException if the user is not found
      *
-     * @return UserInterface|UserModel
+     * @return UserInterface
      */
     public function loadUserByUsername($username)
     {
         if ($username === 'ia@vseth.ethz.ch') {
-            return new UserModel(-1, $this->adminPassword, $username, [UserModel::ROLE_ADMIN]);
+            return new User($this->adminPassword, $username, ['ROLE_ADMIN']);
         }
 
-        /** @var User|null $user */
-        $user = $this->registry->getRepository(User::class)->findOneBy(['email' => $username]);
-        if (null !== $user) {
-            return new UserModel($user->getId(), $user->getAuthenticationCode(), $user->getEmail(), [UserModel::ROLE_USER]);
+        /** @var Organisation|null $organisation */
+        $organisation = $this->registry->getRepository(Organisation::class)->findOneBy(['email' => $username]);
+        if (null !== $organisation) {
+            return new User($organisation->getAuthenticationCode(), $organisation->getEmail(), ['ROLE_ORGANISATION']);
         }
 
         throw new UsernameNotFoundException(sprintf('Username "%s" does not exist in UserProvider.', $username));
@@ -98,6 +98,6 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        return UserModel::class === $class;
+        return User::class === $class;
     }
 }

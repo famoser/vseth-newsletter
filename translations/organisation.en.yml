@@ -1,0 +1,40 @@
+view:
+  title: "Semesterly reports"
+  description: "Please describe your activities."
+  no_events_added_yet: "You have not added any event yet"
+  hi: 'Hi'
+  welcome:
+    thanks: "Thank you for your effort for the students of ETH!"
+    todo: "To continue being recognised by VSETH for the next semester please:"
+    step_1: 'add your events'
+    step_2: 'create the semesterly report'
+    evaluation: 'Based on its evaluation your organisation can keep its recognised status and enjoy the benefits we can provide.'
+  welcome_help_link: https://actives.vseth.ethz.ch/fuer-anerkannte-organisationen
+  calender_help: Updates here will be reflected in the VSETH calender. You can update anytime (even after submitting the semester report).
+  semester_report_submitted: "The semester report was submitted, and will be checked by us."
+  help:
+    application_criteria: 'non-profit, non-political student organisation'
+    application_criteria_link: 'https://actives.vseth.ethz.ch/dokumentation/studentische-organisationen/anerkannt-werden'
+    statute_changes_sent: 'or you sent the new statutes to '
+    ci_guidelines: 'our logo on your webpage & your publicity material'
+    ci_guidelines_link: 'https://actives.vseth.ethz.ch/dokumentation/vseth/ci-guidelines'
+    political_events: 'If you hold events with potentially political content, please describe them here. They need to adhere to our guidelines to political content.'
+    political_events_link: 'https://actives.vseth.ethz.ch/dokumentation/studentische-organisationen/parteipolitisch-neutral-sein'
+    comments: 'If you have anything more to tell us, please do!'
+
+report_submitted_email:
+  subject: "semesterly report submitted by %organisation%"
+  body: |
+    Semester report submitted with %event_count% events.
+
+    Comment:
+    %report_comment%
+
+    Events with political content:
+    %report_political_events_description%
+
+    Organisation details:
+    Email: %organisation_email%
+    Comment: %organisation_comment%
+
+    See more at %link%.

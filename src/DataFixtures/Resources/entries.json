@@ -1,0 +1,22 @@
+[
+  {
+    "titleDe": "Fondueplausch",
+    "titleEn": "FondueFun",
+    "descriptionDe": "Geniesse Fondue mit ähnlich engagierten Aktiven.",
+    "descriptionEn": "Eat fondue in a cozy atmosphere with likewise minded people.",
+    "linkDe": "https://subscribe.invalid/fondue",
+    "linkEn": "https://subscribe.invalid/fondue",
+    "location": "StuZ",
+    "priority": 1001
+  },
+  {
+    "titleDe": "Jahresparty",
+    "titleEn": "yearly party",
+    "descriptionDe": "Pumpende Bässe, blizende Lichter & fliessende Zapfhahnen: Wie jedes Jahr steigt die Party im StuZ.",
+    "descriptionEn": "Pumping beats, flickering lights & beer: Like last year, its party time in StuZ.",
+    "linkDe": "https://subscribe.invalid/jahresparty",
+    "linkEn": "https://subscribe.invalid/jahresparty",
+    "location": "StuZ",
+    "priority": 2000
+  }
+]

@@ -1,0 +1,30 @@
+{% extends "single_content_base.html.twig" %}
+
+{% import 'shared/tables.html.twig' as tables %}
+
+{% block title %}{{ "index.title"|trans }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_organisation" %}
+
+{% block single_content %}
+    <div class="mb-2">
+        <span class="btn-group">
+            <a class="btn btn-secondary"
+               href="{{ path("administration_organisation_new") }}">
+                {{ "new.title"|trans }}
+            </a>
+        </span>
+    </div>
+    {% if organisations|length == 0 %}
+        <p>{{ "index.no_organisations_added_yet"|trans }}</p>
+    {% else %}
+        {{ tables.organisations(organisations) }}
+    {% endif %}
+
+    <p class="mt-4">
+        <a href="{{ path("administration_organisations_hidden") }}">
+            {{ "hidden.title"|trans }}
+        </a>
+    </p>
+{% endblock %}

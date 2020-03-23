@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the vseth-musikzimmer-pay project.
+ * This file is part of the vseth-newsletter project.
  *
  * (c) Florian Moser <git@famoser.ch>
  *
@@ -89,7 +89,7 @@ class BaseController extends AbstractController
      *
      * @param Breadcrumb[] $breadcrumbs
      */
-    protected function render(string $view, array $parameters = [], /* @scrutinizer ignore-unused */ Response $response = null, array $breadcrumbs = []): Response
+    protected function render(string $view, array $parameters = [], Response $response = null, array $breadcrumbs = []): Response
     {
         $parameters['breadcrumbs'] = array_merge($this->getIndexBreadcrumbs(), $breadcrumbs);
 

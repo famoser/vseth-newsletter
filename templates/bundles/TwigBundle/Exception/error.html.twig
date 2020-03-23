@@ -7,10 +7,9 @@
 
 {% block single_content %}
     {% block additional_error_info %}
-        <p>{{ "error.description"|trans }}</p>
+        <p class="text-secondary">{{ "error.description"|trans }}</p>
     {% endblock %}
     <p>
-        <a href="{{ path("index") }}">{{ "error.back_to_homepage"|trans }}</a> <br/>
-        <a href="mailto:{{ reply_email }}">{{ "error.write_us"|trans }}</a>
+        <a href="{{ path("index") }}">{{ "error.back_to_homepage"|trans }}</a>
     </p>
 {% endblock %}

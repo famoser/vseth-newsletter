@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the vseth-musikzimmer-pay project.
+ * This file is part of the vseth-newsletter project.
  *
  * (c) Florian Moser <git@famoser.ch>
  *
@@ -12,7 +12,6 @@
 namespace App\Extension;
 
 use App\Enum\BooleanType;
-use App\Enum\PaymentRemainderStatusType;
 use App\Enum\UserCategoryType;
 use DateTime;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -41,7 +40,6 @@ class TwigExtension extends AbstractExtension
             new TwigFilter('dateTimeFormat', [$this, 'dateTimeFilter']),
             new TwigFilter('booleanFormat', [$this, 'booleanFilter']),
             new TwigFilter('categoryText', [$this, 'categoryTextFilter']),
-            new TwigFilter('paymentRemainderStatusText', [$this, 'paymentRemainderStatusTextFilter']),
             new TwigFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
         ];
     }
@@ -67,15 +65,6 @@ class TwigExtension extends AbstractExtension
             $dateFormat = $this->translator->trans('time.format.date', [], 'framework');
 
             return $this->prependDayName($date) . ', ' . $date->format($dateFormat);
-        }
-
-        return '-';
-    }
-
-    public function paymentRemainderStatusTextFilter($value)
-    {
-        if (\is_int($value)) {
-            return PaymentRemainderStatusType::getTranslation($value, $this->translator);
         }
 
         return '-';
