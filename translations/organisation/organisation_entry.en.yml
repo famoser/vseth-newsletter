@@ -1,0 +1,11 @@
+new:
+  title: 'new entry'
+  description: 'add a new entry'
+
+edit:
+  title: 'edit entry'
+  description: 'change the event'
+
+remove:
+  title: 'remove entry'
+  description: 'remove the entry and all associated data'

@@ -1,0 +1,27 @@
+entity:
+  name: 'Entry'
+  plural: 'Entries'
+
+organizer: "organizer"
+
+title: "name"
+title_de: "name (de)"
+title_en: "name (en)"
+
+description: "description"
+description_de: "description (de)"
+description_en: "description (en)"
+
+link: "link"
+link_de: "link (de)"
+link_en: "link (en)"
+
+start_at: "start date & time"
+end_at: "end date & time"
+
+location: "location"
+priority: "priority"
+
+approved_at: "approved at"
+sent_at: "sent at"
+reject_reason: "reject reason"

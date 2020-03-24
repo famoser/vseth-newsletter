@@ -10,74 +10,72 @@
 {% block single_content %}
     <h2>{{ "view.hi"|trans }} {{ organisation.name }}</h2>
 
-    <p>{{ "view.welcome.thanks"|trans }}<br/>
-        {{ "view.welcome.todo"|trans }}
-    </p>
-    <ol>
-        <li>{{ "view.welcome.step_1"|trans }}</li>
-        <li>{{ "view.welcome.step_2"|trans }}</li>
-    </ol>
-
-    <p>
-        {{ "view.welcome.evaluation"|trans }}
-        <a href="{{ "view.welcome_help_link"|trans }}"><i class="fas fa-link"></i></a>
-    </p>
-
-    <hr/>
-    <h3>{{ "entity.name"|trans({}, "entity_semester_report") }}</h3>
-    {% if submit_semester_report is defined %}
-
-        {{ form_start(submit_semester_report) }}
-
-        {{ form_row(submit_semester_report.generalConformity) }}
-        <small class="form-text text-muted external-help">
-            {{ "view.help.application_criteria"|trans }}
-            <a href="{{ "view.help.application_criteria_link"|trans }}" target="_blank"><i class="fas fa-link"></i></a>
-        </small>
-
-        {{ form_row(submit_semester_report.statutesConformity) }}
-        <small class="form-text text-muted external-help">
-            {{ "view.help.statute_changes_sent"|trans }}
-            <a href="mailto:ia@vseth.ethz.ch" target="_blank">ia@vseth.ethz.ch</a>
-        </small>
-
-        {{ form_row(submit_semester_report.ciConformity) }}
-        <small class="form-text text-muted external-help">
-            {{ "view.help.ci_guidelines"|trans }}
-            <a href="{{ "view.help.ci_guidelines_link"|trans }}" target="_blank"><i class="fas fa-link"></i></a>
-        </small>
-
-        {{ form_row(submit_semester_report.addedAllEvents) }}
-
-        {{ form_row(submit_semester_report.politicalEventsDescription) }}
-        <small class="form-text text-muted external-help">
-            {{ "view.help.political_events"|trans }}
-            <a href="{{ "view.help.political_events_link"|trans }}" target="_blank"><i class="fas fa-link"></i></a>
-        </small>
-
-        {{ form_row(submit_semester_report.comments) }}
-        <small class="form-text text-muted external-help">
-            {{ "view.help.comments"|trans }}
-        </small>
-
-        {{ form_end(submit_semester_report) }}
+    {% if entries|length == 0 %}
+        <p>{{ "view.no_entries_added_yet"|trans({}, "organisation") }}</p>
     {% else %}
-        <p class="alert alert-success">{{ "view.semester_report_submitted"|trans }}</p>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ "semester"|trans({}, "entity_event") }}</th>
+                <th>{{ "name"|trans({}, "entity_event") }}</th>
+                {% if internalFields %}
+                    <th>{{ "description"|trans({}, "entity_event") }}</th>
+                    <th>{{ "start_date"|trans({}, "entity_event") }}</th>
+                    <th>{{ "end_date"|trans({}, "entity_event") }}</th>
+                {% endif %}
+                <th>{{ "location"|trans({}, "entity_event") }}</th>
+                {% if internalFields %}
+                    <th>{{ "budget"|trans({}, "entity_event") }}</th>
+                    <th>{{ "need_financial_support"|trans({}, "entity_event") }}</th>
+                {% else %}
+                    <th>{{ "start_date"|trans({}, "entity_event") }}</th>
+                {% endif %}
+                {% if showEditButtons %}
+                    <th class="minimal-width"></th>
+                {% endif %}
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for event in organisation.events %}
+                <tr>
+                    <td>{{ event.semesterName }}</td>
+                    <td>{{ event.name }}</td>
+                    {% if internalFields %}
+                        <td>{{ event.description }}</td>
+                        <td>{{ event.startDate|dateTimeFormat }}</td>
+                        <td>{{ event.endDate|dateTimeFormat }}</td>
+                    {% endif %}
+                    <td>{{ event.location }}</td>
+                    {% if internalFields %}
+                        <td>+{{ event.revenue }} / -{{ event.expenditure }} </td>
+                        <td>{{ event.needFinancialSupport|booleanFormat }}</td>
+                    {% else %}
+                        <td>{{ event.startDate|dateTimeFormat }}</td>
+                    {% endif %}
+                    {% if showEditButtons %}
+                        <td>
+                            <div class="btn-group">
+                                <a class="btn btn-light"
+                                   href="{{ path("organisation_event_copy", {"organisation" : organisation.id, "event": event.id}) }}">
+                                    <i class="fal fa-copy"></i>
+                                </a>
+                                <a class="btn btn-secondary"
+                                   href="{{ path("organisation_event_edit", {"organisation" : organisation.id, "event": event.id}) }}">
+                                    <i class="fal fa-pencil"></i>
+                                </a>
+                                <a class="btn btn-danger"
+                                   href="{{ path("organisation_event_remove", {"organisation" : organisation.id, "event": event.id}) }}">
+                                    <i class="fal fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 
-    <hr/>
-    <h3>{{ "entity.plural"|trans({}, "entity_event") }}</h3>
-    <div class="btn-group mb-2">
-        <a class="btn btn-secondary"
-           href="{{ path("organisation_event_new", {"organisation": organisation.id}) }}">
-            {{ "new.title"|trans({}, "organisation_event") }}
-        </a>
-    </div>
-
-    {{ tables.events(organisation, true) }}
-
-    <p class="text-secondary">
-        {{ "view.calender_help"|trans }}
-    </p>
 {% endblock %}
 

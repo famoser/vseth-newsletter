@@ -28,7 +28,7 @@ class AdministrationController extends BaseController
      */
     public function indexAction()
     {
-        $allNewsletters = $this->getDoctrine()->getRepository(Newsletter::class)->findAll();
+        $allNewsletters = $this->getDoctrine()->getRepository(Newsletter::class)->findBy([], ['plannedSendAt' => 'DESC']);
         $futureNewsletters = [];
         $sentNewsletters = [];
         foreach ($allNewsletters as $newsletter) {

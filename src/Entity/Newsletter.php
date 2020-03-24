@@ -22,7 +22,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks
- * @ORM\OrderBy({"plannedSendAt" = "ASC"})
  */
 class Newsletter extends BaseEntity
 {
@@ -30,9 +29,9 @@ class Newsletter extends BaseEntity
     use TimeTrait;
 
     /**
-     * @var \DateTime|null
+     * @var \DateTime
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      */
     private $plannedSendAt;
 

@@ -1,0 +1,7 @@
+new:
+  title: 'new newsletter'
+  description: 'add a new newsletter'
+
+edit:
+  title: 'edit newsletter'
+  description: 'change the newsletter'

@@ -57,7 +57,7 @@ class EntryController extends BaseController
 
         $this->organisation = $organisation;
 
-        return $this->render('organisation/event/new.html.twig', ['form' => $form->createView()]);
+        return $this->render('organisation/entry/new.html.twig', ['form' => $form->createView()]);
     }
 
     /**
@@ -76,7 +76,7 @@ class EntryController extends BaseController
 
         $this->organisation = $organisation;
 
-        return $this->render('organisation/event/edit.html.twig', ['form' => $form->createView()]);
+        return $this->render('organisation/entry/edit.html.twig', ['form' => $form->createView()]);
     }
 
     /**     *
@@ -95,7 +95,7 @@ class EntryController extends BaseController
 
         $this->organisation = $organisation;
 
-        return $this->render('organisation/event/remove.html.twig', ['form' => $form->createView()]);
+        return $this->render('organisation/entry/remove.html.twig', ['form' => $form->createView()]);
     }
 
     private function ensureAccessGranted(Entry $entry)

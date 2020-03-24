@@ -1,0 +1,5 @@
+entity:
+  name: 'Newsletter'
+
+planned_send_at: "planned send at"
+sent_at: "sent at"
