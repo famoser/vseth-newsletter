@@ -10,6 +10,8 @@ import {faChartArea} from '@fortawesome/pro-light-svg-icons/faChartArea'
 import {faEnvelope} from '@fortawesome/pro-light-svg-icons/faEnvelope'
 import {faUser} from '@fortawesome/pro-light-svg-icons/faUser'
 import {faCopy} from '@fortawesome/pro-light-svg-icons/faCopy'
+import {faMinus} from '@fortawesome/pro-light-svg-icons/faMinus'
+import {faEnvelopeOpen} from '@fortawesome/pro-light-svg-icons/faEnvelopeOpen'
 
 // add icons
-library.add(faPlus, faTrash, faPencil, faEye, faChartArea, faEnvelope, faUser, faCopy, faEnvelope);
+library.add(faPlus, faTrash, faPencil, faEye, faChartArea, faEnvelope, faUser, faCopy, faEnvelope, faEnvelopeOpen, faMinus);

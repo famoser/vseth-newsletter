@@ -12,6 +12,7 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
+use App\Entity\Entry;
 use App\Entity\Newsletter;
 use App\Model\Breadcrumb;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,6 +72,51 @@ class NewsletterController extends BaseController
         }
 
         return $this->render('administration/newsletter/edit.html.twig', ['form' => $myForm->createView()]);
+    }
+
+    /**
+     * @Route("/{newsletter}/curate", name="administration_newsletter_curate")
+     *
+     * @return Response
+     */
+    public function curateAction(Newsletter $newsletter)
+    {
+        /** @var Entry[] $approvedEntries */
+        $approvedEntries = [];
+        /** @var Entry[] $newEntries */
+        $newEntries = [];
+        foreach ($newsletter->getEntries() as $entry) {
+            if ($entry->getApprovedAt() !== null) {
+                $approvedEntries[] = $entry;
+            } elseif ($entry->getRejectReason() === null) {
+                $newEntries[] = $entry;
+            }
+        }
+
+        return $this->render('administration/newsletter/curate.html.twig', [
+            'newsletter' => $newsletter,
+            'approved_entries' => $approvedEntries,
+            'new_entries' => $newEntries,
+        ]);
+    }
+
+    /**
+     * @Route("/{newsletter}/preview", name="administration_newsletter_preview")
+     *
+     * @return Response
+     */
+    public function previewAction(Newsletter $newsletter)
+    {
+        $approvedEntries = [];
+        foreach ($newsletter->getEntries() as $entry) {
+            if ($entry->getApprovedAt() !== null) {
+                $approvedEntries[] = $entry;
+            }
+        }
+
+        return $this->render('administration/newsletter/preview.html.twig', [
+            'newsletter' => $newsletter,
+        ]);
     }
 
     /**

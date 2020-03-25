@@ -28,17 +28,8 @@ class AdministrationController extends BaseController
      */
     public function indexAction()
     {
-        $allNewsletters = $this->getDoctrine()->getRepository(Newsletter::class)->findBy([], ['plannedSendAt' => 'DESC']);
-        $futureNewsletters = [];
-        $sentNewsletters = [];
-        foreach ($allNewsletters as $newsletter) {
-            if ($newsletter->getSentAt() === null) {
-                $futureNewsletters[] = $newsletter;
-            } else {
-                $sentNewsletters[] = $newsletter;
-            }
-        }
+        $newsletters = $this->getDoctrine()->getRepository(Newsletter::class)->findBy([], ['plannedSendAt' => 'DESC']);
 
-        return $this->render('administration.html.twig', ['future_newsletters' => $futureNewsletters, 'sent_newsletters' => $sentNewsletters]);
+        return $this->render('administration.html.twig', ['newsletters' => $newsletters]);
     }
 }

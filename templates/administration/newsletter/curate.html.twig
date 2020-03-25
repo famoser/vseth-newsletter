@@ -1,0 +1,117 @@
+{% extends "layout_base.html.twig" %}
+
+{% block title %}{{ "curate.title"|trans }}{% endblock %}
+{% block description %}{{ "curate.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_newsletter" %}
+
+{% block content %}
+    <section class="content">
+        <div class="container">
+            <div class="p-1 pt-5 pb-4">
+                <h1>{{ "curate.title"|trans }}</h1>
+                <p class="lead">{{ "curate.description"|trans }}</p>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h2>{{ "curate.approved_entries"|trans }}</h2>
+
+                    <div class="btn-group mb-2">
+                        <a class="btn btn-outline-secondary d-print-none"
+                           href="{{ path('administration_newsletter_preview', {"newsletter" : newsletter.id}) }}">
+                            {{ "preview.title"|trans }}
+                        </a>
+                        {% if newsletter.sentAt is null %}
+                            <a class="btn btn-outline-secondary"
+                               href="{{ path("administration_newsletter_edit", {"newsletter" : newsletter.id}) }}">
+                                <i class="fal fa-pencil"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    {% if approved_entries|length == 0 %}
+                        <hr/>
+                        <p>{{ "curate.no_approved_entries"|trans }}</p>
+                    {% else %}
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="minimal-width">{{ "name"|trans({}, "entity_organisation") }}</th>
+                                <th>{{ "title"|trans({}, "entity_entry") }}</th>
+                                <th>{{ "description"|trans({}, "entity_entry") }}</th>
+                                <th class="minimal-width d-print-none"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for entry in approved_entries %}
+                                <tr>
+                                    <td><a href="mailto:{{ entry.organisation.email }}">{{ entry.organizer }}</a></td>
+                                    <td>{{ entry.titleDe }}</td>
+                                    <td>{{ entry.descriptionDe|truncate(50) }}</td>
+                                    <td class="d-print-none">
+                                        <div class="btn-group">
+                                            <a class="btn btn-outline-warning"
+                                               href="{{ path("administration_entry_disapprove", {"entry" : entry.id}) }}">
+                                                <i class="fal fa-minus"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if new_entries|length > 0 %}
+                <div class="p-1 mt-5 mb-2">
+                    <h2>{{ "curate.new_entries"|trans }}</h2>
+                </div>
+
+                {% for entry in new_entries %}
+                    <div class="card mb-3">
+                        <div class="card-header {% if entry.organisation.category == 5 %}bg-warning{% endif %}">
+                            {{ entry.organisation.name }} |
+                            <a href="mailto:{{ entry.organisation.email }}">{{ entry.organisation.email }}</a> |
+                            <span>{{ "last_changed_at"|trans({}, "entity_entry") }} {{ entry.lastChangedAt|dateTimeFormat }}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>{{ entry.organisation.name }}: {{ entry.titleDe }}</h4>
+                                    <p>{{ entry.descriptionDe|nl2br }}</p>
+                                    <p><a href="{{ entry.linkDe }}">{{ entry.linkDe }}</a></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>{{ entry.organisation.name }}: {{ entry.titleEn }}</h4>
+                                    <p>{{ entry.descriptionEn|nl2br }}</p>
+                                    <p><a href="{{ entry.linkEn }}">{{ entry.linkEn }}</a></p>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p>
+                                        {{ entry.startAt|dateFormat }} - {{ entry.endAt|dateFormat }} <br/>
+                                        {{ entry.location }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="btn-group">
+                                <a class="btn btn-primary"
+                                   href="{{ path("administration_entry_approve", {"entry" : entry.id}) }}">
+                                    <i class="fal fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

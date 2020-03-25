@@ -1,15 +1,5 @@
 index:
   title: 'overview'
-  description: 'semester reports of active organisations of %current_semester%'
-  no_organisations_added_yet: 'no organisations added yet'
-  export_authentication_links: 'Export authentication links'
-  summary:
-    event_count: '#events'
-    budget_sum: 'total budget'
-    requested_financial_support: 'requested financial support'
-  no_missing_organisations: 'all active organisations have submitted their semester report.'
-  missing: 'missing semester report'
-  submitted: 'submitted semester reports'
-  no_submitted_reports_yet: 'no semester reports have been submitted yet'
-  currency: 'CHF'
+  description: 'next newsletters to be sent'
+  no_newsletters: 'no newsletters'
 

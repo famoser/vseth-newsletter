@@ -5,3 +5,14 @@ new:
 edit:
   title: 'edit newsletter'
   description: 'change the newsletter'
+
+curate:
+  title: 'curate newsletter'
+  description: 'moderate which entries appear on the newsletter'
+  approved_entries: 'approved entries'
+  no_approved_entries: 'no approved entries yet'
+  new_entries: 'new entries'
+
+preview:
+  title: 'preview newsletter'
+  description: 'see how the newsletter will be sent'

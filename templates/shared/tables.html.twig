@@ -81,7 +81,7 @@
 
         {% for organisation in organisations %}
             <tr>
-                <td>{{ organisation.relationSinceSemester|semesterFormat }}</td>
+                <td>{{ organisation.relationSinceSemester }}</td>
                 <td><a href="mailto:{{ organisation.email }}">{{ organisation.name }}</a></td>
                 <td>
                     {{ path('login_code', { "code": organisation.authenticationCode}, true) }}

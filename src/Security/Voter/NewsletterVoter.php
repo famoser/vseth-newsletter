@@ -12,11 +12,12 @@
 namespace App\Security\Voter;
 
 use App\Entity\Entry;
+use App\Entity\Newsletter;
 use App\Model\User;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class EntryVoter extends BaseVoter
+class NewsletterVoter extends BaseVoter
 {
     /**
      * @param string $attribute An attribute
@@ -26,7 +27,7 @@ class EntryVoter extends BaseVoter
      */
     protected function supports($attribute, $subject)
     {
-        return $subject instanceof Entry;
+        return $subject instanceof Newsletter;
     }
 
     /**
@@ -40,10 +41,10 @@ class EntryVoter extends BaseVoter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        if (\in_array(User::ROLE_ADMIN, $token->getRoleNames(), true)) {
-            return true;
+        if (!\in_array(User::ROLE_ADMIN, $token->getRoleNames(), true)) {
+            return false;
         }
 
-        return $subject->getOrganisation()->getEmail() === $token->getUser()->getUsername();
+        return $subject->getSentAt() === null;
     }
 }

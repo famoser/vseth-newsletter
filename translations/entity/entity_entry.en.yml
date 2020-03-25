@@ -25,3 +25,5 @@ priority: "priority"
 approved_at: "approved at"
 sent_at: "sent at"
 reject_reason: "reject reason"
+
+last_changed_at: 'last changed at'

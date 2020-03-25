@@ -12,7 +12,7 @@
 namespace App\Extension;
 
 use App\Enum\BooleanType;
-use App\Enum\UserCategoryType;
+use App\Enum\OrganisationCategory;
 use DateTime;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
@@ -39,7 +39,7 @@ class TwigExtension extends AbstractExtension
             new TwigFilter('timeFormat', [$this, 'timeFormatFilter']),
             new TwigFilter('dateTimeFormat', [$this, 'dateTimeFilter']),
             new TwigFilter('booleanFormat', [$this, 'booleanFilter']),
-            new TwigFilter('categoryText', [$this, 'categoryTextFilter']),
+            new TwigFilter('organisationCategoryText', [$this, 'organisationCategoryTextFilter']),
             new TwigFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
         ];
     }
@@ -75,10 +75,10 @@ class TwigExtension extends AbstractExtension
      *
      * @return string
      */
-    public function categoryTextFilter($value)
+    public function organisationCategoryTextFilter($value)
     {
         if (\is_int($value)) {
-            return UserCategoryType::getTranslation($value, $this->translator);
+            return OrganisationCategory::getTranslation($value, $this->translator);
         }
 
         return '-';

@@ -1,157 +1,57 @@
-{% extends "layout_base.html.twig" %}
-
-{% import 'shared/tables.html.twig' as tables %}
+{% extends "single_content_base.html.twig" %}
 
 {% block title %}{{ "index.title"|trans }}{% endblock %}
-{% block description %}{{ "index.description"|trans({"%current_semester%": currentSemester|semesterFormat}) }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
 
 {% trans_default_domain "administration" %}
 
-{% block content %}
-    <section class="content">
-        <div class="container">
-            <div class="p-1 pt-5 pb-4">
-                <h1>{{ "index.title"|trans }}</h1>
-                <p class="lead">{{ "index.description"|trans({"%current_semester%": currentSemester|semesterFormat}) }}</p>
-            </div>
+{% block single_content %}
+    <div class="btn-group mb-2">
+        <a class="btn btn-secondary"
+           href="{{ path("administration_newsletter_new") }}">
+            {{ "new.title"|trans({}, "administration_newsletter") }}
+        </a>
+    </div>
+    {% if newsletters|length == 0 %}
+        <p>{{ "index.no_newsletters"|trans }}</p>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ "planned_send_at"|trans({}, "entity_newsletter") }}</th>
+                <th>{{ "sent_at"|trans({}, "entity_newsletter") }}</th>
+                <th>{{ "entity.plural"|trans({}, "entity_entry") }}</th>
+                <th class="minimal-width"></th>
+            </tr>
+            </thead>
+            <tbody>
 
-            <div class="card">
-                <div class="card-body">
-                    <h2>{{ "index.missing"|trans }}</h2>
-
-                    <div class="btn-group mb-2">
-                        <a class="btn btn-outline-secondary d-print-none"
-                           href="{{ path('administration_send_reminder') }}">
-                            {{ "send_reminder.title"|trans }}
-                        </a>
-                    </div>
-
-                    {% if semesterEvaluation.missingOrganisations|length == 0 %}
-                        <p>{{ "index.no_missing_organisations"|trans }}</p>
-                    {% else %}
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th class="minimal-width">{{ "relation_since_semester"|trans({}, "entity_organisation") }}</th>
-                                <th>{{ "name"|trans({}, "entity_organisation") }}</th>
-                                <th>{{ "last_visit_at"|trans({}, "entity_organisation") }}</th>
-                                <th>{{ "comments"|trans({}, "entity_organisation") }}</th>
-                                <th class="minimal-width d-print-none"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            {% for organisation in semesterEvaluation.missingOrganisations %}
-                                <tr>
-                                    <td>{{ organisation.relationSinceSemester|semesterFormat }}</td>
-                                    <td><a href="mailto:{{ organisation.email }}">{{ organisation.name }}</a></td>
-                                    <td>
-                                        {{ organisation.lastVisitAt|dateTimeFormat }}
-                                    </td>
-                                    <td>{{ organisation.comments }}</td>
-                                    <td class="d-print-none">
-                                        <div class="btn-group">
-                                            <a class="btn btn-outline-secondary"
-                                               href="{{ path("organisation_view", {"organisation" : organisation.id}) }}">
-                                                <i class="fal fa-user"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %}
-                </div>
-            </div>
-
-            {% if semesterEvaluation.organisationEvaluations|length > 0 %}
-                <div class="p-1 mt-5 mb-2">
-                    <h2>{{ "index.submitted"|trans }}</h2>
-                </div>
-
-                {% for evaluation in semesterEvaluation.organisationEvaluations %}
-                    <div class="card mb-3">
-                        <div class="card-header">
-                            {{ evaluation.organisation.name }} |
-                            <a href="mailto:{{ evaluation.organisation.email }}">{{ evaluation.organisation.email }}</a>
-                            |
-                            {{ "relation_since_semester"|trans({}, "entity_organisation") }} {{ evaluation.organisation.relationSinceSemester|semesterFormat }}
-                            | {{ "index.currency"|trans }} <span class="alert-success">+{{ evaluation.revenueSum }}</span> /
-                            <span class="alert-danger">-{{ evaluation.expenditureSum }}</span>
-                            {% if evaluation.organisation.comments is not empty %}
-                                | <i>{{ evaluation.organisation.comments }}</i>
-                            {% endif %}
-                            | <a class="btn btn-sm d-print-none btn-outline-inverse"
-                               href="{{ path("organisation_view", {"organisation" : evaluation.organisation.id}) }}">
-                                <i class="fal fa-user"></i>
-                            </a>
-                        </div>
-                        <div class="card-body">
-                            <h3 class="mt-0 mb-4">{{ evaluation.organisation.name }}</h3>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p>
-                                        <b>{{ "political_events_description"|trans({}, "entity_semester_report") }}</b>
-                                        <br/>
-                                        {{ evaluation.semesterReport.politicalEventsDescription|default("-")|nl2br }}
-                                    </p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p>
-                                        <b>{{ "comments"|trans({}, "entity_semester_report") }}</b>
-                                        <br/>
-                                        {{ evaluation.semesterReport.comments|default("-")|nl2br }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {% for event in evaluation.events %}
-                                <hr/>
-                                {% if event.needFinancialSupport %}
-                                    <p>
-                                        <span class="badge badge-warning">{{ "need_financial_support"|trans({}, "entity_event") }}</span>
-                                    </p>
+            {% for newsletter in newsletters %}
+                <tr>
+                    <td>{{ newsletter.plannedSendAt|dateFormat }}</td>
+                    <td>{{ newsletter.sentAt|dateFormat }}</td>
+                    <td>{{ newsletter.entries|length }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-primary"
+                               href="{{ path("administration_newsletter_curate", {"newsletter" : newsletter.id}) }}">
+                                {% if newsletter.sentAt is null %}
+                                    <i class="fal fa-envelope-open"></i>
+                                {% else %}
+                                    <i class="fal fa-envelope"></i>
                                 {% endif %}
-                                <p class="text-secondary">{{ event.semester|semesterFormat }}
-                                    {% if event.startDate is not null or event.endDate is not null %}
-                                        |
-                                        {% if event.startDate is not null %}
-                                            {{ event.startDate|dateTimeFormat }}
-                                        {% endif %}
-                                        {% if event.startDate is not null and event.endDate is not null %}
-                                            -
-                                        {% endif %}
-                                        {% if event.endDate is not null %}
-                                            {{ event.endDate|dateTimeFormat }}
-                                        {% endif %}
-                                    {% endif %}
-                                    {% if event.location is not empty %}
-                                        | {{ event.location }}
-                                    {% endif %}
-                                    | {{ "index.currency"|trans }} <span class="alert-success">+{{ event.revenue }}</span> /
-                                    <span class="alert-danger">-{{ event.expenditure }}</span>
-                                </p>
-                                <div class="row">
-                                    {% if event.nameDe is not empty or event.descriptionDe is not empty %}
-                                        <div class="col-md-6">
-                                            <h4>{{ event.nameDe }}</h4>
-                                            <p>{{ event.descriptionDe|nl2br }}</p>
-                                        </div>
-                                    {% endif %}
-                                    <div class="col-md-6">
-                                        <h4>{{ event.nameEn }}</h4>
-                                        <p>{{ event.descriptionEn|nl2br }}</p>
-                                    </div>
-                                </div>
-                            {% endfor %}
+                            </a>
+                            {% if newsletter.sentAt is null %}
+                                <a class="btn btn-outline-secondary"
+                                   href="{{ path("administration_newsletter_edit", {"newsletter" : newsletter.id}) }}">
+                                    <i class="fal fa-pencil"></i>
+                                </a>
+                            {% endif %}
                         </div>
-                        <div class="card-footer">
-                            <span>{{ "submitted_date_time"|trans({}, "entity_semester_report") }} {{ evaluation.semesterReport.submittedDateTime|dateTimeFormat }}</span>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-    </section>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 {% endblock %}

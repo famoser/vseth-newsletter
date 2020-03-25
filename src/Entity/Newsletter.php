@@ -46,6 +46,7 @@ class Newsletter extends BaseEntity
      * @var Entry[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Entry", mappedBy="newsletter")
+     * @ORM\OrderBy({"priority": "DESC"})
      */
     private $entries;
 
