@@ -71,8 +71,8 @@
     <table class="table table-striped sortable">
         <thead>
         <tr>
-            <th class="minimal-width">{{ "relation_since_semester"|trans({}, "entity_organisation") }}</th>
             <th>{{ "name"|trans({}, "entity_organisation") }}</th>
+            <th>{{ "category"|trans({}, "entity_organisation") }}</th>
             <th>{{ "login_url"|trans({}, "entity_organisation") }}</th>
             <th class="minimal-width"></th>
         </tr>
@@ -81,8 +81,8 @@
 
         {% for organisation in organisations %}
             <tr>
-                <td>{{ organisation.relationSinceSemester }}</td>
                 <td><a href="mailto:{{ organisation.email }}">{{ organisation.name }}</a></td>
+                <td>{{ organisation.category|organisationCategoryText }}</a></td>
                 <td>
                     {{ path('login_code', { "code": organisation.authenticationCode}, true) }}
                     <a class="btn btn-outline-inverse btn-sm pl-2"

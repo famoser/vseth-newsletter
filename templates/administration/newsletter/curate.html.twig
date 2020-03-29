@@ -77,6 +77,9 @@
                             {{ entry.organisation.name }} |
                             <a href="mailto:{{ entry.organisation.email }}">{{ entry.organisation.email }}</a> |
                             <span>{{ "last_changed_at"|trans({}, "entity_entry") }} {{ entry.lastChangedAt|dateTimeFormat }}</span>
+                            {% if entry.organisation.comments is not empty %}
+                                | <i>{{ entry.organisation.comments }}</i>
+                            {% endif %}
                         </div>
                         <div class="card-body">
                             <div class="row">

@@ -12,7 +12,7 @@
 namespace App\Extension;
 
 use App\Enum\BooleanType;
-use App\Enum\OrganisationCategory;
+use App\Enum\OrganisationCategoryType;
 use DateTime;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\AbstractExtension;
@@ -78,7 +78,7 @@ class TwigExtension extends AbstractExtension
     public function organisationCategoryTextFilter($value)
     {
         if (\is_int($value)) {
-            return OrganisationCategory::getTranslation($value, $this->translator);
+            return OrganisationCategoryType::getTranslation($value, $this->translator);
         }
 
         return '-';

@@ -60,8 +60,6 @@ class OrganisationController extends BaseController
     {
         //create the event
         $organisation = new Organisation();
-        $organisation->setName('');
-        $organisation->setEmail('');
 
         //process form
         $myForm = $this->handleCreateForm(

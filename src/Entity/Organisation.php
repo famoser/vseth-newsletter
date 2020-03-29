@@ -15,7 +15,7 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\HideTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\TimeTrait;
-use App\Enum\OrganisationCategory;
+use App\Enum\OrganisationCategoryType;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -50,7 +50,7 @@ class Organisation extends BaseEntity
      *
      * @ORM\Column(type="integer")
      */
-    private $category = OrganisationCategory::VSETH;
+    private $category = OrganisationCategoryType::VSETH;
 
     /**
      * @var string|null
@@ -85,7 +85,7 @@ class Organisation extends BaseEntity
         $this->entries = new ArrayCollection();
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -95,7 +95,7 @@ class Organisation extends BaseEntity
         $this->name = $name;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -105,7 +105,7 @@ class Organisation extends BaseEntity
         $this->email = $email;
     }
 
-    public function getCategory(): int
+    public function getCategory(): ?int
     {
         return $this->category;
     }

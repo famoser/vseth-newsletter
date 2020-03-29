@@ -44,6 +44,7 @@ class OrganisationRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('u');
         $qb->where('u.hiddenAt IS NULL')
+            ->orderBy('u.category', 'ASC')
             ->orderBy('u.name', 'ASC');
 
         return $qb->getQuery()->getResult();

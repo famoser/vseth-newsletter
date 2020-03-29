@@ -12,7 +12,9 @@
 namespace App\Form\Organisation;
 
 use App\Entity\Organisation;
+use App\Enum\OrganisationCategoryType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,7 +27,7 @@ class OrganisationType extends AbstractType
     {
         $builder->add('name', TextType::class);
         $builder->add('email', EmailType::class);
-        $builder->add('type', self::class);
+        $builder->add('category', ChoiceType::class, OrganisationCategoryType::getBuilderArguments());
         $builder->add('comments', TextareaType::class, ['required' => false]);
     }
 

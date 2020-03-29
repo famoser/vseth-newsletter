@@ -3,7 +3,7 @@ entity:
 
 name: "name"
 email: "E-Mail"
-relation_since_semester: "relations since"
+category: "category"
 comments: 'comments'
 last_visit_at: 'last visit'
 

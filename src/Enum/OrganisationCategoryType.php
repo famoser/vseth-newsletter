@@ -13,7 +13,7 @@ namespace App\Enum;
 
 use App\Enum\Base\BaseEnum;
 
-class OrganisationCategory extends BaseEnum
+class OrganisationCategoryType extends BaseEnum
 {
     const VSETH = 0;
     const COMMISSION = 1;

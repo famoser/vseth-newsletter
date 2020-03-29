@@ -1,0 +1,9 @@
+enum:
+  name: "category"
+
+vseth: 'VSETH'
+commission: 'commission'
+study_association: 'study association'
+associated: 'associated'
+recognised: 'recognised'
+external: 'external'

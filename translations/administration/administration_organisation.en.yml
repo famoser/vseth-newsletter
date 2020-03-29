@@ -15,21 +15,16 @@ remove:
   title: 'remove organisation'
   description: 'remove the organisation and all associated data'
 
-events:
-  title: 'events of organisation'
-  description: 'all future / past events of that organisation'
-  no_events_added_yet: 'the organisation has not added events yet'
-
 hide:
-  success: 'organisation is now hidden. login is no longer possible, and it will not appear in future semester reports.'
+  success: 'organisation is now hidden. login is no longer possible.'
 
 unhide:
-  success: 'organisation is now again visible. login is possible and it will appear in future semester reports.'
+  success: 'organisation is now again visible. login is enabled again.'
 
 hidden:
   title: 'hidden organisations'
   description: 'hidden organisations'
-  help: 'hidden organisations can no longer login, and will not be included in future semester resports.'
+  help: 'hidden organisations can not login.'
   no_organisations_hidden_yet: 'no hidden organisations yet'
 
 reset_authentication_code:
