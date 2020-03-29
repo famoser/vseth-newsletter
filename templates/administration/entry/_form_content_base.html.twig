@@ -7,9 +7,14 @@
 {% block single_content %}
     {{ form_start(form) }}
     <div class="row">
-        <div class="col-md-4 col-sm-6">
+        <div class="col-md-6">
             <div class="form-group">
-                {{ form_row(form.newsletter) }}
+                {{ form_row(form.organisation) }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form_row(form.priority) }}
             </div>
         </div>
     </div>

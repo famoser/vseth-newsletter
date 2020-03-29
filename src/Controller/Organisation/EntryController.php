@@ -44,11 +44,6 @@ class EntryController extends BaseController
         $entry->setOrganisation($organisation);
         $entry->setOrganizer($organisation->getName());
 
-        $entry->setTitleDe('');
-        $entry->setTitleEn('');
-        $entry->setDescriptionDe('');
-        $entry->setDescriptionEn('');
-
         //process form
         $form = $this->handleCreateForm($request, $entry);
         if ($form instanceof Response) {

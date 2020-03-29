@@ -13,12 +13,15 @@ namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
 use App\Entity\Entry;
-use App\Entity\Organisation;
+use App\Entity\Newsletter;
+use App\Form\Entry\RejectEntryType;
 use App\Model\Breadcrumb;
 use App\Security\Voter\Base\BaseVoter;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/entry")
@@ -26,28 +29,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class EntryController extends BaseController
 {
     /**
-     * @var Organisation
+     * @var Newsletter
      */
-    private $organisation;
+    private $newsletter;
 
     /**
-     * @Route("/new", name="administration_entry_new")
+     * @Route("/new/{newsletter}", name="administration_entry_new")
      *
      * @return Response
      */
-    public function newAction(Organisation $organisation, Request $request)
+    public function newAction(Request $request, Newsletter $newsletter, TranslatorInterface $translator)
     {
-        $this->denyAccessUnlessGranted(BaseVoter::VIEW, $organisation);
+        $this->denyAccessUnlessGranted(BaseVoter::VIEW, $newsletter);
 
-        //create the event
+        //create the entry
         $entry = new Entry();
-        $entry->setOrganisation($organisation);
-        $entry->setOrganizer($organisation->getName());
-
-        $entry->setTitleDe('');
-        $entry->setTitleEn('');
-        $entry->setDescriptionDe('');
-        $entry->setDescriptionEn('');
+        $entry->setNewsletter($newsletter);
 
         //process form
         $form = $this->handleCreateForm($request, $entry);
@@ -55,9 +52,14 @@ class EntryController extends BaseController
             return $form;
         }
 
-        $this->organisation = $organisation;
+        //process form
+        if ($form instanceof Response) {
+            return $form;
+        }
 
-        return $this->render('organisation/entry/new.html.twig', ['form' => $form->createView()]);
+        $this->newsletter = $newsletter;
+
+        return $this->render('administration/entry/new.html.twig', ['form' => $form->createView()]);
     }
 
     /**
@@ -65,7 +67,7 @@ class EntryController extends BaseController
      *
      * @return Response
      */
-    public function editAction(Organisation $organisation, Request $request, Entry $entry)
+    public function editAction(Request $request, Entry $entry, TranslatorInterface $translator)
     {
         $this->ensureAccessGranted($entry);
 
@@ -74,9 +76,32 @@ class EntryController extends BaseController
             return $form;
         }
 
-        $this->organisation = $organisation;
+        //process form
+        if ($form instanceof Response) {
+            return $form;
+        }
 
-        return $this->render('organisation/entry/edit.html.twig', ['form' => $form->createView()]);
+        $this->newsletter = $entry->getNewsletter();
+
+        return $this->render('administration/entry/edit.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * prepends admin to use admin forms.
+     *
+     * @param string $classWithNamespace
+     * @param string $prepend
+     * @param bool $repeatClass
+     *
+     * @return string
+     */
+    protected function classToFormType($classWithNamespace, $prepend = '', $repeatClass = true)
+    {
+        if ($prepend === '') {
+            $prepend = 'Admin';
+        }
+
+        return parent::classToFormType($classWithNamespace, $prepend, $repeatClass);
     }
 
     /**
@@ -84,18 +109,37 @@ class EntryController extends BaseController
      *
      * @return Response
      */
-    public function rejectAction(Organisation $organisation, Request $request, Entry $entry)
+    public function rejectAction(Request $request, Entry $entry, TranslatorInterface $translator)
     {
         $this->ensureAccessGranted($entry);
 
-        $form = $this->handleDeleteForm($request, $entry);
-        if ($form === null) {
-            return $this->redirectToRoute('organisation_view', ['organisation' => $organisation->getId()]);
+        //create persist callable
+        $myOnSuccessCallable = function () use ($entry, $translator) {
+            $this->fastSave($entry);
+
+            $successfulText = $translator->trans('reject.successful', [], 'administration_entry');
+            $this->displaySuccess($successfulText);
+
+            //recreate form so values are not filled out already
+            return $this->redirectToRoute('administration_newsletter_curate', ['newsletter' => $entry->getNewsletter()->getId()]);
+        };
+
+        //handle the form
+        $buttonLabel = $translator->trans('reject.title', [], 'administration_entry');
+        $form = $this->handleForm(
+            $this->createForm(RejectEntryType::class, $entry)
+                ->add('submit', SubmitType::class, ['label' => $buttonLabel, 'translation_domain' => false]),
+            $request,
+            $myOnSuccessCallable
+        );
+
+        if ($form instanceof Response) {
+            return $form;
         }
 
-        $this->organisation = $organisation;
+        $this->newsletter = $entry->getNewsletter();
 
-        return $this->render('organisation/entry/remove.html.twig', ['form' => $form->createView()]);
+        return $this->render('administration/entry/reject.html.twig', ['form' => $form->createView()]);
     }
 
     /**
@@ -147,8 +191,12 @@ class EntryController extends BaseController
         // test in frontend
         return array_merge(parent::getIndexBreadcrumbs(), [
             new Breadcrumb(
-                $this->generateUrl('organisation_view', ['organisation' => $this->organisation->getId()]),
-                $this->getTranslator()->trans('view.title', [], 'organisation')
+                $this->generateUrl('administration'),
+                $this->getTranslator()->trans('index.title', [], 'administration')
+            ),
+            new Breadcrumb(
+                $this->generateUrl('administration_newsletter_curate', ['newsletter' => $this->newsletter->getId()]),
+                $this->getTranslator()->trans('curate.title', [], 'administration_newsletter')
             ),
         ]);
     }

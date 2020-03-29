@@ -37,7 +37,7 @@
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th class="minimal-width">{{ "name"|trans({}, "entity_organisation") }}</th>
+                                <th>{{ "name"|trans({}, "entity_organisation") }}</th>
                                 <th>{{ "title"|trans({}, "entity_entry") }}</th>
                                 <th>{{ "description"|trans({}, "entity_entry") }}</th>
                                 <th class="minimal-width d-print-none"></th>
@@ -106,6 +106,14 @@
                                 <a class="btn btn-primary"
                                    href="{{ path("administration_entry_approve", {"entry" : entry.id}) }}">
                                     <i class="fal fa-plus"></i>
+                                </a>
+                                <a class="btn btn-outline-secondary"
+                                   href="{{ path("administration_entry_edit", {"entry" : entry.id}) }}">
+                                    <i class="fal fa-pencil"></i>
+                                </a>
+                                <a class="btn btn-outline-danger"
+                                   href="{{ path("administration_entry_reject", {"entry" : entry.id}) }}">
+                                    <i class="fal fa-times"></i>
                                 </a>
                             </div>
                         </div>

@@ -139,7 +139,7 @@ class Entry extends BaseEntity
      */
     private $organisation;
 
-    public function getOrganizer(): string
+    public function getOrganizer(): ?string
     {
         return $this->organizer;
     }
@@ -149,7 +149,7 @@ class Entry extends BaseEntity
         $this->organizer = $organizer;
     }
 
-    public function getTitleDe(): string
+    public function getTitleDe(): ?string
     {
         return $this->titleDe;
     }
@@ -159,7 +159,7 @@ class Entry extends BaseEntity
         $this->titleDe = $titleDe;
     }
 
-    public function getTitleEn(): string
+    public function getTitleEn(): ?string
     {
         return $this->titleEn;
     }
@@ -169,7 +169,7 @@ class Entry extends BaseEntity
         $this->titleEn = $titleEn;
     }
 
-    public function getDescriptionDe(): string
+    public function getDescriptionDe(): ?string
     {
         return $this->descriptionDe;
     }
@@ -179,7 +179,7 @@ class Entry extends BaseEntity
         $this->descriptionDe = $descriptionDe;
     }
 
-    public function getDescriptionEn(): string
+    public function getDescriptionEn(): ?string
     {
         return $this->descriptionEn;
     }
@@ -279,7 +279,7 @@ class Entry extends BaseEntity
         $this->rejectReason = $rejectReason;
     }
 
-    public function getNewsletter(): Newsletter
+    public function getNewsletter(): ?Newsletter
     {
         return $this->newsletter;
     }
@@ -289,7 +289,7 @@ class Entry extends BaseEntity
         $this->newsletter = $newsletter;
     }
 
-    public function getOrganisation(): Organisation
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }

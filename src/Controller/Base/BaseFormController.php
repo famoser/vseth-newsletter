@@ -189,7 +189,7 @@ class BaseFormController extends BaseDoctrineController
      *
      * @return string
      */
-    private function classToFormType($classWithNamespace, $prepend = '', $repeatClass = true)
+    protected function classToFormType($classWithNamespace, $prepend = '', $repeatClass = true)
     {
         $className = mb_substr($classWithNamespace, mb_strrpos($classWithNamespace, '\\') + 1);
 

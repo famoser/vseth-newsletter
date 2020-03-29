@@ -1,0 +1,12 @@
+new:
+  title: 'new entry'
+  description: 'add a new entry'
+
+edit:
+  title: 'edit entry'
+  description: 'change the entry'
+
+reject:
+  title: 'reject entry'
+  description: 'reject entry and prevent it from being included for good'
+  successful: 'entry rejected'
