@@ -17,9 +17,7 @@ use App\Entity\Traits\TimeTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * an event determines how the questionnaire looks like.
- *
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\EntryRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Entry extends BaseEntity

@@ -1,7 +1,7 @@
 {% extends "layout_base.html.twig" %}
 
-{% block title %}{{ "curate.title"|trans }}{% endblock %}
-{% block description %}{{ "curate.description"|trans }}{% endblock %}
+{% block title %}{{ "entries.title"|trans }}{% endblock %}
+{% block description %}{{ "entries.description"|trans }}{% endblock %}
 
 {% trans_default_domain "administration_newsletter" %}
 
@@ -9,30 +9,24 @@
     <section class="content">
         <div class="container">
             <div class="p-1 pt-5 pb-4">
-                <h1>{{ "curate.title"|trans }}</h1>
-                <p class="lead">{{ "curate.description"|trans }}</p>
+                <h1>{{ "entries.title"|trans }}</h1>
+                <p class="lead">{{ "entries.description"|trans }}</p>
             </div>
 
             <div class="card">
                 <div class="card-body">
-                    <h2>{{ "curate.approved_entries"|trans }}</h2>
+                    <h2>{{ "entries.approved_entries"|trans }}</h2>
 
-                    <div class="btn-group mb-2">
+                    <p>
                         <a class="btn btn-outline-secondary d-print-none"
-                           href="{{ path('administration_newsletter_preview', {"newsletter" : newsletter.id}) }}">
-                            {{ "preview.title"|trans }}
+                           href="{{ path('administration_entry_new', {"newsletter" : newsletter.id}) }}">
+                            {{ "new.title"|trans({}, "administration_entry") }}
                         </a>
-                        {% if newsletter.sentAt is null %}
-                            <a class="btn btn-outline-secondary"
-                               href="{{ path("administration_newsletter_edit", {"newsletter" : newsletter.id}) }}">
-                                <i class="fal fa-pencil"></i>
-                            </a>
-                        {% endif %}
-                    </div>
+                    </p>
 
                     {% if approved_entries|length == 0 %}
                         <hr/>
-                        <p>{{ "curate.no_approved_entries"|trans }}</p>
+                        <p>{{ "entries.no_approved_entries"|trans }}</p>
                     {% else %}
                         <table class="table table-striped">
                             <thead>
@@ -68,7 +62,7 @@
 
             {% if new_entries|length > 0 %}
                 <div class="p-1 mt-5 mb-2">
-                    <h2>{{ "curate.new_entries"|trans }}</h2>
+                    <h2>{{ "entries.new_entries"|trans }}</h2>
                 </div>
 
                 {% for entry in new_entries %}

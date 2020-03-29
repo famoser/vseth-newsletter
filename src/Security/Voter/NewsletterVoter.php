@@ -11,7 +11,6 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Entry;
 use App\Entity\Newsletter;
 use App\Model\User;
 use App\Security\Voter\Base\BaseVoter;
@@ -37,13 +36,13 @@ class NewsletterVoter extends BaseVoter
      * It is safe to assume that $attribute and $subject already passed the "supports()" method check.
      *
      * @param string $attribute
-     * @param Entry $subject
+     * @param Newsletter $subject
      *
      * @return bool
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $newsletterNotSent = $subject->getNewsletter()->getSentAt() === null;
+        $newsletterNotSent = $subject->getSentAt() === null;
         $isAdmin = \in_array(User::ROLE_ADMIN, $token->getRoleNames(), true);
 
         switch ($attribute) {

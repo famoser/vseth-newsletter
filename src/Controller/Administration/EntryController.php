@@ -157,7 +157,7 @@ class EntryController extends BaseController
         $entry->setApprovedAt(new \DateTime());
         $this->fastSave($entry);
 
-        return $this->redirectToRoute('administration_newsletter_curate', ['newsletter' => $entry->getNewsletter()->getId()]);
+        return $this->redirectToRoute('administration_newsletter_entries', ['newsletter' => $entry->getNewsletter()->getId()]);
     }
 
     /**
@@ -174,7 +174,7 @@ class EntryController extends BaseController
         $entry->setApprovedAt(null);
         $this->fastSave($entry);
 
-        return $this->redirectToRoute('administration_newsletter_curate', ['newsletter' => $entry->getNewsletter()->getId()]);
+        return $this->redirectToRoute('administration_newsletter_entries', ['newsletter' => $entry->getNewsletter()->getId()]);
     }
 
     /**
@@ -191,7 +191,7 @@ class EntryController extends BaseController
                 $this->getTranslator()->trans('index.title', [], 'administration')
             ),
             new Breadcrumb(
-                $this->generateUrl('administration_newsletter_curate', ['newsletter' => $this->newsletter->getId()]),
+                $this->generateUrl('administration_newsletter', ['newsletter' => $this->newsletter->getId()]),
                 $this->getTranslator()->trans('curate.title', [], 'administration_newsletter')
             ),
         ]);

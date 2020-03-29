@@ -34,19 +34,13 @@
                     <td>
                         <div class="btn-group">
                             <a class="btn btn-primary"
-                               href="{{ path("administration_newsletter_curate", {"newsletter" : newsletter.id}) }}">
+                               href="{{ path("administration_newsletter", {"newsletter" : newsletter.id}) }}">
                                 {% if newsletter.sentAt is null %}
                                     <i class="fal fa-envelope-open"></i>
                                 {% else %}
                                     <i class="fal fa-envelope"></i>
                                 {% endif %}
                             </a>
-                            {% if newsletter.sentAt is null %}
-                                <a class="btn btn-outline-secondary"
-                                   href="{{ path("administration_newsletter_edit", {"newsletter" : newsletter.id}) }}">
-                                    <i class="fal fa-pencil"></i>
-                                </a>
-                            {% endif %}
                         </div>
                     </td>
                 </tr>

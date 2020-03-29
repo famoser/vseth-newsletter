@@ -36,6 +36,20 @@ class Newsletter extends BaseEntity
     private $plannedSendAt;
 
     /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $introductionDe;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $introductionEn;
+
+    /**
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -81,5 +95,25 @@ class Newsletter extends BaseEntity
     public function getEntries()
     {
         return $this->entries;
+    }
+
+    public function getIntroductionDe(): ?string
+    {
+        return $this->introductionDe;
+    }
+
+    public function setIntroductionDe(?string $introductionDe): void
+    {
+        $this->introductionDe = $introductionDe;
+    }
+
+    public function getIntroductionEn(): ?string
+    {
+        return $this->introductionEn;
+    }
+
+    public function setIntroductionEn(?string $introductionEn): void
+    {
+        $this->introductionEn = $introductionEn;
     }
 }

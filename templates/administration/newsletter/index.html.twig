@@ -1,0 +1,36 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ newsletter.plannedSendAt|dateFormat(false) }}{% endblock %}
+{% block description %}{{ "index.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_newsletter" %}
+
+{% block single_content %}
+    <div>
+        <span class="btn-group">
+            <a class="btn btn-outline-secondary"
+               href="{{ path('administration_newsletter_edit', {"newsletter" : newsletter.id}) }}">
+                <i class="fal fa-pencil"></i>
+            </a>
+        </span>
+
+        <span class="btn-group">
+            <a class="btn {% if moderate_entry_count == 0 %}btn-secondary{% else %}btn-secondary{% endif %}"
+               href="{{ path('administration_newsletter_entries', {"newsletter" : newsletter.id}) }}">
+                {{ "entries.title"|trans }} ({{ moderate_entry_count }})
+            </a>
+            <a class="btn btn-outline-secondary"
+               href="{{ path('administration_newsletter_change_order', {"newsletter" : newsletter.id}) }}">
+                {{ "change_order.title"|trans }}
+            </a>
+        </span>
+
+        <span class="btn-group">
+            <a class="btn btn-primary"
+               href="{{ path('administration_newsletter_send', {"newsletter" : newsletter.id}) }}">
+                {{ "send.title"|trans }}
+            </a>
+        </span>
+    </div>
+
+{% endblock %}

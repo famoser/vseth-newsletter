@@ -1,3 +1,7 @@
+index:
+  title: 'newsletter'
+  description: 'preview the newsletter'
+
 new:
   title: 'new newsletter'
   description: 'add a new newsletter'
@@ -6,8 +10,8 @@ edit:
   title: 'edit newsletter'
   description: 'change the newsletter'
 
-curate:
-  title: 'curate newsletter'
+entries:
+  title: 'curate entries'
   description: 'moderate which entries appear on the newsletter'
   approved_entries: 'approved entries'
   no_approved_entries: 'no approved entries yet'
@@ -16,3 +20,11 @@ curate:
 preview:
   title: 'preview newsletter'
   description: 'see how the newsletter will be sent'
+
+change_order:
+  title: 'change entry order'
+  description: 'move entries around until you like the ordering'
+
+send:
+  title: 'send'
+  description: 'send the newsletter'

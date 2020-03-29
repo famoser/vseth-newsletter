@@ -38,18 +38,23 @@ class LoadNewsletters extends BaseFixture
      */
     public function load(ObjectManager $manager)
     {
-        //prepare resources
         $newsletter = new Newsletter();
+        $introductionDe = 'Willkommen im Semester! Der VSETH hat wieder viele spannende Events für euch.';
+        $newsletter->setIntroductionDe($introductionDe);
+        $introductionEn = 'Welcome to the new semester! VSETH has again a lot to offer.';
+        $newsletter->setIntroductionEn($introductionEn);
+
+        //prepare resources
         $newsletter->setPlannedSendAt(new \DateTime('+1 week'));
         $manager->persist($newsletter);
 
-        $newsletter = new Newsletter();
-        $newsletter->setPlannedSendAt(new \DateTime('-2 weeks'));
-        $newsletter->setSentAt(new \DateTime('-2 weeks'));
+        $newsletter = clone $newsletter;
+        $newsletter->setPlannedSendAt(new \DateTime('+4 week'));
         $manager->persist($newsletter);
 
-        $newsletter = new Newsletter();
-        $newsletter->setPlannedSendAt(new \DateTime('+4 week'));
+        $newsletter = clone $newsletter;
+        $newsletter->setPlannedSendAt(new \DateTime('-2 weeks'));
+        $newsletter->setSentAt(new \DateTime('-2 weeks'));
         $manager->persist($newsletter);
 
         $manager->flush();

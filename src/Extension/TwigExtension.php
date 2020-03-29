@@ -59,12 +59,14 @@ class TwigExtension extends AbstractExtension
      *
      * @return string
      */
-    public function dateFormatFilter($date)
+    public function dateFormatFilter($date, $prependDay = true)
     {
         if ($date instanceof \DateTime) {
             $dateFormat = $this->translator->trans('time.format.date', [], 'framework');
 
-            return $this->prependDayName($date) . ', ' . $date->format($dateFormat);
+            $prepend = $prependDay ? $this->prependDayName($date) . ', ' : '';
+
+            return $prepend . $date->format($dateFormat);
         }
 
         return '-';

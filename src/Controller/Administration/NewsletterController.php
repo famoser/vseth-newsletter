@@ -26,12 +26,38 @@ use Symfony\Component\Routing\Annotation\Route;
 class NewsletterController extends BaseController
 {
     /**
+     * @var Newsletter
+     */
+    private $newsletter;
+
+    /**
+     * @Route("/{newsletter}", name="administration_newsletter")
+     *
+     * @return Response
+     */
+    public function indexAction(Newsletter $newsletter)
+    {
+        $entryRepository = $this->getDoctrine()->getRepository(Entry::class);
+        $entries = $entryRepository->findApprovedByNewsletter($newsletter->getId());
+        $moderateEntryCount = $entryRepository->count(['approvedAt' => null, 'rejectReason' => null, 'newsletter' => $newsletter->getId()]);
+
+        $this->newsletter = $newsletter;
+
+        return $this->render('administration/newsletter/index.html.twig', [
+            'newsletter' => $newsletter,
+            'moderate_entry_count' => $moderateEntryCount,
+        ]);
+    }
+
+    /**
      * @Route("/new", name="administration_newsletter_new")
      *
      * @return Response
      */
     public function newAction(Request $request)
     {
+        $newsletter = new Newsletter();
+
         /** @var Newsletter[] $lastNewsletters */
         $lastNewsletters = $this->getDoctrine()->getRepository(Newsletter::class)->findBy([], ['plannedSendAt' => 'DESC'], 2);
 
@@ -45,10 +71,12 @@ class NewsletterController extends BaseController
         }
 
         $newStart = $defaultStart->add($defaultDiff);
-
-        //create the event
-        $newsletter = new Newsletter();
         $newsletter->setPlannedSendAt($newStart);
+
+        if (\count($lastNewsletters) > 0) {
+            $newsletter->setIntroductionDe($lastNewsletters[0]->getIntroductionDe());
+            $newsletter->setIntroductionEn($lastNewsletters[0]->getIntroductionEn());
+        }
 
         //process form
         $myForm = $this->handleCreateForm($request, $newsletter);
@@ -74,15 +102,17 @@ class NewsletterController extends BaseController
             return $myForm;
         }
 
+        $this->newsletter = $newsletter;
+
         return $this->render('administration/newsletter/edit.html.twig', ['form' => $myForm->createView()]);
     }
 
     /**
-     * @Route("/{newsletter}/curate", name="administration_newsletter_curate")
+     * @Route("/{newsletter}/entries", name="administration_newsletter_entries")
      *
      * @return Response
      */
-    public function curateAction(Newsletter $newsletter)
+    public function entriesAction(Newsletter $newsletter)
     {
         /** @var Entry[] $approvedEntries */
         $approvedEntries = [];
@@ -96,7 +126,9 @@ class NewsletterController extends BaseController
             }
         }
 
-        return $this->render('administration/newsletter/curate.html.twig', [
+        $this->newsletter = $newsletter;
+
+        return $this->render('administration/newsletter/entries.html.twig', [
             'newsletter' => $newsletter,
             'approved_entries' => $approvedEntries,
             'new_entries' => $newEntries,
@@ -104,21 +136,36 @@ class NewsletterController extends BaseController
     }
 
     /**
-     * @Route("/{newsletter}/preview", name="administration_newsletter_preview")
+     * @Route("/{newsletter}/change_order", name="administration_newsletter_change_order")
      *
      * @return Response
      */
-    public function previewAction(Newsletter $newsletter)
+    public function changeOrderAction(Newsletter $newsletter)
     {
-        $approvedEntries = [];
-        foreach ($newsletter->getEntries() as $entry) {
-            if ($entry->getApprovedAt() !== null) {
-                $approvedEntries[] = $entry;
-            }
-        }
+        $entries = $this->getDoctrine()->getRepository(Entry::class)->findApprovedByNewsletter($newsletter->getId());
 
-        return $this->render('administration/newsletter/preview.html.twig', [
+        $this->newsletter = $newsletter;
+
+        return $this->render('administration/newsletter/change_order.html.twig', [
             'newsletter' => $newsletter,
+            'entries' => $entries,
+        ]);
+    }
+
+    /**
+     * @Route("/{newsletter}/send", name="administration_newsletter_send")
+     *
+     * @return Response
+     */
+    public function sendAction(Newsletter $newsletter)
+    {
+        $entries = $this->getDoctrine()->getRepository(Entry::class)->findApprovedByNewsletter($newsletter->getId());
+
+        $this->newsletter = $newsletter;
+
+        return $this->render('administration/newsletter/send.html.twig', [
+            'newsletter' => $newsletter,
+            'entries' => $entries,
         ]);
     }
 
@@ -129,11 +176,22 @@ class NewsletterController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        return array_merge(parent::getIndexBreadcrumbs(), [
+        $breadcrumbs = array_merge(parent::getIndexBreadcrumbs(), [
             new Breadcrumb(
                 $this->generateUrl('administration'),
                 $this->getTranslator()->trans('index.title', [], 'administration')
             ),
         ]);
+
+        if ($this->newsletter !== null) {
+            $breadcrumbs = array_merge($breadcrumbs, [
+                new Breadcrumb(
+                    $this->generateUrl('administration_newsletter', ['newsletter' => $this->newsletter->getId()]),
+                    $this->newsletter->getPlannedSendAt()->format('d.m.Y')
+                ),
+            ]);
+        }
+
+        return $breadcrumbs;
     }
 }
