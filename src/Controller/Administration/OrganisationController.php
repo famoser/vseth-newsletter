@@ -14,6 +14,7 @@ namespace App\Controller\Administration;
 use App\Controller\Administration\Base\BaseController;
 use App\Entity\Organisation;
 use App\Model\Breadcrumb;
+use App\Security\Voter\OrganisationVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -83,6 +84,8 @@ class OrganisationController extends BaseController
      */
     public function editAction(Request $request, Organisation $organisation)
     {
+        $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
+
         //process form
         $myForm = $this->handleUpdateForm($request, $organisation);
         if ($myForm instanceof Response) {
@@ -101,6 +104,8 @@ class OrganisationController extends BaseController
      */
     public function resetAuthenticationCodeAction(Organisation $organisation, TranslatorInterface $translator)
     {
+        $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
+
         $organisation->generateAuthenticationCode();
         $this->fastSave($organisation);
 
@@ -118,6 +123,8 @@ class OrganisationController extends BaseController
      */
     public function hideAction(Organisation $organisation, TranslatorInterface $translator)
     {
+        $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
+
         if ($organisation->getHiddenAt() === null) {
             $organisation->hide();
             $this->fastSave($organisation);
@@ -137,6 +144,8 @@ class OrganisationController extends BaseController
      */
     public function unhideAction(Organisation $organisation, TranslatorInterface $translator)
     {
+        $this->denyAccessUnlessGranted(OrganisationVoter::EDIT, $organisation);
+
         if ($organisation->getHiddenAt() !== null) {
             $organisation->unhide();
             $this->fastSave($organisation);

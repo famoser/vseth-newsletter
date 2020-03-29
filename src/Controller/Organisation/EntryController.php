@@ -15,13 +15,14 @@ use App\Controller\Administration\Base\BaseController;
 use App\Entity\Entry;
 use App\Entity\Organisation;
 use App\Model\Breadcrumb;
-use App\Security\Voter\Base\BaseVoter;
+use App\Security\Voter\EntryVoter;
+use App\Security\Voter\OrganisationVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/entry")
+ * @Route("/{organisation}/entry")
  */
 class EntryController extends BaseController
 {
@@ -37,12 +38,19 @@ class EntryController extends BaseController
      */
     public function newAction(Organisation $organisation, Request $request)
     {
-        $this->denyAccessUnlessGranted(BaseVoter::VIEW, $organisation);
+        $this->denyAccessUnlessGranted(OrganisationVoter::ADD_ENTRY, $organisation);
 
-        //create the event
-        $entry = new Entry();
+        if ($request->query->has('copy-id')) {
+            $cloneEntry = $this->getDoctrine()->getRepository(Entry::class)->find($request->query->get('copy-id'));
+            $this->denyAccessUnlessGranted(EntryVoter::VIEW, $cloneEntry);
+            $entry = clone $cloneEntry;
+        } else {
+            $entry = new Entry();
+            $entry->setOrganizer($organisation->getName());
+        }
+
         $entry->setOrganisation($organisation);
-        $entry->setOrganizer($organisation->getName());
+        $entry->setPriority($organisation->getCategory() * 1000 + \ord($organisation->getName()));
 
         //process form
         $form = $this->handleCreateForm($request, $entry);
@@ -62,7 +70,7 @@ class EntryController extends BaseController
      */
     public function editAction(Organisation $organisation, Request $request, Entry $entry)
     {
-        $this->ensureAccessGranted($entry);
+        $this->denyAccessUnlessGranted(EntryVoter::EDIT, $entry);
 
         $form = $this->handleUpdateForm($request, $entry);
         if ($form instanceof Response) {
@@ -81,7 +89,7 @@ class EntryController extends BaseController
      */
     public function removeAction(Organisation $organisation, Request $request, Entry $entry)
     {
-        $this->ensureAccessGranted($entry);
+        $this->denyAccessUnlessGranted(EntryVoter::EDIT, $entry);
 
         $form = $this->handleDeleteForm($request, $entry);
         if ($form === null) {
@@ -91,11 +99,6 @@ class EntryController extends BaseController
         $this->organisation = $organisation;
 
         return $this->render('organisation/entry/remove.html.twig', ['form' => $form->createView()]);
-    }
-
-    private function ensureAccessGranted(Entry $entry)
-    {
-        $this->denyAccessUnlessGranted(BaseVoter::VIEW, $entry);
     }
 
     /**

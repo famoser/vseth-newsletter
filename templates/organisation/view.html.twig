@@ -10,67 +10,49 @@
 {% block single_content %}
     <h2>{{ "view.hi"|trans }} {{ organisation.name }}</h2>
 
+    <p class="mt-4">
+        <a class="btn btn-primary" href="{{ path("organisation_entry_new", {"organisation": organisation.id}) }}">
+            <i class="fal fa-plus"></i>
+        </a>
+    </p>
     {% if entries|length == 0 %}
         <p>{{ "view.no_entries_added_yet"|trans({}, "organisation") }}</p>
     {% else %}
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>{{ "semester"|trans({}, "entity_event") }}</th>
-                <th>{{ "name"|trans({}, "entity_event") }}</th>
-                {% if internalFields %}
-                    <th>{{ "description"|trans({}, "entity_event") }}</th>
-                    <th>{{ "start_date"|trans({}, "entity_event") }}</th>
-                    <th>{{ "end_date"|trans({}, "entity_event") }}</th>
-                {% endif %}
-                <th>{{ "location"|trans({}, "entity_event") }}</th>
-                {% if internalFields %}
-                    <th>{{ "budget"|trans({}, "entity_event") }}</th>
-                    <th>{{ "need_financial_support"|trans({}, "entity_event") }}</th>
-                {% else %}
-                    <th>{{ "start_date"|trans({}, "entity_event") }}</th>
-                {% endif %}
-                {% if showEditButtons %}
-                    <th class="minimal-width"></th>
-                {% endif %}
+                <th>{{ "title"|trans({}, "entity_entry") }}</th>
+                <th>{{ "description"|trans({}, "entity_entry") }}</th>
+                <th>{{ "start_at"|trans({}, "entity_entry") }}</th>
+                <th>{{ "location"|trans({}, "entity_entry") }}</th>
+                <th>{{ "entity.name"|trans({}, "entity_newsletter") }}</th>
+                <th class="minimal-width"></th>
             </tr>
             </thead>
             <tbody>
-
-            {% for event in organisation.events %}
+            {% for entry in organisation.entries %}
                 <tr>
-                    <td>{{ event.semesterName }}</td>
-                    <td>{{ event.name }}</td>
-                    {% if internalFields %}
-                        <td>{{ event.description }}</td>
-                        <td>{{ event.startDate|dateTimeFormat }}</td>
-                        <td>{{ event.endDate|dateTimeFormat }}</td>
-                    {% endif %}
-                    <td>{{ event.location }}</td>
-                    {% if internalFields %}
-                        <td>+{{ event.revenue }} / -{{ event.expenditure }} </td>
-                        <td>{{ event.needFinancialSupport|booleanFormat }}</td>
-                    {% else %}
-                        <td>{{ event.startDate|dateTimeFormat }}</td>
-                    {% endif %}
-                    {% if showEditButtons %}
-                        <td>
-                            <div class="btn-group">
-                                <a class="btn btn-light"
-                                   href="{{ path("organisation_event_copy", {"organisation" : organisation.id, "event": event.id}) }}">
-                                    <i class="fal fa-copy"></i>
-                                </a>
-                                <a class="btn btn-secondary"
-                                   href="{{ path("organisation_event_edit", {"organisation" : organisation.id, "event": event.id}) }}">
-                                    <i class="fal fa-pencil"></i>
-                                </a>
-                                <a class="btn btn-danger"
-                                   href="{{ path("organisation_event_remove", {"organisation" : organisation.id, "event": event.id}) }}">
-                                    <i class="fal fa-trash"></i>
-                                </a>
-                            </div>
-                        </td>
-                    {% endif %}
+                    <td>{{ entry.titleEn }}</td>
+                    <td>{{ entry.descriptionEn|truncate(50) }}</td>
+                    <td>{{ entry.startAt|dateTimeFormat }}</td>
+                    <td>{{ entry.location }}</td>
+                    <td>{{ entry.newsletter.plannedSendAt|dateFormat }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a class="btn btn-light"
+                               href="{{ path("organisation_entry_new", {"organisation" : organisation.id, "copy-id": entry.id}) }}">
+                                <i class="fal fa-copy"></i>
+                            </a>
+                            <a class="btn btn-secondary"
+                               href="{{ path("organisation_entry_edit", {"organisation" : organisation.id, "entry": entry.id}) }}">
+                                <i class="fal fa-pencil"></i>
+                            </a>
+                            <a class="btn btn-danger"
+                               href="{{ path("organisation_entry_remove", {"organisation" : organisation.id, "entry": entry.id}) }}">
+                                <i class="fal fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

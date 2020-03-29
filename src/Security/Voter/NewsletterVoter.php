@@ -19,6 +19,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class NewsletterVoter extends BaseVoter
 {
+    const ADD_ENTRY = 10;
+
     /**
      * @param string $attribute An attribute
      * @param mixed $subject The subject to secure, e.g. an object the user wants to access or any other PHP type
@@ -41,10 +43,18 @@ class NewsletterVoter extends BaseVoter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        if (!\in_array(User::ROLE_ADMIN, $token->getRoleNames(), true)) {
-            return false;
+        $newsletterNotSent = $subject->getNewsletter()->getSentAt() === null;
+        $isAdmin = \in_array(User::ROLE_ADMIN, $token->getRoleNames(), true);
+
+        switch ($attribute) {
+            case self::VIEW:
+                return true;
+            case self::ADD_ENTRY:
+                return $newsletterNotSent;
+            case self::EDIT:
+                return $newsletterNotSent && $isAdmin;
         }
 
-        return $subject->getSentAt() === null;
+        return false;
     }
 }

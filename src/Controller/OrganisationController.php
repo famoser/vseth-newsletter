@@ -31,7 +31,7 @@ class OrganisationController extends BaseController
      */
     public function viewAction(Organisation $organisation)
     {
-        $this->ensureAccessGranted($organisation);
+        $this->denyAccessUnlessGranted(BaseVoter::VIEW, $organisation);
 
         // remember last visit
         if (\in_array(User::ROLE_ORGANISATION, $this->getUser()->getRoles(), true)) {
@@ -42,10 +42,5 @@ class OrganisationController extends BaseController
         $entries = $this->getDoctrine()->getRepository(Entry::class)->findBy(['organisation' => $organisation->getId()]);
 
         return $this->render('organisation/view.html.twig', ['entries' => $entries, 'organisation' => $organisation]);
-    }
-
-    private function ensureAccessGranted(Organisation $organisation)
-    {
-        $this->denyAccessUnlessGranted(BaseVoter::VIEW, $organisation);
     }
 }

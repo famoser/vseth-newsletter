@@ -18,6 +18,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class OrganisationVoter extends BaseVoter
 {
+    const ADD_ENTRY = 10;
+
     /**
      * @param string $attribute An attribute
      * @param mixed $subject The subject to secure, e.g. an object the user wants to access or any other PHP type
@@ -40,6 +42,18 @@ class OrganisationVoter extends BaseVoter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        return \in_array(User::ROLE_ADMIN, $token->getRoleNames(), true) || ($subject->getEmail() === $token->getUser()->getUsername());
+        $isAdmin = \in_array(User::ROLE_ADMIN, $token->getRoleNames(), true);
+        $isOwner = $subject->getEmail() === $token->getUser()->getUsername();
+
+        switch ($attribute) {
+            case self::VIEW:
+                return true;
+            case self::ADD_ENTRY:
+                return $isAdmin || $isOwner;
+            case self::EDIT:
+                return $isAdmin;
+        }
+
+        return false;
     }
 }

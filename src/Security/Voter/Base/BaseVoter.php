@@ -17,6 +17,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 abstract class BaseVoter extends Voter
 {
     const VIEW = 2;
+    const EDIT = 3;
 
     /**
      * @param string $attribute
@@ -26,6 +27,6 @@ abstract class BaseVoter extends Voter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        return $attribute === self::VIEW;
+        return $attribute === self::VIEW || $attribute === self::EDIT;
     }
 }

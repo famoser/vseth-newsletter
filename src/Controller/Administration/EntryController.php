@@ -16,7 +16,8 @@ use App\Entity\Entry;
 use App\Entity\Newsletter;
 use App\Form\Entry\RejectEntryType;
 use App\Model\Breadcrumb;
-use App\Security\Voter\Base\BaseVoter;
+use App\Security\Voter\EntryVoter;
+use App\Security\Voter\NewsletterVoter;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -38,9 +39,9 @@ class EntryController extends BaseController
      *
      * @return Response
      */
-    public function newAction(Request $request, Newsletter $newsletter, TranslatorInterface $translator)
+    public function newAction(Request $request, Newsletter $newsletter)
     {
-        $this->denyAccessUnlessGranted(BaseVoter::VIEW, $newsletter);
+        $this->denyAccessUnlessGranted(NewsletterVoter::ADD_ENTRY, $newsletter);
 
         //create the entry
         $entry = new Entry();
@@ -67,9 +68,9 @@ class EntryController extends BaseController
      *
      * @return Response
      */
-    public function editAction(Request $request, Entry $entry, TranslatorInterface $translator)
+    public function editAction(Request $request, Entry $entry)
     {
-        $this->ensureAccessGranted($entry);
+        $this->denyAccessUnlessGranted(EntryVoter::EDIT, $entry);
 
         $form = $this->handleUpdateForm($request, $entry);
         if ($form instanceof Response) {
@@ -111,7 +112,7 @@ class EntryController extends BaseController
      */
     public function rejectAction(Request $request, Entry $entry, TranslatorInterface $translator)
     {
-        $this->ensureAccessGranted($entry);
+        $this->denyAccessUnlessGranted(EntryVoter::EDIT, $entry);
 
         //create persist callable
         $myOnSuccessCallable = function () use ($entry, $translator) {
@@ -151,7 +152,7 @@ class EntryController extends BaseController
      */
     public function approveAction(Entry $entry)
     {
-        $this->ensureAccessGranted($entry);
+        $this->denyAccessUnlessGranted(EntryVoter::EDIT, $entry);
 
         $entry->setApprovedAt(new \DateTime());
         $this->fastSave($entry);
@@ -168,17 +169,12 @@ class EntryController extends BaseController
      */
     public function disapproveAction(Entry $entry)
     {
-        $this->ensureAccessGranted($entry);
+        $this->denyAccessUnlessGranted(EntryVoter::EDIT, $entry);
 
         $entry->setApprovedAt(null);
         $this->fastSave($entry);
 
         return $this->redirectToRoute('administration_newsletter_curate', ['newsletter' => $entry->getNewsletter()->getId()]);
-    }
-
-    private function ensureAccessGranted(Entry $entry)
-    {
-        $this->denyAccessUnlessGranted(BaseVoter::VIEW, $entry);
     }
 
     /**

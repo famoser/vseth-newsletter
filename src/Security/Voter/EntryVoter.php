@@ -40,10 +40,19 @@ class EntryVoter extends BaseVoter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        if (\in_array(User::ROLE_ADMIN, $token->getRoleNames(), true)) {
-            return true;
+        $allowedToAccess =
+            \in_array(User::ROLE_ADMIN, $token->getRoleNames(), true) ||
+            $subject->getOrganisation()->getEmail() === $token->getUser()->getUsername();
+
+        $newsletterNotSent = $subject->getNewsletter()->getSentAt() === null;
+
+        switch ($attribute) {
+            case self::VIEW:
+                return $allowedToAccess;
+            case self::EDIT:
+                return $allowedToAccess && $newsletterNotSent;
         }
 
-        return $subject->getOrganisation()->getEmail() === $token->getUser()->getUsername();
+        return false;
     }
 }

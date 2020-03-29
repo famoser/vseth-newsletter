@@ -15,6 +15,7 @@ use App\Controller\Administration\Base\BaseController;
 use App\Entity\Entry;
 use App\Entity\Newsletter;
 use App\Model\Breadcrumb;
+use App\Security\Voter\NewsletterVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,6 +66,8 @@ class NewsletterController extends BaseController
      */
     public function editAction(Request $request, Newsletter $newsletter)
     {
+        $this->denyAccessUnlessGranted(NewsletterVoter::EDIT, $newsletter);
+
         //process form
         $myForm = $this->handleUpdateForm($request, $newsletter);
         if ($myForm instanceof Response) {
