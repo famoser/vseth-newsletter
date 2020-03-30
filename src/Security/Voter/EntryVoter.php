@@ -12,7 +12,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Entry;
-use App\Model\User;
+use App\Model\UserModel;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -41,7 +41,7 @@ class EntryVoter extends BaseVoter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $allowedToAccess =
-            \in_array(User::ROLE_ADMIN, $token->getRoleNames(), true) ||
+            \in_array(UserModel::ROLE_ADMIN, $token->getRoleNames(), true) ||
             $subject->getOrganisation()->getEmail() === $token->getUser()->getUsername();
 
         $newsletterNotSent = $subject->getNewsletter()->getSentAt() === null;

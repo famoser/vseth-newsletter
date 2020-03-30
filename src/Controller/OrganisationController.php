@@ -14,7 +14,7 @@ namespace App\Controller;
 use App\Controller\Administration\Base\BaseController;
 use App\Entity\Entry;
 use App\Entity\Organisation;
-use App\Model\User;
+use App\Model\UserModel;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,7 +34,7 @@ class OrganisationController extends BaseController
         $this->denyAccessUnlessGranted(BaseVoter::VIEW, $organisation);
 
         // remember last visit
-        if (\in_array(User::ROLE_ORGANISATION, $this->getUser()->getRoles(), true)) {
+        if (\in_array(UserModel::ROLE_ORGANISATION, $this->getUser()->getRoles(), true)) {
             $organisation->setVisitOccurred();
             $this->fastSave($organisation);
         }

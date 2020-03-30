@@ -12,7 +12,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Newsletter;
-use App\Model\User;
+use App\Model\UserModel;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -43,7 +43,7 @@ class NewsletterVoter extends BaseVoter
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         $newsletterNotSent = $subject->getSentAt() === null;
-        $isAdmin = \in_array(User::ROLE_ADMIN, $token->getRoleNames(), true);
+        $isAdmin = \in_array(UserModel::ROLE_ADMIN, $token->getRoleNames(), true);
 
         switch ($attribute) {
             case self::VIEW:

@@ -12,7 +12,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Organisation;
-use App\Model\User;
+use App\Model\UserModel;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -42,7 +42,7 @@ class OrganisationVoter extends BaseVoter
      */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        $isAdmin = \in_array(User::ROLE_ADMIN, $token->getRoleNames(), true);
+        $isAdmin = \in_array(UserModel::ROLE_ADMIN, $token->getRoleNames(), true);
         $isOwner = $subject->getEmail() === $token->getUser()->getUsername();
 
         switch ($attribute) {

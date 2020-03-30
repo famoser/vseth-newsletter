@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/newsletter")
@@ -160,13 +161,15 @@ class NewsletterController extends BaseController
      *
      * @return Response
      */
-    public function sendAction(Request $request, Newsletter $newsletter, NewsletterServiceInterface $newsletterService)
+    public function sendAction(Request $request, Newsletter $newsletter, NewsletterServiceInterface $newsletterService, TranslatorInterface $translator)
     {
-        $entries = $this->getDoctrine()->getRepository(Entry::class)->findApprovedByNewsletter($newsletter->getId());
+        $testEmail = $this->getParameter('TEST_NEWSLETTER_EMAIL');
+        $warningMessage = $translator->trans('send.checked_test_email', ['%email%' => $testEmail], 'administration_newsletter');
+        $confirmButton = $translator->trans('send.send_to_all', [], 'administration_newsletter');
 
         $form = $this->createFormBuilder()
-            ->add('checkedTestEmail', CheckboxType::class)
-            ->add('confirm', SubmitType::class)
+            ->add('checkedTestEmail', CheckboxType::class, ['translation_domain' => false, 'label' => $warningMessage])
+            ->add('sendToAll', SubmitType::class, ['translation_domain' => false, 'label' => $confirmButton])
             ->getForm();
 
         $sent = false;
@@ -179,16 +182,17 @@ class NewsletterController extends BaseController
         });
 
         if ($sent) {
+            $successMessage = $translator->trans('send.sent', [], 'administration_newsletter');
+            $this->displaySuccess($successMessage);
+
             return $this->redirectToRoute('administration_newsletter', ['newsletter' => $newsletter->getId()]);
         }
+
         $newsletterService->sendTest($newsletter);
 
         $this->newsletter = $newsletter;
 
-        return $this->render('administration/newsletter/send.html.twig', [
-            'newsletter' => $newsletter,
-            'entries' => $entries,
-        ]);
+        return $this->render('administration/newsletter/send.html.twig', ['form' => $form->createView()]);
     }
 
     /**

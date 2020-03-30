@@ -4,6 +4,8 @@ parameters:
   DATABASE_URL: '%env(DATABASE_URL)%'
   MAILER_URL: '%env(MAILER_URL)%'
   REPLY_EMAIL: '%env(REPLY_EMAIL)%'
+  TEST_NEWSLETTER_EMAIL: '%env(TEST_NEWSLETTER_EMAIL)%'
+  NEWSLETTER_EMAIL: '%env(NEWSLETTER_EMAIL)%'
   ADMIN_PASSWORD: '%env(ADMIN_PASSWORD)%'
   PUBLIC_DIR: "%kernel.project_dir%/public"
   UPLOAD_DIR: "%kernel.project_dir%/var/upload"

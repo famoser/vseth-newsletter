@@ -28,3 +28,6 @@ change_order:
 send:
   title: 'send'
   description: 'send the newsletter'
+  checked_test_email: "I have checked the test newsletter sent to %email% and confirm all looks good."
+  send_to_all: "publish newsletter"
+  sent: 'newsletter sent!'
