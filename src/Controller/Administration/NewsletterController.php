@@ -157,6 +157,16 @@ class NewsletterController extends BaseController
     }
 
     /**
+     * @Route("/{newsletter}/preview", name="administration_newsletter_preview")
+     *
+     * @return Response
+     */
+    public function previewAction(Newsletter $newsletter)
+    {
+        return $this->render('email/newsletter.html.twig', ['newsletter' => $newsletter]);
+    }
+
+    /**
      * @Route("/{newsletter}/send", name="administration_newsletter_send")
      *
      * @return Response

@@ -531,6 +531,12 @@
     "symfony/yaml": {
         "version": "v3.4.2"
     },
+    "tijsverkoyen/css-to-inline-styles": {
+        "version": "2.2.2"
+    },
+    "twig/cssinliner-extra": {
+        "version": "v3.0.3"
+    },
     "twig/extensions": {
         "version": "1.0",
         "recipe": {
@@ -542,6 +548,9 @@
         "files": [
             "config/packages/twig_extensions.yaml"
         ]
+    },
+    "twig/extra-bundle": {
+        "version": "v3.0.3"
     },
     "twig/twig": {
         "version": "v2.4.4"

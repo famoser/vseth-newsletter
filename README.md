@@ -15,3 +15,12 @@ Testing:
 
 Release:
  - execute `./vendor/bin/agnes release v1.0 master` to create release `v1.0` from master (ensure the GITHUB_AUTH_TOKEN in `.env` is set)
+
+
+
+
+newsletter notes:
+https://twig.symfony.com/doc/2.x/filters/inline_css.html
+https://symfonycasts.com/screencast/mailer/inky
+https://symfonycasts.com/screencast/mailer/encore-css#play
+https://get.foundation/emails/docs/css-guide.html

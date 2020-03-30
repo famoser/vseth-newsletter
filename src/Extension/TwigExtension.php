@@ -14,17 +14,33 @@ namespace App\Extension;
 use App\Enum\BooleanType;
 use App\Enum\OrganisationCategoryType;
 use DateTime;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 
-class TwigExtension extends AbstractExtension
+class TwigExtension extends AbstractExtension implements ServiceSubscriberInterface
 {
     private $translator;
+    private $container;
+    private $publicDir;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, ContainerInterface $container, ParameterBagInterface $parameterBag)
     {
         $this->translator = $translator;
+        $this->container = $container;
+        $this->publicDir = $parameterBag->get('PUBLIC_DIR');
+    }
+
+    public static function getSubscribedServices()
+    {
+        return [
+            EntrypointLookupInterface::class,
+        ];
     }
 
     /**
@@ -42,6 +58,27 @@ class TwigExtension extends AbstractExtension
             new TwigFilter('organisationCategoryText', [$this, 'organisationCategoryTextFilter']),
             new TwigFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
         ];
+    }
+
+    public function getFunctions()
+    {
+        return [
+            new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
+        ];
+    }
+
+    public function getEncoreEntryCssSource(string $entryName): string
+    {
+        $files = $this->container
+            ->get(EntrypointLookupInterface::class)
+            ->getCssFiles($entryName);
+
+        $source = '';
+        foreach ($files as $file) {
+            $source .= file_get_contents($this->publicDir . '/' . $file);
+        }
+
+        return $source;
     }
 
     /**

@@ -2,10 +2,10 @@ var Encore = require("@symfony/webpack-encore");
 
 Encore
 // the project directory where all compiled assets will be stored
-    .setOutputPath("public/dist/")
+    .setOutputPath("public/build/")
 
     // the public path used by the web server to access the previous directory
-    .setPublicPath("/dist")
+    .setPublicPath("/build")
 
     .copyFiles({
         from: './assets/images',
@@ -13,6 +13,7 @@ Encore
     })
 
     // will create public/build/app.js and public/build/app.css
+    .addStyleEntry('email', './assets/sass/email.sass')
     .addEntry("app", "./assets/js/app.js")
 
     .enableSingleRuntimeChunk()
