@@ -11,7 +11,17 @@
 
 namespace App\Service\Interfaces;
 
-interface EmailServiceInterface
+use App\Entity\Newsletter;
+
+interface NewsletterServiceInterface
 {
-    public function sendEmail(string $receiver, string $subject, string $body);
+    /**
+     * @return bool
+     */
+    public function send(Newsletter $newsletter);
+
+    /**
+     * @return bool
+     */
+    public function sendTest(Newsletter $newsletter);
 }

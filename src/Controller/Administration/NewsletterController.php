@@ -16,6 +16,9 @@ use App\Entity\Entry;
 use App\Entity\Newsletter;
 use App\Model\Breadcrumb;
 use App\Security\Voter\NewsletterVoter;
+use App\Service\Interfaces\NewsletterServiceInterface;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -157,9 +160,28 @@ class NewsletterController extends BaseController
      *
      * @return Response
      */
-    public function sendAction(Newsletter $newsletter)
+    public function sendAction(Request $request, Newsletter $newsletter, NewsletterServiceInterface $newsletterService)
     {
         $entries = $this->getDoctrine()->getRepository(Entry::class)->findApprovedByNewsletter($newsletter->getId());
+
+        $form = $this->createFormBuilder()
+            ->add('checkedTestEmail', CheckboxType::class)
+            ->add('confirm', SubmitType::class)
+            ->getForm();
+
+        $sent = false;
+        $this->handleForm($form, $request, function () use (&$sent, $newsletter, $newsletterService) {
+            $sent = true;
+            $newsletterService->send($newsletter);
+
+            $newsletter->setSentAt(new \DateTime());
+            $this->fastSave($newsletter);
+        });
+
+        if ($sent) {
+            return $this->redirectToRoute('administration_newsletter', ['newsletter' => $newsletter->getId()]);
+        }
+        $newsletterService->sendTest($newsletter);
 
         $this->newsletter = $newsletter;
 
