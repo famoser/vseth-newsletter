@@ -1,4 +1,4 @@
-{% apply inline_css(source(encore_entry_css_files("email")|first)) %}
+{% apply inline_css(encore_entry_css_source("email")) %}
 <!-- Emails use the XHTML Strict doctype -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="https://www.w3.org/1999/xhtml">
@@ -6,11 +6,6 @@
     <!-- The character set should be utf-8 -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width"/>
-    <!-- Link to the email's CSS, which will be inlined into the email -->
-    <link rel="stylesheet" href="assets/css/foundation-emails.css">
-    <style>
-
-    </style>
 </head>
 
 <body>
@@ -20,7 +15,8 @@
         <!-- The class, align, and <center> tag center the container -->
         <td class="float-center" align="center" valign="top">
             <center>
-                hi
+                {# fix encore server as soon as 24.4 released https://symfony.com/doc/master/frontend/encore/dev-server.html #}
+                <img title="VSETH logo" src="{{ load_public_file('build/images/vseth_Logo_bylines.png')|data_uri }}" />
             </center>
         </td>
     </tr>

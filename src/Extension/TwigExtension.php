@@ -14,33 +14,24 @@ namespace App\Extension;
 use App\Enum\BooleanType;
 use App\Enum\OrganisationCategoryType;
 use DateTime;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
-class TwigExtension extends AbstractExtension implements ServiceSubscriberInterface
+class TwigExtension extends AbstractExtension
 {
     private $translator;
-    private $container;
+    private $entrypointLookup;
     private $publicDir;
 
-    public function __construct(TranslatorInterface $translator, ContainerInterface $container, ParameterBagInterface $parameterBag)
+    public function __construct(TranslatorInterface $translator, ParameterBagInterface $parameterBag, EntrypointLookupInterface $entrypointLookup)
     {
         $this->translator = $translator;
-        $this->container = $container;
+        $this->entrypointLookup = $entrypointLookup;
         $this->publicDir = $parameterBag->get('PUBLIC_DIR');
-    }
-
-    public static function getSubscribedServices()
-    {
-        return [
-            EntrypointLookupInterface::class,
-        ];
     }
 
     /**
@@ -64,13 +55,13 @@ class TwigExtension extends AbstractExtension implements ServiceSubscriberInterf
     {
         return [
             new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
+            new TwigFunction('load_public_file', [$this, 'loadPublicFile']),
         ];
     }
 
     public function getEncoreEntryCssSource(string $entryName): string
     {
-        $files = $this->container
-            ->get(EntrypointLookupInterface::class)
+        $files = $this->entrypointLookup
             ->getCssFiles($entryName);
 
         $source = '';
@@ -79,6 +70,13 @@ class TwigExtension extends AbstractExtension implements ServiceSubscriberInterf
         }
 
         return $source;
+    }
+
+    public function loadPublicFile(string $entryName): string
+    {
+        $path = $this->publicDir . '/' . $entryName;
+
+        return file_get_contents($path);
     }
 
     /**

@@ -6,7 +6,6 @@ trace.html
 
 # deployment
 servers.yml
-public/dist/*
 public/build/*
 
 # debug
