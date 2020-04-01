@@ -123,13 +123,14 @@ class TwigExtension extends AbstractExtension
 
     /**
      * @param $date
+     * @param string|null $locale
      *
      * @return string
      */
-    public function dateTimeFilter($date)
+    public function dateTimeFilter($date, $locale = null)
     {
         if ($date instanceof \DateTime) {
-            $dateTimeFormat = $this->translator->trans('time.format.date_time', [], 'framework');
+            $dateTimeFormat = $this->translator->trans('time.format.date_time', [], 'framework', $locale);
 
             return $this->prependDayName($date) . ', ' . $date->format($dateTimeFormat);
         }

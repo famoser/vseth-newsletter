@@ -8,6 +8,7 @@
     "ext-json": "*",
     "ext-pdo": "*",
     "ext-pdo_sqlite": "*",
+    "ext-xsl": "*",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
     "eluceo/ical": "^0.16.0",
     "payrexx/payrexx": "^1.6",
@@ -39,7 +40,8 @@
     "twig/cssinliner-extra": "^3.0",
     "twig/extensions": "^1.5",
     "twig/extra-bundle": "^3.0",
-    "twig/html-extra": "^3.0"
+    "twig/html-extra": "^3.0",
+    "twig/inky-extra": "^3.0"
   },
   "require-dev": {
     "brainmaestro/composer-git-hooks": "^2.6",

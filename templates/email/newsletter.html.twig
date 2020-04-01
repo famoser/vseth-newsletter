@@ -1,26 +1,94 @@
-{% apply inline_css(encore_entry_css_source("email")) %}
-<!-- Emails use the XHTML Strict doctype -->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="https://www.w3.org/1999/xhtml">
-<head>
-    <!-- The character set should be utf-8 -->
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width"/>
-</head>
+{# fix encore server as soon as 24.4 released https://symfony.com/doc/master/frontend/encore/dev-server.html #}
+{% apply inky_to_html|inline_css(encore_entry_css_source("email")) %}
+    <!-- Emails use the XHTML Strict doctype -->
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html xmlns="https://www.w3.org/1999/xhtml">
+    <head>
+        <!-- The character set should be utf-8 -->
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <meta name="viewport" content="width=device-width"/>
+    </head>
 
-<body>
-<!-- Wrapper for the body of the email -->
-<table class="body" data-made-with-foundation>
-    <tr>
-        <!-- The class, align, and <center> tag center the container -->
-        <td class="float-center" align="center" valign="top">
-            <center>
-                {# fix encore server as soon as 24.4 released https://symfony.com/doc/master/frontend/encore/dev-server.html #}
-                <img title="VSETH logo" src="{{ load_public_file('build/images/vseth_Logo_bylines.png')|data_uri }}" />
-            </center>
-        </td>
-    </tr>
-</table>
-</body>
-</html>
+    <body>
+    <!-- Wrapper for the body of the email -->
+    <table class="body" data-made-with-foundation>
+        <tr>
+            <!-- The class, align, and <center> tag center the container -->
+            <td class="float-center" align="center" valign="top">
+                <center>
+                    <spacer size="20"></spacer>
+                    <img class="logo" alt="VSETH logo"
+                         src="{{ load_public_file('build/images/vseth_Logo_bylines.png')|data_uri }}"/>
+                    <spacer size="20"></spacer>
+                    <p class="text-center">({{ "newsletter.english_below"|trans({}, "email", "en") }})</p>
+                    <spacer size="20"></spacer>
+                    <container id="de" name="de">
+                        <row>
+                            <columns small="12" large="12">
+                                <spacer size="10"></spacer>
+                                <h1>{{ "newsletter.title"|trans({}, "email", "de") }}</h1>
+                                <p>{{ newsletter.introductionDe }}</p>
+                            </columns>
+                        </row>
+
+                        <row>
+                            <columns small="12" large="12">
+                                <ul>
+                                    {% set item_count = 0 %}
+                                    {% for entry in newsletter.entries %}
+                                        {% if entry.approvedAt is not null %}
+                                            {% if item_count % 5 == 4 %}
+                                                <spacer size="20"></spacer>
+                                            {% endif %}
+                                            {% set item_count = item_count + 1 %}
+                                            <li>
+                                                <a href="#{{ entry.id }}">
+                                                    {{ entry.organizer }}: {{ entry.titleDe }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </columns>
+                        </row>
+
+                        {% for entry in newsletter.entries %}
+                            {% if entry.approvedAt is not null %}
+                                <callout id="{{ entry.id }}" name="{{ entry.id }}"">
+                                    <row>
+                                        <columns small="12">
+                                            <h2>{{ entry.organizer }}: {{ entry.titleDe }}</h2>
+                                            <p>{{ entry.descriptionDe }}
+                                                {% if entry.linkDe is not null %}
+                                                    <a href="{{ entry.linkDe }}">{{ "newsletter.more"|trans({}, "email", "de") }}</a>
+                                                {% endif %}
+                                            </p>
+                                            {% if entry.location is not null or entry.startAt is not null %}
+                                                <p class="secondary">
+                                                    {% if entry.startAt is not null %}
+                                                        {{ entry.startAt|dateTimeFormat("de") }}
+                                                        {% if entry.endAt is not null %}
+                                                            - {{ entry.endAt|dateTimeFormat("de") }}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    {% if entry.location is not null %}
+                                                        {% if entry.startAt is not null %}
+                                                            |
+                                                        {% endif %}
+                                                        {{ entry.location }}
+                                                    {% endif %}
+                                                </p>
+                                            {% endif %}
+                                        </columns>
+                                    </row>
+                                </callout>
+                            {% endif %}
+                        {% endfor %}
+                    </container>
+                </center>
+            </td>
+        </tr>
+    </table>
+    </body>
+    </html>
 {% endapply %}

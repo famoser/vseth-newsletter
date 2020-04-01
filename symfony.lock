@@ -128,6 +128,9 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "lorenzo/pinky": {
+        "version": "1.0.5"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
     },
@@ -553,6 +556,9 @@
         "version": "v3.0.3"
     },
     "twig/html-extra": {
+        "version": "v3.0.3"
+    },
+    "twig/inky-extra": {
         "version": "v3.0.3"
     },
     "twig/twig": {
