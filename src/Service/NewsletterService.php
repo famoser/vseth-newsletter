@@ -14,15 +14,15 @@ namespace App\Service;
 use App\Entity\Newsletter;
 use App\Service\Interfaces\NewsletterServiceInterface;
 use Psr\Log\LoggerInterface;
-use Swift_Mailer;
-use Swift_Message;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Twig\Environment;
 
 class NewsletterService implements NewsletterServiceInterface
 {
     /**
-     * @var Swift_Mailer
+     * @var MailerInterface
      */
     private $mailer;
 
@@ -54,7 +54,7 @@ class NewsletterService implements NewsletterServiceInterface
     /**
      * EmailService constructor.
      */
-    public function __construct(Swift_Mailer $mailer, LoggerInterface $logger, Environment $twig, ParameterBagInterface $parameterBag)
+    public function __construct(MailerInterface $mailer, LoggerInterface $logger, Environment $twig, ParameterBagInterface $parameterBag)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
@@ -87,14 +87,15 @@ class NewsletterService implements NewsletterServiceInterface
      */
     private function sendNewsletterTo(Newsletter $newsletter, string $receiver)
     {
-        $message = (new Swift_Message())
-            ->setSubject('Newsletter')
-            ->setFrom($this->replyEmail)
-            ->setReplyTo($this->replyEmail)
-            ->setTo($receiver);
+        $message = (new TemplatedEmail())
+            ->subject('Newsletter')
+            ->from($this->replyEmail)
+            ->replyTo($this->replyEmail)
+            ->to($receiver);
 
-        $message->setBody($this->twig->render('email/newsletter.plain.twig', ['newsletter' => $newsletter]), 'text/plain');
-        $message->addPart($this->twig->render('email/newsletter.html.twig', ['newsletter' => $newsletter]), 'text/html');
+        $message->htmlTemplate('email/newsletter.html.twig')
+            ->textTemplate('email/newsletter.txt.twig')
+            ->context(['newsletter' => $newsletter]);
 
         //send message & check if at least one receiver was reached
         return $this->mailer->send($message) > 0;

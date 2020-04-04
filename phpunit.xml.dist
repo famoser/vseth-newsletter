@@ -19,6 +19,10 @@
         <env name="REPLY_EMAIL" value="info@example.com"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
         <env name="ADMIN_PASSWORD" value="text"/>
+
+        <!-- ###+ symfony/mailer ### -->
+        <!-- MAILER_DSN=smtp://localhost -->
+        <!-- ###- symfony/mailer ### -->
     </php>
 
     <testsuites>
