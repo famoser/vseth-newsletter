@@ -64,8 +64,8 @@ class LoadEntries extends BaseFixture
                 $entry->setNewsletter($newsletter);
 
                 if ($startIndex++ % self::START_FREQUENCY !== 0) {
-                    $newsletterDate = $newsletter->getPlannedSendAt();
-                    $start = $newsletterDate->add(new \DateInterval('P10D'));
+                    $newsletterDate = clone $newsletter->getPlannedSendAt();
+                    $start = clone $newsletterDate->add(new \DateInterval('P10D'));
                     $end = $newsletterDate->add(new \DateInterval('P10DT2H'));
                     $entry->setStartAt($start);
                     $entry->setEndAt($end);
@@ -75,7 +75,47 @@ class LoadEntries extends BaseFixture
             }
         }
 
+        /** @var Entry[] $randoms */
+        $randoms = $this->loadSomeRandoms($manager, 30);
+        foreach ($randoms as $random) {
+            $randomOrganisation = $organisations[rand(0, \count($organisations) - 1)];
+            $random->setOrganisation($randomOrganisation);
+            $random->setOrganizer($randomOrganisation->getName());
+            $random->setNewsletter($newsletters[0]);
+        }
+
         $manager->flush();
+    }
+
+    protected function getRandomInstance()
+    {
+        $faker = $this->getFaker();
+
+        $entry = new Entry();
+        $entry->setPriority($faker->numberBetween(0, 10000));
+        $entry->setTitleDe($faker->text(100));
+        $entry->setTitleEn($faker->text(100));
+        $entry->setDescriptionDe($faker->text(300));
+        $entry->setDescriptionEn($faker->text(300));
+        $entry->setLinkDe($faker->text(30));
+        $entry->setLinkEn($faker->text(30));
+
+        if ($faker->numberBetween(0, 100) > 20) {
+            $entry->setStartAt($faker->dateTime);
+            if ($faker->numberBetween(0, 100) > 10) {
+                $entry->setEndAt((clone $entry->getStartAt())->add(new \DateInterval('PT2H')));
+            }
+        }
+
+        if ($faker->numberBetween(0, 100) > 10) {
+            $entry->setLocation($faker->text(20));
+        }
+
+        if ($faker->numberBetween(0, 100) > 20) {
+            $entry->setApprovedAt(new  \DateTime());
+        }
+
+        return $entry;
     }
 
     /**
