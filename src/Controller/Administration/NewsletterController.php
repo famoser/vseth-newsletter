@@ -35,25 +35,6 @@ class NewsletterController extends BaseController
     private $newsletter;
 
     /**
-     * @Route("/{newsletter}", name="administration_newsletter")
-     *
-     * @return Response
-     */
-    public function indexAction(Newsletter $newsletter)
-    {
-        $entryRepository = $this->getDoctrine()->getRepository(Entry::class);
-        $entries = $entryRepository->findApprovedByNewsletter($newsletter->getId());
-        $moderateEntryCount = $entryRepository->count(['approvedAt' => null, 'rejectReason' => null, 'newsletter' => $newsletter->getId()]);
-
-        $this->newsletter = $newsletter;
-
-        return $this->render('administration/newsletter/index.html.twig', [
-            'newsletter' => $newsletter,
-            'moderate_entry_count' => $moderateEntryCount,
-        ]);
-    }
-
-    /**
      * @Route("/new", name="administration_newsletter_new")
      *
      * @return Response
@@ -69,7 +50,7 @@ class NewsletterController extends BaseController
         if (\count($lastNewsletters) === 1) {
             $defaultStart = $lastNewsletters[0]->getPlannedSendAt();
         }
-        $defaultDiff = new \DateInterval('P14T');
+        $defaultDiff = new \DateInterval('P14D');
         if (\count($lastNewsletters) === 2) {
             $defaultDiff = $lastNewsletters[0]->getPlannedSendAt()->diff($lastNewsletters[1]->getPlannedSendAt());
         }
@@ -89,6 +70,24 @@ class NewsletterController extends BaseController
         }
 
         return $this->render('administration/newsletter/new.html.twig', ['form' => $myForm->createView()]);
+    }
+
+    /**
+     * @Route("/{newsletter}", name="administration_newsletter")
+     *
+     * @return Response
+     */
+    public function indexAction(Newsletter $newsletter)
+    {
+        $entryRepository = $this->getDoctrine()->getRepository(Entry::class);
+        $moderateEntryCount = $entryRepository->count(['approvedAt' => null, 'rejectReason' => null, 'newsletter' => $newsletter->getId()]);
+
+        $this->newsletter = $newsletter;
+
+        return $this->render('administration/newsletter/index.html.twig', [
+            'newsletter' => $newsletter,
+            'moderate_entry_count' => $moderateEntryCount,
+        ]);
     }
 
     /**
