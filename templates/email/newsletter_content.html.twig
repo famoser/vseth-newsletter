@@ -1,5 +1,4 @@
 {% macro render_for_language(newsletter, locale) %}
-
     <container id="{{ locale }}" name="{{ locale }}">
         <row>
             <columns small="12" large="12">
@@ -15,43 +14,49 @@
                     {% set item_count = 0 %}
                     {% for entry in newsletter.entries %}
                         {% if entry.approvedAt is not null %}
-                            {% if item_count % 5 == 4 %}
-                                <spacer size="20"></spacer>
-                            {% endif %}
                             {% set item_count = item_count + 1 %}
                             <li>
                                 <a href="#{{ entry.id }}-{{ locale }}">
                                     {{ entry.header(locale) }}
                                 </a>
                             </li>
+                            {% if item_count % 5 == 0 and not loop.last %}
+                                <spacer size="20"></spacer>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 </ul>
             </columns>
         </row>
-        <spacer size="10"></spacer>
-        {% for entry in newsletter.entries %}
-            {% if entry.approvedAt is not null %}
+    </container>
+    {% for entry in newsletter.entries %}
+        {% if entry.approvedAt is not null %}
+            <spacer size="5"></spacer>
+            <container>
                 <callout id="{{ entry.id }}-{{ locale }}" name="{{ entry.id }}-{{ locale }}" class="entry">
                     <row>
                         <columns small="12">
                             <h2>{{ entry.header(locale) }}</h2>
                             <p>
                                 {{ entry.description(locale) }}
-                                {% if entry.link(locale) is not null %}
-                                    [<a
-                                        href="{{ entry.link(locale) }}">{{ "newsletter.more"|trans({}, "email", "de") }}</a>]
-                                {% endif %}
-                                {% if entry.location is not null or entry.startAt is not null %}
-                                    <br/><i>{{ entry|entryEventInfo("de")|nl2br }}</i>
-                                {% endif %}
                             </p>
+                            <spacer size="8"></spacer>
+                            {% if entry.location is not null or entry.startAt is not null %}
+                                <p>
+                                    <i>
+                                        {{ entry|entryEventInfo("de")|nl2br }},
+                                        {% if entry.link(locale) is not null %} <a
+                                                href="{{ entry.link(locale) }}">{{ "newsletter.link"|trans({}, "email", locale) }}</a>
+                                        {% endif %}
+                                    </i>
+                                </p>
+                            {% endif %}
                         </columns>
                     </row>
                 </callout>
-            {% endif %}
-        {% endfor %}
-    </container>
+            </container>
+        {% endif %}
+    {% endfor %}
 {% endmacro %}
 
 {% apply inky_to_html %}
