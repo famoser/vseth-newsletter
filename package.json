@@ -36,6 +36,6 @@
     "vue-i18n": "^7"
   },
   "scripts": {
-    "dev-server": "encore dev-server --writeToDisk"
+    "generate-email-css": "encore production && cp public/build/email*.css assets/css/email.css"
   }
 }

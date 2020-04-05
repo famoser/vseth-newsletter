@@ -1,4 +1,7 @@
 {# fix encore server as soon as 24.4 released https://symfony.com/doc/master/frontend/encore/dev-server.html #}
-{% apply inline_css(encore_entry_css_source("email")) %}
-    {% include "email/newsletter_content.html.twig" %}
+{# ensure encore server writes to disk in dev-server mode #}
+{# then redifine css source to use encore output in public/build #}
+{# remove css compile task from precommit hook in composer.json #}
+{% apply inline_css(source('@css/email.css')) %}
+    {% include "email/newsletter_content.html.twig"  with {'logo_src': email.image('@images/vseth_newsletter_logo.png')} %}
 {% endapply %}

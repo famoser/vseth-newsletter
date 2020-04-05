@@ -163,7 +163,7 @@ class NewsletterController extends BaseController
      */
     public function previewAction(Newsletter $newsletter)
     {
-        return $this->render('email/newsletter.html.twig', ['newsletter' => $newsletter]);
+        return $this->render('administration/newsletter/preview.html.twig', ['newsletter' => $newsletter]);
     }
 
     /**
