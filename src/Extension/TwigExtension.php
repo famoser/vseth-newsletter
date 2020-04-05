@@ -84,7 +84,7 @@ class TwigExtension extends AbstractExtension
         }
 
         if ($entry->getLocation() !== null) {
-            if (\mb_strlen($result) > 0) {
+            if (mb_strlen($result) > 0) {
                 $result .= ', ';
             }
             $result .= $entry->getLocation();

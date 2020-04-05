@@ -66,7 +66,7 @@ class LoginControllerTest extends WebTestCase
             sprintf('The %s URL does not exist.', $url)
         );
     }
-    
+
     public function getSecureUrls()
     {
         yield ['/administration'];
