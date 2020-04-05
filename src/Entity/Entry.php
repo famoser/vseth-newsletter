@@ -26,9 +26,9 @@ class Entry extends BaseEntity
     use TimeTrait;
 
     /**
-     * @var string
+     * @var string|null
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $organizer;
 

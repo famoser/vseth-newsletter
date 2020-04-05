@@ -42,7 +42,7 @@
                             {% for entry in approved_entries %}
                                 <tr>
                                     <td><a href="mailto:{{ entry.organisation.email }}">{{ entry.organisation.name }}</a></td>
-                                    <td>{{ entry.header("en") }}</td>
+                                    <td>{{ entry.header("de") }}</td>
                                     <td>{{ entry.descriptionEn|truncate(50) }}</td>
                                     <td class="d-print-none">
                                         <div class="btn-group">

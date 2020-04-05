@@ -11,7 +11,7 @@
             {% for entry in newsletter.entries %}
                 {% if entry.approvedAt is not null %}
                     <li class="list-group-item">
-                        <b>{{ entry.header("en") }}</b>
+                        <b>{{ entry.header("de") }}</b>
                         | {{ entry.startAt|dateFormat(false) }}
                         <span class="float-right text-secondary">
                         {{ entry.organisation.name }} | {{ entry.organisation.category|organisationCategoryText }}
