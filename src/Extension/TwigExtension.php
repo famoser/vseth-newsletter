@@ -11,6 +11,7 @@
 
 namespace App\Extension;
 
+use App\Entity\Entry;
 use App\Enum\BooleanType;
 use App\Enum\OrganisationCategoryType;
 use DateTime;
@@ -19,7 +20,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
-use Twig\TwigFunction;
 
 class TwigExtension extends AbstractExtension
 {
@@ -48,35 +48,49 @@ class TwigExtension extends AbstractExtension
             new TwigFilter('booleanFormat', [$this, 'booleanFilter']),
             new TwigFilter('organisationCategoryText', [$this, 'organisationCategoryTextFilter']),
             new TwigFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
+            new TwigFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
+            new TwigFilter('leftTrimLines', [$this, 'leftTrimLines']),
+            new TwigFilter('entryEventInfo', [$this, 'entryEventInfo']),
         ];
     }
 
-    public function getFunctions()
+    public function leftTrimLines(string $input): string
     {
-        return [
-            new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
-            new TwigFunction('load_public_file', [$this, 'loadPublicFile']),
-        ];
-    }
+        $lines = explode("\n", $input);
 
-    public function getEncoreEntryCssSource(string $entryName): string
-    {
-        $files = $this->entrypointLookup
-            ->getCssFiles($entryName);
-
-        $source = '';
-        foreach ($files as $file) {
-            $source .= file_get_contents($this->publicDir . '/' . $file);
+        $resultLines = [];
+        foreach ($lines as $line) {
+            $resultLines[] = ltrim($line);
         }
 
-        return $source;
+        return implode("\n", $resultLines);
     }
 
-    public function loadPublicFile(string $entryName): string
+    public function entryEventInfo(Entry $entry, string $locale): string
     {
-        $path = $this->publicDir . '/' . $entryName;
+        $dateTimeFormat = $this->translator->trans('time.format.date_time', [], 'framework', $locale);
 
-        return file_get_contents($path);
+        $result = '';
+        if ($entry->getStartAt() !== null) {
+            $result .= $entry->getStartAt()->format($dateTimeFormat);
+            if ($entry->getEndAt() !== null) {
+                $endDateTime = $entry->getEndAt()->format($dateTimeFormat);
+                $start = mb_substr($endDateTime, 0, 10);
+                if (mb_strpos($result, $start) !== false) {
+                    $endDateTime = mb_substr($endDateTime, 11);
+                }
+                $result .= ' - ' . $endDateTime;
+            }
+        }
+
+        if ($entry->getLocation() !== null) {
+            if (\mb_strlen($result) > 0) {
+                $result .= ', ';
+            }
+            $result .= $entry->getLocation();
+        }
+
+        return $result;
     }
 
     /**

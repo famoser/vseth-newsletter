@@ -147,6 +147,15 @@ class Entry extends BaseEntity
         $this->organizer = $organizer;
     }
 
+    public function getTitle(string $locale): ?string
+    {
+        if ($locale === 'de') {
+            return $this->titleDe;
+        }
+
+        return $this->titleEn;
+    }
+
     public function getTitleDe(): ?string
     {
         return $this->titleDe;
@@ -167,6 +176,15 @@ class Entry extends BaseEntity
         $this->titleEn = $titleEn;
     }
 
+    public function getDescription(string $locale): ?string
+    {
+        if ($locale === 'de') {
+            return $this->descriptionDe;
+        }
+
+        return $this->descriptionEn;
+    }
+
     public function getDescriptionDe(): ?string
     {
         return $this->descriptionDe;
@@ -185,6 +203,15 @@ class Entry extends BaseEntity
     public function setDescriptionEn(string $descriptionEn): void
     {
         $this->descriptionEn = $descriptionEn;
+    }
+
+    public function getLink(string $locale): ?string
+    {
+        if ($locale === 'de') {
+            return $this->linkDe;
+        }
+
+        return $this->linkEn;
     }
 
     public function getLinkDe(): ?string

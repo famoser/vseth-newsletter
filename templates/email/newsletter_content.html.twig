@@ -1,15 +1,11 @@
-{% apply inky_to_html %}
-    <spacer size="20"></spacer>
-    <img class="logo" src="{{ logo_src }}" alt="Logo">
-    <spacer size="20"></spacer>
-    <p class="text-center">({{ "newsletter.english_below"|trans({}, "email", "en") }})</p>
-    <spacer size="20"></spacer>
-    <container id="de" name="de">
+{% macro render_for_language(newsletter, locale) %}
+
+    <container id="{{ locale }}" name="{{ locale }}">
         <row>
             <columns small="12" large="12">
                 <spacer size="10"></spacer>
-                <h1>{{ "newsletter.title"|trans({}, "email", "de") }}</h1>
-                <p>{{ newsletter.introductionDe }}</p>
+                <h1>{{ "newsletter.title"|trans({}, "email", locale) }}</h1>
+                <p>{{ newsletter.introduction(locale) }}</p>
             </columns>
         </row>
 
@@ -24,8 +20,8 @@
                             {% endif %}
                             {% set item_count = item_count + 1 %}
                             <li>
-                                <a href="#{{ entry.id }}">
-                                    {{ entry.organizer }}: {{ entry.titleDe }}
+                                <a href="#{{ entry.id }}-{{ locale }}">
+                                    {{ entry.organizer }}: {{ entry.title(locale) }}
                                 </a>
                             </li>
                         {% endif %}
@@ -33,38 +29,42 @@
                 </ul>
             </columns>
         </row>
-
+        <spacer size="10"></spacer>
         {% for entry in newsletter.entries %}
             {% if entry.approvedAt is not null %}
-                <callout id="{{ entry.id }}" name="{{ entry.id }}"">
-                <row>
-                    <columns small="12">
-                        <h2>{{ entry.organizer }}: {{ entry.titleDe }}</h2>
-                        <p>{{ entry.descriptionDe }}
-                            {% if entry.linkDe is not null %}
-                                <a href="{{ entry.linkDe }}">{{ "newsletter.more"|trans({}, "email", "de") }}</a>
-                            {% endif %}
-                        </p>
-                        {% if entry.location is not null or entry.startAt is not null %}
-                            <p class="secondary">
-                                {% if entry.startAt is not null %}
-                                    {{ entry.startAt|dateTimeFormat("de") }}
-                                    {% if entry.endAt is not null %}
-                                        - {{ entry.endAt|dateTimeFormat("de") }}
-                                    {% endif %}
+                <callout id="{{ entry.id }}-{{ locale }}" name="{{ entry.id }}-{{ locale }}" class="entry">
+                    <row>
+                        <columns small="12">
+                            <h2>{{ entry.organizer }}: {{ entry.title(locale) }}</h2>
+                            <p>
+                                {{ entry.description(locale) }}
+                                {% if entry.link(locale) is not null %}
+                                    [<a
+                                        href="{{ entry.link(locale) }}">{{ "newsletter.more"|trans({}, "email", "de") }}</a>]
                                 {% endif %}
-                                {% if entry.location is not null %}
-                                    {% if entry.startAt is not null %}
-                                        |
-                                    {% endif %}
-                                    {{ entry.location }}
+                                {% if entry.location is not null or entry.startAt is not null %}
+                                    <br/><i>{{ entry|entryEventInfo("de")|nl2br }}</i>
                                 {% endif %}
                             </p>
-                        {% endif %}
-                    </columns>
-                </row>
+                        </columns>
+                    </row>
                 </callout>
             {% endif %}
         {% endfor %}
     </container>
+{% endmacro %}
+
+{% apply inky_to_html %}
+    <spacer size="20"></spacer>
+    <center>
+        <img class="logo" src="{{ logo_src }}" alt="Logo">
+    </center>
+    <p class="text-center">(<a class="secondary"
+                               href="#en">{{ "newsletter.english_below"|trans({}, "email", "en") }}</a>)</p>
+    <spacer size="10"></spacer>
+    {{ _self.render_for_language(newsletter, "de") }}
+    <spacer size="20"></spacer>
+    {{ _self.render_for_language(newsletter, "en") }}
+    <spacer size="10"></spacer>
+    <p class="text-center"><a href="https://vseth.ethz.ch">{{ "newsletter.webpage"|trans({}, "email", "en") }}</a></p>
 {% endapply %}

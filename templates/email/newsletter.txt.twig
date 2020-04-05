@@ -1,0 +1,43 @@
+{% macro render_for_language(newsletter, locale) %}
+==========
+{{ "newsletter.title"|trans({}, "email", locale) }}
+==========
+
+{{ newsletter.introduction(locale) }}
+
+{% set item_count = 0 %}
+{% for entry in newsletter.entries %}
+    {% if entry.approvedAt is not null %}
+- [{{ item_count }}] {{ entry.organizer }}: {{ entry.title(locale) }}
+        {% set item_count = item_count + 1 %}
+    {% endif %}
+{% endfor %}
+
+{% set item_count = 0 %}
+{% for entry in newsletter.entries %}
+    {% if entry.approvedAt is not null %}
+        [{{ item_count }}]==================================================
+
+        {{ entry.organizer }}: {{ entry.title(locale) }}
+
+        {{ entry.description(locale) }}
+        {% if entry.link(locale) is not null %}
+            {{ "newsletter.more"|trans({}, "email", locale) }}: {{ entry.link(locale) }}
+        {% endif %}
+        {% if entry.location is not null or entry.startAt is not null %}
+            {{ entry|entryEventInfo(locale) }}
+        {% endif %}
+        {% set item_count = item_count + 1 %}
+    {% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% apply leftTrimLines %}
+({{ "newsletter.english_below"|trans({}, "email", "en") }})
+
+{{ _self.render_for_language(newsletter, "de") }}
+
+
+{{ _self.render_for_language(newsletter, "en") }}
+
+{% endapply %}
