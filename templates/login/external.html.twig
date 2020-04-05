@@ -1,0 +1,10 @@
+{% extends "form_content_base.html.twig" %}
+
+{% block title %}{{ "external.title"|trans }}{% endblock %}
+{% block description %}{{ "external.description"|trans }}{% endblock %}
+
+{% trans_default_domain "login" %}
+
+{% block form_description %}
+    <p class="alert alert-warning">{{ "external.only_exceptional_cases"|trans }}</p>
+{% endblock %}

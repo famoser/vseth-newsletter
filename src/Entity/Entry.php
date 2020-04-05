@@ -323,4 +323,13 @@ class Entry extends BaseEntity
     {
         $this->organisation = $organisation;
     }
+
+    public function getHeader(string $locale)
+    {
+        if ($this->organizer !== null) {
+            return $this->organizer . ': ' . $this->getTitle($locale);
+        }
+
+        return $this->getTitle($locale);
+    }
 }

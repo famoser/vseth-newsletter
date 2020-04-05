@@ -23,7 +23,6 @@ class BaseEntryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('organizer', TextType::class);
         $builder->add('titleDe', TextType::class);
         $builder->add('titleEn', TextType::class);
         $builder->add('descriptionDe', TextareaType::class);

@@ -15,6 +15,7 @@ use App\Entity\Entry;
 use App\Entity\Newsletter;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -34,6 +35,7 @@ class EntryType extends BaseEntryType
             'translation_domain' => 'entity_newsletter',
             'label' => 'entity.name',
         ]);
+        $builder->add('organizer', TextType::class);
         parent::buildForm($builder, $options);
     }
 

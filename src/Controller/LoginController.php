@@ -13,6 +13,8 @@ namespace App\Controller;
 
 use App\Controller\Base\BaseFormController;
 use App\Entity\Organisation;
+use App\Enum\OrganisationCategoryType;
+use App\Form\Organisation\ExternalOrganisationType;
 use App\Form\PasswordContainer\LoginType;
 use App\Security\UserProvider;
 use App\Service\Interfaces\AuthenticationServiceInterface;
@@ -68,6 +70,40 @@ class LoginController extends BaseFormController
     public function chooseAction(Organisation $organisation)
     {
         return $this->render('login/choose.html.twig', ['organisation' => $organisation]);
+    }
+
+    /**
+     * @Route("/external", name="login_external")
+     *
+     * @return Response
+     */
+    public function externalAction(Request $request, TranslatorInterface $translator, AuthenticationServiceInterface $authenticationService)
+    {
+        $organisation = new Organisation();
+        $organisation->setCategory(OrganisationCategoryType::EXTERNAL);
+
+        $myOnSuccessCallable = function () use ($organisation, $translator, $authenticationService) {
+            $existing = $this->getDoctrine()->getRepository(Organisation::class)->findOneBy(['email' => $organisation->getEmail()]);
+            if ($existing === null) {
+                $organisation->generateAuthenticationCode();
+                $this->fastSave($organisation);
+            } else {
+                $organisation = $existing;
+            }
+
+            return $this->redirectToRoute('login_request_code', ['organisation' => $organisation->getId()]);
+        };
+
+        $buttonLabel = $translator->trans('form.submit_buttons.create', [], 'framework');
+        $formType = $this->createForm(ExternalOrganisationType::class, $organisation)
+            ->add('submit', SubmitType::class, ['label' => $buttonLabel, 'translation_domain' => false]);
+        $form = $this->handleForm($formType, $request, $myOnSuccessCallable);
+
+        if ($form instanceof Response) {
+            return $form;
+        }
+
+        return $this->render('login/external.html.twig', ['form' => $form->createView()]);
     }
 
     /**

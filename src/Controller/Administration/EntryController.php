@@ -45,6 +45,7 @@ class EntryController extends BaseController
 
         //create the entry
         $entry = new Entry();
+        $entry->setPriority(0);
         $entry->setNewsletter($newsletter);
 
         //process form

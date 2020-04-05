@@ -15,6 +15,8 @@ use App\Entity\Entry;
 use App\Entity\Organisation;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,6 +33,8 @@ class AdminEntryType extends BaseEntryType
                     ->orderBy('u.name', 'ASC');
             },
         ]);
+        $builder->add('priority', NumberType::class);
+        $builder->add('organizer', TextType::class, ['required' => false]);
 
         parent::buildForm($builder, $options);
     }

@@ -8,7 +8,7 @@
 {% set item_count = 0 %}
 {% for entry in newsletter.entries %}
     {% if entry.approvedAt is not null %}
-- [{{ item_count }}] {{ entry.organizer }}: {{ entry.title(locale) }}
+- [{{ item_count }}] {{ entry.header(locale) }}
         {% set item_count = item_count + 1 %}
     {% endif %}
 {% endfor %}
@@ -18,7 +18,7 @@
     {% if entry.approvedAt is not null %}
         [{{ item_count }}]==================================================
 
-        {{ entry.organizer }}: {{ entry.title(locale) }}
+        {{ entry.header(locale) }}
 
         {{ entry.description(locale) }}
         {% if entry.link(locale) is not null %}

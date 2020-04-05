@@ -19,7 +19,7 @@ choose:
 
 request_code:
   title: "Request E-Mail"
-  success: "E-Mail sent."
+  success: "E-Mail sent with a link that allows you to login."
   error:
     requested_too_often: 'You have already received an E-Mail within the last %days% days. If you did not receive that, please contact our IT support.'
   email:
@@ -35,3 +35,9 @@ request_code:
 
       Best regards
       VSETH
+
+external:
+  title: "Login as an external organisation"
+  description: "Apply for an entry in the newsletter"
+  only_exceptional_cases: 'We include content from external organisations only in rare & exceptional cases. Please ask kommunikation@vseth.ethz.ch before filling out this form.'
+  success: 'Please check your E-Mail. It contains a link which allows you to login.'

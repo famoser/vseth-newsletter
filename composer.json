@@ -105,9 +105,9 @@
     "hooks": {
       "pre-commit": [
         "echo committing as $(git config user.name)",
+        "(git status -s | grep \"assets\\/sass\\/email.sass\" && yarn run generate-email-css && git add assets/css/email.css) || true",
         "./vendor/bin/php-cs-fixer fix  --config=.php_cs",
-        "git update-index --again",
-        "(git status -s | grep \"assets\\/sass\\/email.sass\" && yarn run generate-email-css && git add assets/css/email.css) || true"
+        "git update-index --again"
       ],
       "post-merge": "composer install"
     }

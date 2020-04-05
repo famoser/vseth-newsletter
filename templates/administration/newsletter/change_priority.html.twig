@@ -7,11 +7,11 @@
 
 {% block single_content %}
     <form method="POST">
-        <ul class="list-group sortable">
+        <ul class="list-group orderable">
             {% for entry in newsletter.entries %}
                 {% if entry.approvedAt is not null %}
                     <li class="list-group-item">
-                        <b>{{ entry.organizer }}: {{ entry.titleEn }}</b>
+                        <b>{{ entry.header("en") }}</b>
                         | {{ entry.startAt|dateFormat(false) }}
                         <span class="float-right text-secondary">
                         {{ entry.organisation.name }} | {{ entry.organisation.category|organisationCategoryText }}

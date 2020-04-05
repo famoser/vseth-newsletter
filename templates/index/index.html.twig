@@ -24,5 +24,14 @@
     {% for category, organisations in organisations_by_categories %}
         {{ _self.display_category(category, organisations) }}
     {% endfor %}
+
+    <p class="text-secondary mb-0 mt-4">
+        {{ 5|organisationCategoryText }}
+    </p>
+    <ul class="list-group">
+        <li class="list-group-item">
+            <a href="{{ path("login_external") }}">{{ "external.title"|trans({}, "login") }}</a>
+        </li>
+    </ul>
 {% endblock %}
 

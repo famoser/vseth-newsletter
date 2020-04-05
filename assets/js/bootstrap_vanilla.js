@@ -56,7 +56,7 @@ $(document).ready(function () {
         paging: false
     });
 
-    $('.sortable').each(function () {
+    $('.orderable').each(function () {
         Sortable.create($(this)[0], {
             animation: 150,
             ghostClass: 'list-group-item-secondary'

@@ -44,7 +44,7 @@ class SemesterlyReportsApiService implements SemesterlyReportsApiServiceInterfac
 
     public function isEnabled()
     {
-        return \mb_strlen($this->semesterlyReportsApiUrl) > 5;
+        return mb_strlen($this->semesterlyReportsApiUrl) > 5;
     }
 
     public function syncRecognisedOrganisations()

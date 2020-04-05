@@ -21,7 +21,7 @@
                             {% set item_count = item_count + 1 %}
                             <li>
                                 <a href="#{{ entry.id }}-{{ locale }}">
-                                    {{ entry.organizer }}: {{ entry.title(locale) }}
+                                    {{ entry.header(locale) }}
                                 </a>
                             </li>
                         {% endif %}
@@ -35,7 +35,7 @@
                 <callout id="{{ entry.id }}-{{ locale }}" name="{{ entry.id }}-{{ locale }}" class="entry">
                     <row>
                         <columns small="12">
-                            <h2>{{ entry.organizer }}: {{ entry.title(locale) }}</h2>
+                            <h2>{{ entry.header(locale) }}</h2>
                             <p>
                                 {{ entry.description(locale) }}
                                 {% if entry.link(locale) is not null %}
