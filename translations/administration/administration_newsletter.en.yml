@@ -21,9 +21,10 @@ preview:
   title: 'preview newsletter'
   description: 'see how the newsletter will be sent'
 
-change_order:
+change_priority:
   title: 'change entry order'
   description: 'move entries around until you like the ordering'
+  set_priority: 'set priority'
 
 send:
   title: 'send'

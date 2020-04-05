@@ -12,6 +12,7 @@
 namespace App\Controller\Administration\Base;
 
 use App\Controller\Base\BaseFormController;
+use App\Entity\Newsletter;
 use App\Model\Breadcrumb;
 
 class BaseController extends BaseFormController
@@ -24,5 +25,29 @@ class BaseController extends BaseFormController
                 $this->getTranslator()->trans('index.title', [], 'index')
             ),
         ];
+    }
+
+    protected function getNewsletterBreadcrumbs(?Newsletter $newsletter)
+    {
+        $breadcrumbs = array_merge(
+            self::getIndexBreadcrumbs(),
+            [
+                new Breadcrumb(
+                    $this->generateUrl('administration'),
+                    $this->getTranslator()->trans('index.title', [], 'administration')
+                ),
+            ]
+        );
+
+        if ($newsletter !== null) {
+            $breadcrumbs = array_merge($breadcrumbs, [
+                new Breadcrumb(
+                    $this->generateUrl('administration_newsletter', ['newsletter' => $newsletter->getId()]),
+                    $newsletter->getPlannedSendAt()->format('d.m.Y')
+                ),
+            ]);
+        }
+
+        return $breadcrumbs;
     }
 }

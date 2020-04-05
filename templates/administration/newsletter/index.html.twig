@@ -16,13 +16,13 @@
             </span>
 
             <span class="btn-group">
-                <a class="btn {% if moderate_entry_count == 0 %}btn-secondary{% else %}btn-secondary{% endif %}"
+                <a class="btn {% if moderate_entry_count == 0 %}btn-secondary{% else %}btn-warning{% endif %}"
                    href="{{ path('administration_newsletter_entries', {"newsletter" : newsletter.id}) }}">
                     {{ "entries.title"|trans }} ({{ moderate_entry_count }})
                 </a>
                 <a class="btn btn-outline-secondary"
-                   href="{{ path('administration_newsletter_change_order', {"newsletter" : newsletter.id}) }}">
-                    {{ "change_order.title"|trans }}
+                   href="{{ path('administration_newsletter_change_priority', {"newsletter" : newsletter.id}) }}">
+                    {{ "change_priority.title"|trans }}
                 </a>
             </span>
 

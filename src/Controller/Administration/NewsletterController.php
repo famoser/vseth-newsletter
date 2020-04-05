@@ -140,17 +140,23 @@ class NewsletterController extends BaseController
     }
 
     /**
-     * @Route("/{newsletter}/change_order", name="administration_newsletter_change_order")
+     * @Route("/{newsletter}/change_priority", name="administration_newsletter_change_priority")
      *
      * @return Response
      */
-    public function changeOrderAction(Newsletter $newsletter)
+    public function changePriorityAction(Request $request, Newsletter $newsletter)
     {
         $entries = $this->getDoctrine()->getRepository(Entry::class)->findApprovedByNewsletter($newsletter->getId());
 
         $this->newsletter = $newsletter;
 
-        return $this->render('administration/newsletter/change_order.html.twig', [
+        if ($request->request->has('entry_id')) {
+            $this->savePriorities($newsletter, $request->request->get('entry_id'));
+        }
+
+        $this->getDoctrine()->getManager()->refresh($newsletter);
+
+        return $this->render('administration/newsletter/change_priority.html.twig', [
             'newsletter' => $newsletter,
             'entries' => $entries,
         ]);
@@ -212,22 +218,74 @@ class NewsletterController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        $breadcrumbs = array_merge(parent::getIndexBreadcrumbs(), [
-            new Breadcrumb(
-                $this->generateUrl('administration'),
-                $this->getTranslator()->trans('index.title', [], 'administration')
-            ),
-        ]);
+        return $this->getNewsletterBreadcrumbs($this->newsletter);
+    }
 
-        if ($this->newsletter !== null) {
-            $breadcrumbs = array_merge($breadcrumbs, [
-                new Breadcrumb(
-                    $this->generateUrl('administration_newsletter', ['newsletter' => $this->newsletter->getId()]),
-                    $this->newsletter->getPlannedSendAt()->format('d.m.Y')
-                ),
-            ]);
+    private function savePriorities(Newsletter $newsletter, array $entryIds)
+    {
+        /** @var Entry[] $entryLookup */
+        $entryLookup = [];
+        foreach ($newsletter->getEntries() as $entry) {
+            $entryLookup[$entry->getId()] = $entry;
         }
 
-        return $breadcrumbs;
+        /** @var Entry[] $orderedEntries */
+        $orderedEntries = [];
+        foreach ($entryIds as $entryId) {
+            $orderedEntries[] = $entryLookup[$entryId];
+        }
+
+        // adapt order of all decreased priorities
+        $longestIncreasingSubsequence = $this->findLongestIncreasingSubsequenceWithLowestStart($entryIds);
+        $currentLISIndex = \count($longestIncreasingSubsequence) - 1;
+        $maxPriority = PHP_INT_MAX;
+        for ($i = \count($orderedEntries) - 1; $i >= 0; --$i) {
+            if ($currentLISIndex >= 0 && $longestIncreasingSubsequence[$currentLISIndex] === $orderedEntries[$i]->getId()) {
+                --$currentLISIndex;
+                $maxPriority = $entryLookup[$longestIncreasingSubsequence[$currentLISIndex]]->getPriority();
+                continue;
+            }
+
+            if ($orderedEntries[$i]->getPriority() >= $maxPriority) {
+                $orderedEntries[$i]->setPriority($maxPriority - 1);
+                --$maxPriority;
+            }
+        }
+
+        // adapt order of all increased priorities & correct conflicts
+        $minPriority = 0;
+        foreach ($orderedEntries as $orderedEntry) {
+            if ($minPriority >= $orderedEntry->getPriority()) {
+                $orderedEntry->setPriority($minPriority + 1);
+            }
+
+            $minPriority = $orderedEntry->getPriority();
+        }
+
+        $this->fastSave(...$orderedEntries);
+    }
+
+    private function findLongestIncreasingSubsequenceWithLowestStart(array $entries)
+    {
+        $increasingSubsequences = [];
+        foreach ($entries as $key => $currentValue) {
+            $increasingSubsequences[$key][0] = $currentValue;
+            for ($i = $key - 1; $i >= 0; --$i) {
+                $lastIndex = \count($increasingSubsequences[$i]) - 1;
+                $lastValue = $increasingSubsequences[$i][$lastIndex];
+                if ($currentValue > $lastValue) {
+                    $increasingSubsequences[$i][] = $currentValue;
+                }
+            }
+        }
+
+        $longestIncreasingSubsequence = [];
+        foreach ($increasingSubsequences as $increasingSubsequence) {
+            if (\count($increasingSubsequence) > \count($longestIncreasingSubsequence)) {
+                $longestIncreasingSubsequence = $increasingSubsequence;
+            }
+        }
+
+        return $longestIncreasingSubsequence;
     }
 }

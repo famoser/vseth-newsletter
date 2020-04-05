@@ -6,8 +6,10 @@ window.$ = $;
 require("bootstrap");
 require("bootstrap-select");
 
-require( 'datatables.net');
-require( 'datatables.net-bs4');
+require('datatables.net');
+require('datatables.net-bs4');
+
+import Sortable from 'sortablejs';
 
 // include fontawesome
 import {dom} from '@fortawesome/fontawesome-svg-core'
@@ -52,5 +54,12 @@ $(document).ready(function () {
 
     $('table.sortable').DataTable({
         paging: false
+    });
+
+    $('.sortable').each(function () {
+        Sortable.create($(this)[0], {
+            animation: 150,
+            ghostClass: 'list-group-item-secondary'
+        });
     });
 });

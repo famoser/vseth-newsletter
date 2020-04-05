@@ -122,7 +122,7 @@ class EntryController extends BaseController
             $this->displaySuccess($successfulText);
 
             //recreate form so values are not filled out already
-            return $this->redirectToRoute('administration_newsletter_curate', ['newsletter' => $entry->getNewsletter()->getId()]);
+            return $this->redirectToRoute('administration_newsletter', ['newsletter' => $entry->getNewsletter()->getId()]);
         };
 
         //handle the form
@@ -184,16 +184,6 @@ class EntryController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        // test in frontend
-        return array_merge(parent::getIndexBreadcrumbs(), [
-            new Breadcrumb(
-                $this->generateUrl('administration'),
-                $this->getTranslator()->trans('index.title', [], 'administration')
-            ),
-            new Breadcrumb(
-                $this->generateUrl('administration_newsletter', ['newsletter' => $this->newsletter->getId()]),
-                $this->getTranslator()->trans('curate.title', [], 'administration_newsletter')
-            ),
-        ]);
+        return $this->getNewsletterBreadcrumbs($this->newsletter);
     }
 }
