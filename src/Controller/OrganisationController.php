@@ -13,7 +13,6 @@ namespace App\Controller;
 
 use App\Controller\Administration\Base\BaseController;
 use App\Entity\Organisation;
-use App\Model\Breadcrumb;
 use App\Model\UserModel;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,11 +50,6 @@ class OrganisationController extends BaseController
 
     protected function getIndexBreadcrumbs()
     {
-        return [
-            new Breadcrumb(
-                $this->generateUrl('organisation_view', ['organisation' => $this->organisation->getId()]),
-                $this->getTranslator()->trans('index.title', [], 'index')
-            ),
-        ];
+        return $this->getOrganisationBreadcrumbs($this->organisation);
     }
 }

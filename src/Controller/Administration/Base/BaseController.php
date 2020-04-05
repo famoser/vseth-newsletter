@@ -13,31 +13,19 @@ namespace App\Controller\Administration\Base;
 
 use App\Controller\Base\BaseFormController;
 use App\Entity\Newsletter;
+use App\Entity\Organisation;
 use App\Model\Breadcrumb;
 
 class BaseController extends BaseFormController
 {
-    protected function getIndexBreadcrumbs()
-    {
-        return [
-            new Breadcrumb(
-                $this->generateUrl('index'),
-                $this->getTranslator()->trans('index.title', [], 'index')
-            ),
-        ];
-    }
-
     protected function getNewsletterBreadcrumbs(?Newsletter $newsletter)
     {
-        $breadcrumbs = array_merge(
-            self::getIndexBreadcrumbs(),
-            [
-                new Breadcrumb(
-                    $this->generateUrl('administration'),
-                    $this->getTranslator()->trans('index.title', [], 'administration')
-                ),
-            ]
-        );
+        $breadcrumbs = [
+            new Breadcrumb(
+                $this->generateUrl('administration'),
+                $this->getTranslator()->trans('index.title', [], 'administration')
+            ),
+        ];
 
         if ($newsletter !== null) {
             $breadcrumbs = array_merge($breadcrumbs, [
@@ -49,5 +37,15 @@ class BaseController extends BaseFormController
         }
 
         return $breadcrumbs;
+    }
+
+    protected function getOrganisationBreadcrumbs(Organisation $organisation)
+    {
+        return [
+            new Breadcrumb(
+                $this->generateUrl('organisation_view', ['organisation' => $organisation->getId()]),
+                $this->getTranslator()->trans('index.title', [], 'index')
+            ),
+        ];
     }
 }

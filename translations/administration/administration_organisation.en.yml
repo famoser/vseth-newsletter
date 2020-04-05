@@ -29,3 +29,8 @@ hidden:
 
 reset_authentication_code:
   success: 'authentication code reset'
+
+sync:
+  title: 'sync recognised organisations'
+  successful: 'Synchronized recognised organisations. Added %added% , updated %updated% and hid %hidden%.'
+  failed: 'Synchronization failed. Error message: %message%.'

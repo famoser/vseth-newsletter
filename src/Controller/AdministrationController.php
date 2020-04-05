@@ -13,6 +13,7 @@ namespace App\Controller;
 
 use App\Controller\Administration\Base\BaseController;
 use App\Entity\Newsletter;
+use App\Model\Breadcrumb;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -31,5 +32,13 @@ class AdministrationController extends BaseController
         $newsletters = $this->getDoctrine()->getRepository(Newsletter::class)->findBy([], ['plannedSendAt' => 'DESC']);
 
         return $this->render('administration.html.twig', ['newsletters' => $newsletters]);
+    }
+
+    /**
+     * @return Breadcrumb[]|array
+     */
+    protected function getIndexBreadcrumbs()
+    {
+        return $this->getNewsletterBreadcrumbs(null);
     }
 }

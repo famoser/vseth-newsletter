@@ -15,6 +15,8 @@ use App\Controller\Administration\Base\BaseController;
 use App\Entity\Organisation;
 use App\Model\Breadcrumb;
 use App\Security\Voter\OrganisationVoter;
+use App\Service\Interfaces\SemesterlyReportsApiServiceInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,12 +32,14 @@ class OrganisationController extends BaseController
      *
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(SemesterlyReportsApiServiceInterface $semesterlyReportsApiService)
     {
         //get all existing semesters
         $organisations = $this->getDoctrine()->getRepository(Organisation::class)->findActive();
 
-        return $this->render('administration/organisations.twig', ['organisations' => $organisations]);
+        $enableSyncButton = $semesterlyReportsApiService->isEnabled();
+
+        return $this->render('administration/organisations.twig', ['organisations' => $organisations, 'enable_sync_button' => $enableSyncButton]);
     }
 
     /**
@@ -50,6 +54,28 @@ class OrganisationController extends BaseController
         $organisations = $this->getDoctrine()->getRepository(Organisation::class)->findHidden();
 
         return $this->render('administration/organisations_hidden.twig', ['organisations' => $organisations]);
+    }
+
+    /**
+     * @Route("/sync", name="administration_organisations_sync")
+     *
+     * @return Response
+     */
+    public function syncAction(SemesterlyReportsApiServiceInterface $semesterlyReportsApiService, TranslatorInterface $translator, LoggerInterface $logger)
+    {
+        try {
+            list($added, $updated, $hidden) = $semesterlyReportsApiService->syncRecognisedOrganisations();
+
+            $successMessage = $translator->trans('sync.successful', ['%added%' => $added, '%updated%' => $updated, '%hidden%' => $hidden], 'administration_organisation');
+            $this->displaySuccess($successMessage);
+        } catch (\Exception $exception) {
+            $logger->error('failed to synchronize with api', ['exception' => $exception]);
+
+            $successMessage = $translator->trans('sync.failed', ['%message%' => $exception->getMessage()], 'administration_organisation');
+            $this->displayError($successMessage);
+        }
+
+        return $this->redirectToRoute('administration_organisations');
     }
 
     /**
@@ -163,11 +189,11 @@ class OrganisationController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        return array_merge(parent::getIndexBreadcrumbs(), [
+        return [
             new Breadcrumb(
                 $this->generateUrl('administration_organisations'),
                 $this->getTranslator()->trans('index.title', [], 'administration_organisation')
             ),
-        ]);
+        ];
     }
 }

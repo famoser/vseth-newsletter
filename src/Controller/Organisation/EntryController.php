@@ -117,12 +117,6 @@ class EntryController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        // test in frontend
-        return array_merge(parent::getIndexBreadcrumbs(), [
-            new Breadcrumb(
-                $this->generateUrl('organisation_view', ['organisation' => $this->organisation->getId()]),
-                $this->getTranslator()->trans('view.title', [], 'organisation')
-            ),
-        ]);
+        return $this->getOrganisationBreadcrumbs($this->organisation);
     }
 }

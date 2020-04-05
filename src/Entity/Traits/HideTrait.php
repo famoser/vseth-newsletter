@@ -36,9 +36,6 @@ trait HideTrait
         $this->hiddenAt = new DateTime();
     }
 
-    /**
-     * @throws Exception
-     */
     public function unhide()
     {
         $this->hiddenAt = null;

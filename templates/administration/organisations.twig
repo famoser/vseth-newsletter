@@ -14,6 +14,13 @@
                href="{{ path("administration_organisation_new") }}">
                 {{ "new.title"|trans }}
             </a>
+            {% if enable_sync_button %}
+                <a class="btn btn-outline-secondary"
+                   href="{{ path("administration_organisations_sync") }}">
+                    {{ "sync.title"|trans }}
+                </a>
+
+            {% endif %}
         </span>
     </div>
     {% if organisations|length == 0 %}

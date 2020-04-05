@@ -10,3 +10,4 @@ parameters:
   PUBLIC_DIR: "%kernel.project_dir%/public"
   UPLOAD_DIR: "%kernel.project_dir%/var/upload"
   AUTHENTICATION_CODE_REQUEST_TIMEOUT_IN_DAYS: '%env(AUTHENTICATION_CODE_REQUEST_TIMEOUT_IN_DAYS)%'
+  SEMESTERLY_REPORTS_API_URL: '%env(SEMESTERLY_REPORTS_API_URL)%'
