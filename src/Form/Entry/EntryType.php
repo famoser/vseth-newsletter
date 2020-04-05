@@ -31,6 +31,8 @@ class EntryType extends BaseEntryType
                 return $er->createQueryBuilder('u')
                     ->where('u.sentAt IS NULL');
             },
+            'translation_domain' => 'entity_newsletter',
+            'label' => 'entity.name',
         ]);
         parent::buildForm($builder, $options);
     }

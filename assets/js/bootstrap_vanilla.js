@@ -62,4 +62,6 @@ $(document).ready(function () {
             ghostClass: 'list-group-item-secondary'
         });
     });
+
+    $('[data-toggle="tooltip"]').tooltip()
 });

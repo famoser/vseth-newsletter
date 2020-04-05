@@ -7,3 +7,31 @@ login:
   error:
     login_failed: 'login failed'
     invalid_auth_code: 'The authentication code is invalid. Double-check the URL is correct or request a new code at <a href="mailto:ia@vseth.ethz.ch">ia@vseth.ethz.ch</a>.'
+
+choose:
+  title: "Choose login method"
+  description: "How do you want to login?"
+  email:
+    title: "E-Mail authentication"
+    description: "We will send you a link to your E-Mail with which you can login."
+    help:
+        email_not_received: "Did you not receive an E-Mail? Please contact our IT support."
+
+request_code:
+  title: "Request E-Mail"
+  success: "E-Mail sent."
+  error:
+    requested_too_often: 'You have already received an E-Mail within the last %days% days. If you did not receive that, please contact our IT support.'
+  email:
+    subject: 'Newsletter Login'
+    body: |
+      Hi %organisation_name%
+
+      You have requested a new login link for the newsletter application.
+      Here you go: %url%
+
+      You can use this link any number of times.
+      If you wish to change it, simply request a new link on the webpage.
+
+      Best regards
+      VSETH

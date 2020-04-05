@@ -5,7 +5,24 @@
 
 {% trans_default_domain "index" %}
 
+{% macro display_category(category, organisations) %}
+    <p class="text-secondary mb-0 mt-4">
+        {{ category|organisationCategoryText }}
+    </p>
+    <ul class="list-group">
+        {% for organisation in organisations %}
+            <li class="list-group-item">
+                <a href="{{ path("login_choose", {organisation: organisation.id}) }}">{{ organisation.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
 {% block single_content %}
-    <p>{{ 'index.please_login'|trans }}</p>
+    <p>{{ 'index.please_select_organisation'|trans }}</p>
+
+    {% for category, organisations in organisations_by_categories %}
+        {{ _self.display_category(category, organisations) }}
+    {% endfor %}
 {% endblock %}
 

@@ -15,15 +15,18 @@ use App\Controller\Base\BaseFormController;
 use App\Entity\Organisation;
 use App\Form\PasswordContainer\LoginType;
 use App\Security\UserProvider;
+use App\Service\Interfaces\AuthenticationServiceInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/login")
@@ -55,6 +58,41 @@ class LoginController extends BaseFormController
         $form->add('form.login', SubmitType::class, ['translation_domain' => 'login', 'label' => 'login.do_login']);
 
         return $this->render('login/login.html.twig', ['form' => $form->createView(), 'error_occurred' => $errorOccurred]);
+    }
+
+    /**
+     * @Route("/choose/{organisation}", name="login_choose")
+     *
+     * @return Response
+     */
+    public function chooseAction(Organisation $organisation)
+    {
+        return $this->render('login/choose.html.twig', ['organisation' => $organisation]);
+    }
+
+    /**
+     * @Route("/request_code/{organisation}", name="login_request_code")
+     *
+     * @return Response
+     */
+    public function requestCodeAction(Organisation $organisation, AuthenticationServiceInterface $authenticationService, TranslatorInterface $translator)
+    {
+        $authenticationCodeRequestTimeoutInDays = max(0, $this->getParameter('AUTHENTICATION_CODE_REQUEST_TIMEOUT_IN_DAYS'));
+        $requestTimeout = new \DateTime();
+        $requestTimeout->sub(new \DateInterval('P' . $authenticationCodeRequestTimeoutInDays . 'D'));
+        if ($organisation->getLastAuthenticationCodeRequestAt() !== null && $organisation->getLastAuthenticationCodeRequestAt() > $requestTimeout) {
+            $this->displayError($translator->trans('request_code.error.requested_too_often', ['%days%' => $authenticationCodeRequestTimeoutInDays], 'login'));
+        } else {
+            $organisation->generateAuthenticationCode();
+            $organisation->setAuthenticationCodeRequestOccurred();
+            $url = $this->generateUrl('login_code', ['code' => $organisation->getAuthenticationCode()], UrlGeneratorInterface::ABSOLUTE_URL);
+            $authenticationService->sendAuthenticationCode($organisation, $url);
+            $this->fastSave($organisation);
+
+            $this->displaySuccess($translator->trans('request_code.success', [], 'login'));
+        }
+
+        return $this->redirectToRoute('login_choose', ['organisation' => $organisation->getId()]);
     }
 
     /**

@@ -15,44 +15,63 @@
             <i class="fal fa-plus"></i>
         </a>
     </p>
-    {% if entries|length == 0 %}
+    {% if organisation.entries|length == 0 %}
         <p>{{ "view.no_entries_added_yet"|trans({}, "organisation") }}</p>
     {% else %}
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>{{ "title"|trans({}, "entity_entry") }}</th>
-                <th>{{ "description"|trans({}, "entity_entry") }}</th>
-                <th>{{ "start_at"|trans({}, "entity_entry") }}</th>
-                <th>{{ "location"|trans({}, "entity_entry") }}</th>
+                <th>{{ "entity.name"|trans({}, "entity_entry") }}</th>
                 <th>{{ "entity.name"|trans({}, "entity_newsletter") }}</th>
+                <th>{{ "view.status.title"|trans }}</th>
                 <th class="minimal-width"></th>
             </tr>
             </thead>
             <tbody>
             {% for entry in organisation.entries %}
-                <tr>
-                    <td>{{ entry.titleEn }}</td>
-                    <td>{{ entry.descriptionEn|truncate(50) }}</td>
-                    <td>{{ entry.startAt|dateTimeFormat }}</td>
-                    <td>{{ entry.location }}</td>
-                    <td>{{ entry.newsletter.plannedSendAt|dateFormat }}</td>
-                    <td>
-                        <div class="btn-group">
-                            <a class="btn btn-light"
-                               href="{{ path("organisation_entry_new", {"organisation" : organisation.id, "copy-id": entry.id}) }}">
-                                <i class="fal fa-copy"></i>
-                            </a>
-                            <a class="btn btn-secondary"
-                               href="{{ path("organisation_entry_edit", {"organisation" : organisation.id, "entry": entry.id}) }}">
-                                <i class="fal fa-pencil"></i>
-                            </a>
-                            <a class="btn btn-danger"
-                               href="{{ path("organisation_entry_remove", {"organisation" : organisation.id, "entry": entry.id}) }}">
-                                <i class="fal fa-trash"></i>
-                            </a>
-                        </div>
-                    </td>
+                <td>
+                    <b>{{ entry.organizer }}: {{ entry.titleEn }}</b>
+                    | {{ entry.startAt|dateFormat(false) }}
+                </td>
+                <td>{{ entry.newsletter.plannedSendAt|dateFormat }}</td>
+                <td>
+                    {% if entry.rejectReason is not null %}
+                        <span class="text-danger" data-toggle="tooltip" data-placement="right"
+                              title="{{ entry.rejectReason }}">
+                                {{ "view.status.rejected"|trans }}
+                            </span>
+                    {% elseif entry.approvedAt is not null %}
+                        <span class="text-success">
+                            {% if entry.newsletter.sentAt is null %}
+                                {{ "view.status.approved"|trans }}
+                            {% else %}
+                                {{ "view.status.sent"|trans }}
+                            {% endif %}
+                        </span>
+                    {% else %}
+                        {% if entry.newsletter.sentAt is null %}
+                            {{ "view.status.new"|trans }}
+                        {% else %}
+                            {{ "view.status.too_late"|trans }}
+                        {% endif %}
+                    {% endif %}
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-light"
+                           href="{{ path("organisation_entry_new", {"organisation" : organisation.id, "copy-id": entry.id}) }}">
+                            <i class="fal fa-copy"></i>
+                        </a>
+                        <a class="btn btn-secondary"
+                           href="{{ path("organisation_entry_edit", {"organisation" : organisation.id, "entry": entry.id}) }}">
+                            <i class="fal fa-pencil"></i>
+                        </a>
+                        <a class="btn btn-danger"
+                           href="{{ path("organisation_entry_remove", {"organisation" : organisation.id, "entry": entry.id}) }}">
+                            <i class="fal fa-trash"></i>
+                        </a>
+                    </div>
+                </td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -1,0 +1,20 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "choose.title"|trans }}{% endblock %}
+{% block description %}{{ "choose.description"|trans }}{% endblock %}
+
+{% trans_default_domain "login" %}
+
+{% block single_content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">{{"choose.email.title"|trans }}</h5>
+                    <p class="card-text">{{"choose.email.description"|trans }}</p>
+                    <a href="{{path("login_request_code", {organisation: organisation.id})}}" class="btn btn-primary">{{"request_code.title"|trans }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,4 +1,4 @@
 index:
-  title: "Semesterly reports"
-  description: "Please describe your activities."
-  please_login: 'To login, please use the link in the email you have received.'
+  title: "Newsletter"
+  description: "Add entries to the VSETH newsletter."
+  please_select_organisation: 'Please select the organisation with which you want to login.'

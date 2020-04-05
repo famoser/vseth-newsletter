@@ -40,13 +40,22 @@ class EntryController extends BaseController
     {
         $this->denyAccessUnlessGranted(OrganisationVoter::ADD_ENTRY, $organisation);
 
+        $entry = new Entry();
+        $entry->setOrganizer($organisation->getName());
         if ($request->query->has('copy-id')) {
+            /** @var Entry $cloneEntry */
             $cloneEntry = $this->getDoctrine()->getRepository(Entry::class)->find($request->query->get('copy-id'));
             $this->denyAccessUnlessGranted(EntryVoter::VIEW, $cloneEntry);
-            $entry = clone $cloneEntry;
-        } else {
-            $entry = new Entry();
-            $entry->setOrganizer($organisation->getName());
+            $entry->setOrganizer($cloneEntry->getOrganizer());
+            $entry->setTitleDe($cloneEntry->getTitleDe());
+            $entry->setTitleEn($cloneEntry->getTitleEn());
+            $entry->setDescriptionDe($cloneEntry->getDescriptionDe());
+            $entry->setDescriptionEn($cloneEntry->getDescriptionEn());
+            $entry->setLinkDe($cloneEntry->getLinkDe());
+            $entry->setLinkEn($cloneEntry->getLinkEn());
+            $entry->setStartAt($cloneEntry->getStartAt());
+            $entry->setEndAt($cloneEntry->getEndAt());
+            $entry->setLocation($cloneEntry->getLocation());
         }
 
         $entry->setOrganisation($organisation);

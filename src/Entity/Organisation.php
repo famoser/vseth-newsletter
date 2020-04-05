@@ -71,12 +71,20 @@ class Organisation extends BaseEntity
      *
      * @ORM\Column(type="datetime", nullable=true, options={"default": null})
      */
+    private $lastAuthenticationCodeRequestAt;
+
+    /**
+     * @var DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true, options={"default": null})
+     */
     private $lastVisitAt;
 
     /**
      * @var Entry[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Entry", mappedBy="organisation")
+     * @ORM\OrderBy({"createdAt": "DESC"})
      */
     private $entries;
 
@@ -159,5 +167,15 @@ class Organisation extends BaseEntity
     public function generateAuthenticationCode()
     {
         $this->authenticationCode = Uuid::uuid4();
+    }
+
+    public function getLastAuthenticationCodeRequestAt(): ?DateTime
+    {
+        return $this->lastAuthenticationCodeRequestAt;
+    }
+
+    public function setAuthenticationCodeRequestOccurred(): void
+    {
+        $this->lastAuthenticationCodeRequestAt = new \DateTime();
     }
 }

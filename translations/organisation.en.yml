@@ -3,3 +3,10 @@ view:
   description: "Newsletter entries."
   no_entries_added_yet: "You have not created a newsletter entry so far"
   hi: 'Hi'
+  status:
+    title: 'status'
+    new: "new"
+    approved: "approved"
+    rejected: "rejected"
+    sent: "sent"
+    too_late: 'too late'

@@ -17,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class NewsletterService implements NewsletterServiceInterface
@@ -30,6 +31,11 @@ class NewsletterService implements NewsletterServiceInterface
      * @var Environment
      */
     private $twig;
+
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
     /**
      * @var LoggerInterface
@@ -54,10 +60,11 @@ class NewsletterService implements NewsletterServiceInterface
     /**
      * EmailService constructor.
      */
-    public function __construct(MailerInterface $mailer, LoggerInterface $logger, Environment $twig, ParameterBagInterface $parameterBag)
+    public function __construct(MailerInterface $mailer, LoggerInterface $logger, TranslatorInterface $translator, Environment $twig, ParameterBagInterface $parameterBag)
     {
         $this->mailer = $mailer;
         $this->twig = $twig;
+        $this->translator = $translator;
         $this->logger = $logger;
         $this->replyEmail = $parameterBag->get('REPLY_EMAIL');
         $this->testNewsletterEmail = $parameterBag->get('TEST_NEWSLETTER_EMAIL');

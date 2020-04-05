@@ -12,6 +12,8 @@
 namespace App\Controller;
 
 use App\Controller\Base\BaseDoctrineController;
+use App\Entity\Organisation;
+use App\Enum\OrganisationCategoryType;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 
@@ -32,7 +34,24 @@ class IndexController extends BaseDoctrineController
             return $this->redirectToRoute('administration');
         }
 
-        return $this->render('index/index.html.twig');
+        /** @var Organisation[] $organisations */
+        $organisations = $this->getDoctrine()->getRepository(Organisation::class)->findBy(['hiddenAt' => null], ['name' => 'ASC']);
+        /** @var Organisation[][] $organisationsByCategories */
+        $organisationsByCategories = [
+            OrganisationCategoryType::VSETH => [],
+            OrganisationCategoryType::COMMISSION => [],
+            OrganisationCategoryType::STUDY_ASSOCIATION => [],
+            OrganisationCategoryType::ASSOCIATED => [],
+            OrganisationCategoryType::RECOGNISED => [],
+        ];
+
+        foreach ($organisations as $organisation) {
+            if (isset($organisationsByCategories[$organisation->getCategory()])) {
+                $organisationsByCategories[$organisation->getCategory()][] = $organisation;
+            }
+        }
+
+        return $this->render('index/index.html.twig', ['organisations_by_categories' => $organisationsByCategories]);
     }
 
     /**

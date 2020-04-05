@@ -2,8 +2,8 @@ enum:
   name: "category"
 
 vseth: 'VSETH'
-commission: 'commission'
-study_association: 'study association'
-associated: 'associated'
-recognised: 'recognised'
-external: 'external'
+commission: 'Commission'
+study_association: 'Study association'
+associated: 'Associated organisation'
+recognised: 'Recognised organisation'
+external: 'External organisation'

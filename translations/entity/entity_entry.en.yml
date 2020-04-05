@@ -4,9 +4,9 @@ entity:
 
 organizer: "organizer"
 
-title: "name"
-title_de: "name (de)"
-title_en: "name (en)"
+title: "title"
+title_de: "title (de)"
+title_en: "title (en)"
 
 description: "description"
 description_de: "description (de)"

@@ -12,8 +12,8 @@
 namespace App\Controller;
 
 use App\Controller\Administration\Base\BaseController;
-use App\Entity\Entry;
 use App\Entity\Organisation;
+use App\Model\Breadcrumb;
 use App\Model\UserModel;
 use App\Security\Voter\Base\BaseVoter;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,6 +24,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OrganisationController extends BaseController
 {
+    /**
+     * @var Organisation
+     */
+    private $organisation;
+
     /**
      * @Route("/{organisation}", name="organisation_view")
      *
@@ -39,8 +44,18 @@ class OrganisationController extends BaseController
             $this->fastSave($organisation);
         }
 
-        $entries = $this->getDoctrine()->getRepository(Entry::class)->findBy(['organisation' => $organisation->getId()]);
+        $this->organisation = $organisation;
 
-        return $this->render('organisation/view.html.twig', ['entries' => $entries, 'organisation' => $organisation]);
+        return $this->render('organisation/view.html.twig', ['organisation' => $organisation]);
+    }
+
+    protected function getIndexBreadcrumbs()
+    {
+        return [
+            new Breadcrumb(
+                $this->generateUrl('organisation_view', ['organisation' => $this->organisation->getId()]),
+                $this->getTranslator()->trans('index.title', [], 'index')
+            ),
+        ];
     }
 }
