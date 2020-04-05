@@ -7,7 +7,7 @@
                 <p>{{ newsletter.introduction(locale) }}</p>
             </columns>
         </row>
-
+        <spacer size="20"></spacer>
         <row>
             <columns small="12" large="12">
                 <ul>
@@ -28,6 +28,7 @@
                 </ul>
             </columns>
         </row>
+        <spacer size="20"></spacer>
     </container>
     {% for entry in newsletter.entries %}
         {% if entry.approvedAt is not null %}
