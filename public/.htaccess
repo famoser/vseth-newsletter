@@ -162,9 +162,9 @@ AddDefaultCharset utf-8
 <IfModule mod_headers.c>
 
 
-    Header set Content-Security-Policy "default-src 'none'; manifest-src 'self'; base-uri 'self'; object-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
-    Header set X-Content-Security-Policy "default-src 'none'; manifest-src 'self'; base-uri 'self'; object-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
-    Header set X--WebKit-CSP "default-src 'none'; manifest-src 'self'; base-uri 'self'; object-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
+    Header set Content-Security-Policy "default-src 'none'; frame-src 'self';  frame-ancestors 'self'; manifest-src 'self'; base-uri 'self'; object-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
+    Header set X-Content-Security-Policy "default-src 'none'; frame-src 'self';  frame-ancestors 'self'; manifest-src 'self'; base-uri 'self'; object-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
+    Header set X--WebKit-CSP "default-src 'none'; frame-src 'self'; frame-ancestors 'self'; manifest-src 'self'; base-uri 'self'; object-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
 
     # Header set Content-Security-Policy "default-src 'none'; base-uri 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
     # Header set X-Content-Security-Policy "default-src 'none'; base-uri 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none'"
