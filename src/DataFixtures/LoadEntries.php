@@ -101,14 +101,16 @@ class LoadEntries extends BaseFixture
         $entry->setLinkEn($faker->text(30));
 
         if ($faker->numberBetween(0, 100) > 20) {
-            $entry->setStartAt($faker->dateTime);
+            $entry->setStartAt($faker->dateTimeInInterval('now', '+30 days'));
             if ($faker->numberBetween(0, 100) > 10) {
                 $entry->setEndAt((clone $entry->getStartAt())->add(new \DateInterval('PT2H')));
             }
         }
 
         if ($faker->numberBetween(0, 100) > 10) {
-            $entry->setLocation($faker->text(20));
+            $places = ['StuZ', 'HG E5', 'CAB E11', 'Höngg', 'Semperaula'];
+            $chosenPlace = $faker->numberBetween(0, \count($places) - 1);
+            $entry->setLocation($places[$chosenPlace]);
         }
 
         if ($faker->numberBetween(0, 100) > 20) {
