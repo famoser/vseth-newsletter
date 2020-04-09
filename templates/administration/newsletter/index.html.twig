@@ -18,7 +18,10 @@
             <span class="btn-group">
                 <a class="btn {% if moderate_entry_count == 0 %}btn-secondary{% else %}btn-warning{% endif %}"
                    href="{{ path('administration_newsletter_entries', {"newsletter" : newsletter.id}) }}">
-                    {{ "entries.title"|trans }} ({{ moderate_entry_count }})
+                    {{ "entries.title"|trans }}
+                    {% if moderate_entry_count > 0 %}
+                        <span class="badge badge-light">{{ moderate_entry_count }}</span>
+                    {% endif %}
                 </a>
                 <a class="btn btn-outline-secondary"
                    href="{{ path('administration_newsletter_change_priority', {"newsletter" : newsletter.id}) }}">

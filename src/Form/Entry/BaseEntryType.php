@@ -25,8 +25,8 @@ class BaseEntryType extends AbstractType
     {
         $builder->add('titleDe', TextType::class);
         $builder->add('titleEn', TextType::class);
-        $builder->add('descriptionDe', TextareaType::class);
-        $builder->add('descriptionEn', TextareaType::class);
+        $builder->add('descriptionDe', TextareaType::class, ['attr' => ['maxlength' => '300']]);
+        $builder->add('descriptionEn', TextareaType::class, ['attr' => ['maxlength' => '300']]);
         $builder->add('linkDe', TextType::class, ['required' => false]);
         $builder->add('linkEn', TextType::class, ['required' => false]);
         $builder->add('startAt', DateTimeType::class, ['date_widget' => 'single_text', 'time_widget' => 'single_text', 'required' => false]);

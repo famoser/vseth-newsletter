@@ -15,6 +15,7 @@ use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\TimeTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EntryRepository")
@@ -50,6 +51,7 @@ class Entry extends BaseEntity
      * @var string
      *
      * @ORM\Column(type="text")
+     * @Assert\Length(max = 300)
      */
     private $descriptionDe;
 
@@ -57,6 +59,7 @@ class Entry extends BaseEntity
      * @var string
      *
      * @ORM\Column(type="text")
+     * @Assert\Length(max = 300)
      */
     private $descriptionEn;
 

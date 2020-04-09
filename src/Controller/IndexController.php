@@ -30,8 +30,15 @@ class IndexController extends BaseDoctrineController
     public function indexAction(Security $security)
     {
         $user = $security->getUser();
-        if ($user !== null && \in_array('ROLE_ADMIN', $user->getRoles(), true)) {
-            return $this->redirectToRoute('administration');
+        if ($user !== null) {
+            if (\in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+                return $this->redirectToRoute('administration');
+            } elseif (\in_array('ROLE_ORGANISATION', $user->getRoles(), true)) {
+                $organisation = $this->getDoctrine()->getRepository(Organisation::class)->findOneBy(['email' => $user->getUsername()]);
+                if ($organisation !== null) {
+                    return $this->redirectToRoute('organisation_view', ['organisation' => $organisation->getId()]);
+                }
+            }
         }
 
         /** @var Organisation[] $organisations */

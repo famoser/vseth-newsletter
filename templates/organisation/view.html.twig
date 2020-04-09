@@ -30,7 +30,7 @@
             <tbody>
             {% for entry in organisation.entries %}
                 <td>
-                    <b>{{ entry.header(locale) }}</b>
+                    <b>{{ entry.header("en") }}</b>
                     | {{ entry.startAt|dateFormat(false) }}
                 </td>
                 <td>{{ entry.newsletter.plannedSendAt|dateFormat }}</td>
@@ -62,14 +62,16 @@
                            href="{{ path("organisation_entry_new", {"organisation" : organisation.id, "copy-id": entry.id}) }}">
                             <i class="fal fa-copy"></i>
                         </a>
-                        <a class="btn btn-secondary"
-                           href="{{ path("organisation_entry_edit", {"organisation" : organisation.id, "entry": entry.id}) }}">
-                            <i class="fal fa-pencil"></i>
-                        </a>
-                        <a class="btn btn-danger"
-                           href="{{ path("organisation_entry_remove", {"organisation" : organisation.id, "entry": entry.id}) }}">
-                            <i class="fal fa-trash"></i>
-                        </a>
+                        {% if entry.newsletter.sentAt is null %}
+                            <a class="btn btn-secondary"
+                               href="{{ path("organisation_entry_edit", {"organisation" : organisation.id, "entry": entry.id}) }}">
+                                <i class="fal fa-pencil"></i>
+                            </a>
+                            <a class="btn btn-danger"
+                               href="{{ path("organisation_entry_remove", {"organisation" : organisation.id, "entry": entry.id}) }}">
+                                <i class="fal fa-trash"></i>
+                            </a>
+                        {% endif %}
                     </div>
                 </td>
                 </tr>

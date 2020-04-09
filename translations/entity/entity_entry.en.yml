@@ -27,3 +27,7 @@ sent_at: "sent at"
 reject_reason: "reject reason"
 
 last_changed_at: 'last changed at'
+
+help:
+  description_short: 'keep it short! (max 300 characters)'
+  link_privacy: 'avoid using link shortener for privacy reasons.'

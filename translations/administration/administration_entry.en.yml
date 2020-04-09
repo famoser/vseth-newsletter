@@ -10,3 +10,4 @@ reject:
   title: 'reject entry'
   description: 'reject entry and prevent it from being included for good'
   successful: 'entry rejected'
+  help: 'help the organizer to improve by writing a useful message why the entry can not be included and how to do better next time. the organizer will not be notified, but can see the message upon next login.'
