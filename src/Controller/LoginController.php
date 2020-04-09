@@ -16,6 +16,7 @@ use App\Entity\Organisation;
 use App\Enum\OrganisationCategoryType;
 use App\Form\Organisation\ExternalOrganisationType;
 use App\Form\PasswordContainer\LoginType;
+use App\Security\OpenIdConnect\ClientInterface;
 use App\Security\UserProvider;
 use App\Service\Interfaces\AuthenticationServiceInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -104,6 +105,34 @@ class LoginController extends BaseFormController
         }
 
         return $this->render('login/external.html.twig', ['form' => $form->createView()]);
+    }
+
+    /**
+     * @Route("/open-id-connect", name="login_open_id_connect")
+     *
+     * @return Response
+     */
+    public function openIdConnectAction(ClientInterface $client)
+    {
+        $redirectUrl = $this->generateUrl('login_open_id_connect_response');
+        $state = 42;
+
+        return $client->redirect($redirectUrl, $state);
+        $baseUrl = $this->getParameter('OPEN_ID_CONNECT_ENDPOINT_BASE_URL');
+
+        return $this->redirect('https://auth.vseth.ethz.ch/auth/realms/VSETH/protocol/openid-connect/auth?client_id=');
+    }
+
+    /**
+     * @Route("/open-id-connect/response", name="login_open_id_connect_response")
+     *
+     * @return Response
+     */
+    public function openIdConnectResponseAction(Request $request)
+    {
+        dump($request);
+
+        return $this->redirectToRoute('index');
     }
 
     /**
