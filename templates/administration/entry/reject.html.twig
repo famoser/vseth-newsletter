@@ -4,3 +4,7 @@
 {% block description %}{{ "reject.description"|trans }}{% endblock %}
 
 {% trans_default_domain "administration_entry" %}
+
+{% block form_description %}
+    <p>{{ "reject.help"|trans }}</p>
+{% endblock %}
