@@ -178,4 +178,9 @@ class Organisation extends BaseEntity
     {
         $this->lastAuthenticationCodeRequestAt = new \DateTime();
     }
+
+    public function getDefaultPriority()
+    {
+        return $this->getCategory() * 1000 + \ord($this->getName());
+    }
 }

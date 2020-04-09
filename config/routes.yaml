@@ -1,8 +1,8 @@
-app:
-  resource: "../src/Controller/"
-  type:     annotation
-
 app_administration:
   resource: "../src/Controller/Administration/"
   type:     annotation
   prefix:   /administration
+
+app:
+  resource: "../src/Controller/"
+  type:     annotation

@@ -59,7 +59,7 @@ class EntryController extends BaseController
         }
 
         $entry->setOrganisation($organisation);
-        $entry->setPriority($organisation->getCategory() * 1000 + \ord($organisation->getName()));
+        $entry->setPriority($organisation->getDefaultPriority());
 
         //process form
         $form = $this->handleCreateForm($request, $entry);

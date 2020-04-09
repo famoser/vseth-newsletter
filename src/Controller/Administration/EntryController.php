@@ -45,11 +45,14 @@ class EntryController extends BaseController
 
         //create the entry
         $entry = new Entry();
-        $entry->setPriority(0);
         $entry->setNewsletter($newsletter);
 
         //process form
-        $form = $this->handleCreateForm($request, $entry);
+        $form = $this->handleCreateForm($request, $entry, function () use ($entry) {
+            $entry->setPriority($entry->getOrganisation()->getDefaultPriority());
+
+            return true;
+        });
         if ($form instanceof Response) {
             return $form;
         }
