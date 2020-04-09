@@ -143,7 +143,7 @@ class NewsletterController extends BaseController
      *
      * @return Response
      */
-    public function changePriorityAction(Request $request, Newsletter $newsletter)
+    public function changePriorityAction(Request $request, Newsletter $newsletter, TranslatorInterface $translator)
     {
         $entries = $this->getDoctrine()->getRepository(Entry::class)->findApprovedByNewsletter($newsletter->getId());
 
@@ -151,6 +151,9 @@ class NewsletterController extends BaseController
 
         if ($request->request->has('entry_id')) {
             $this->savePriorities($newsletter, $request->request->get('entry_id'));
+
+            $success = $translator->trans('change_priority.success', [], 'administration_newsletter');
+            $this->displaySuccess($success);
         }
 
         $this->getDoctrine()->getManager()->refresh($newsletter);

@@ -25,6 +25,7 @@ change_priority:
   title: 'change entry order'
   description: 'move entries around until you like the ordering'
   set_priority: 'set priority'
+  success: 'priorities saved'
 
 send:
   title: 'send'
