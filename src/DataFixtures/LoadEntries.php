@@ -93,8 +93,8 @@ class LoadEntries extends BaseFixture
 
         $entry = new Entry();
         $entry->setPriority($faker->numberBetween(0, 10000));
-        $entry->setTitleDe($faker->text(100));
-        $entry->setTitleEn($faker->text(100));
+        $entry->setTitleDe($faker->text(40));
+        $entry->setTitleEn($faker->text(40));
         $entry->setDescriptionDe($faker->text(300));
         $entry->setDescriptionEn($faker->text(300));
         $entry->setLinkDe($faker->text(30));

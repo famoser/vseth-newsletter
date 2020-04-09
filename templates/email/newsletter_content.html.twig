@@ -2,7 +2,7 @@
     <container id="{{ locale }}" name="{{ locale }}">
         <row>
             <columns small="12" large="12">
-                <spacer size="10"></spacer>
+                <spacer size="20"></spacer>
                 <h1>{{ "newsletter.title"|trans({}, "email", locale) }}</h1>
                 <p>{{ newsletter.introduction(locale) }}</p>
             </columns>
@@ -32,12 +32,12 @@
     </container>
     {% for entry in newsletter.entries %}
         {% if entry.approvedAt is not null %}
-            <spacer size="5"></spacer>
+            <spacer size="10"></spacer>
             <container>
                 <callout id="{{ entry.id }}-{{ locale }}" name="{{ entry.id }}-{{ locale }}" class="entry">
                     <row>
                         <columns small="12">
-                            <h2>{{ entry.header(locale) }}</h2>
+                            <h4>{{ entry.header(locale) }}</h4>
                             <p>
                                 {{ entry.description(locale) }}
                             </p>
@@ -69,8 +69,9 @@
                                href="#en">{{ "newsletter.english_below"|trans({}, "email", "en") }}</a>)</p>
     <spacer size="10"></spacer>
     {{ _self.render_for_language(newsletter, "de") }}
-    <spacer size="20"></spacer>
+    <spacer size="80"></spacer>
     {{ _self.render_for_language(newsletter, "en") }}
     <spacer size="10"></spacer>
     <p class="text-center"><a href="https://vseth.ethz.ch">{{ "newsletter.webpage"|trans({}, "email", "en") }}</a></p>
+    <spacer size="10"></spacer>
 {% endapply %}
