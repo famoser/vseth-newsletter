@@ -30,7 +30,7 @@
             <tbody>
             {% for entry in organisation.entries %}
                 <td>
-                    <b>{{ entry.header(locale) }}</b>
+                    <b>{{ entry.header("en") }}</b>
                     | {{ entry.startAt|dateFormat(false) }}
                 </td>
                 <td>{{ entry.newsletter.plannedSendAt|dateFormat }}</td>
