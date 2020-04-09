@@ -12,7 +12,7 @@
             {{ "new.title"|trans({}, "administration_newsletter") }}
         </a>
     </div>
-    {% if newsletters|length == 0 %}
+    {% if newsletter_models|length == 0 %}
         <p>{{ "index.no_newsletters"|trans }}</p>
     {% else %}
         <table class="table table-striped">
@@ -26,16 +26,21 @@
             </thead>
             <tbody>
 
-            {% for newsletter in newsletters %}
+            {% for model in newsletter_models %}
                 <tr>
-                    <td>{{ newsletter.plannedSendAt|dateFormat }}</td>
-                    <td>{{ newsletter.sentAt|dateFormat }}</td>
-                    <td>{{ newsletter.entries|length }}</td>
+                    <td>{{ model.newsletter.plannedSendAt|dateFormat }}</td>
+                    <td>{{ model.newsletter.sentAt|dateFormat }}</td>
+                    <td>
+                        {{ model.approvedEntries }}
+                        {% if model.newsletter.sentAt is null and model.moderateEntries > 0 %}
+                            <span class="badge badge-warning">{{ model.moderateEntries }}</span>
+                        {% endif %}
+                    </td>
                     <td>
                         <div class="btn-group">
                             <a class="btn btn-primary"
-                               href="{{ path("administration_newsletter", {"newsletter" : newsletter.id}) }}">
-                                {% if newsletter.sentAt is null %}
+                               href="{{ path("administration_newsletter", {"newsletter" : model.newsletter.id}) }}">
+                                {% if model.newsletter.sentAt is null %}
                                     <i class="fal fa-envelope-open"></i>
                                 {% else %}
                                     <i class="fal fa-envelope"></i>
