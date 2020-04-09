@@ -68,9 +68,9 @@ class LoginController extends BaseFormController
      *
      * @return Response
      */
-    public function chooseAction(Organisation $organisation)
+    public function chooseAction(Organisation $organisation, ClientInterface $client)
     {
-        return $this->render('login/choose.html.twig', ['organisation' => $organisation]);
+        return $this->render('login/choose.html.twig', ['organisation' => $organisation, 'open_id_enabled' => $client->isEnabled()]);
     }
 
     /**

@@ -40,7 +40,7 @@ class VSETHClient implements ClientInterface
      */
     public function isEnabled()
     {
-        return $this->clientId !== null;
+        return $this->clientId !== 'null';
     }
 
     /**

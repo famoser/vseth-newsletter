@@ -10,22 +10,24 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{"choose.email.title"|trans }}</h5>
-                    <p class="card-text">{{"choose.email.description"|trans }}</p>
-                    <a href="{{path("login_request_code", {organisation: organisation.id})}}" class="btn btn-primary">{{"request_code.title"|trans }}</a>
+                    <h5 class="card-title">{{ "choose.email.title"|trans }}</h5>
+                    <p class="card-text">{{ "choose.email.description"|trans }}</p>
+                    <a href="{{ path("login_request_code", {organisation: organisation.id}) }}"
+                       class="btn btn-primary">{{ "request_code.title"|trans }}</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{"choose.open_id_connect.title"|trans }}</h5>
-                    <p class="card-text">{{"choose.open_id_connect.description"|trans }}</p>
-                    <a href="{{path("login_open_id_connect", {organisation: organisation.id})}}" class="btn btn-primary">{{"open_id_connect.title"|trans }}</a>
+        {% if open_id_enabled %}
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ "choose.open_id_connect.title"|trans }}</h5>
+                        <p class="card-text">{{ "choose.open_id_connect.description"|trans }}</p>
+                        <a href="{{ path("login_open_id_connect", {organisation: organisation.id}) }}"
+                           class="btn btn-primary">{{ "open_id_connect.title"|trans }}</a>
+                    </div>
                 </div>
             </div>
-        </div>
-
-
+        {% endif %}
     </div>
 {% endblock %}
