@@ -13,9 +13,15 @@
             </div>
             <div class="form-group">
                 {{ form_row(form.descriptionDe) }}
+                <small class="form-text text-muted external-help">
+                    {{ "help.description_short"|trans({}, "entity_entry") }}
+                </small>
             </div>
             <div class="form-group">
                 {{ form_row(form.linkDe) }}
+                <small class="form-text text-muted external-help">
+                    {{ "help.link_privacy"|trans({}, "entity_entry") }}
+                </small>
             </div>
         </div>
         <div class="col-md">
@@ -25,6 +31,7 @@
             <div class="form-group">
                 {{ form_row(form.descriptionEn) }}
             </div>
+            <div class="external-help-spacer"></div>
             <div class="form-group">
                 {{ form_row(form.linkEn) }}
             </div>
