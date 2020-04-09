@@ -11,6 +11,7 @@
 
 namespace App\Security\OpenIdConnect;
 
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 interface ClientInterface
@@ -21,7 +22,7 @@ interface ClientInterface
     public function isEnabled();
 
     /**
-     * @return string
+     * @return RedirectResponse
      */
     public function redirect(string $redirectUrl, string $state);
 

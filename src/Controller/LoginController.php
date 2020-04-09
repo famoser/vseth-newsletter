@@ -114,13 +114,10 @@ class LoginController extends BaseFormController
      */
     public function openIdConnectAction(ClientInterface $client)
     {
-        $redirectUrl = $this->generateUrl('login_open_id_connect_response');
+        $redirectUrl = $this->generateUrl('login_open_id_connect_response', [], UrlGeneratorInterface::ABSOLUTE_URL);
         $state = 42;
 
         return $client->redirect($redirectUrl, $state);
-        $baseUrl = $this->getParameter('OPEN_ID_CONNECT_ENDPOINT_BASE_URL');
-
-        return $this->redirect('https://auth.vseth.ethz.ch/auth/realms/VSETH/protocol/openid-connect/auth?client_id=');
     }
 
     /**

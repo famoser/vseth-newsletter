@@ -16,6 +16,9 @@ choose:
     description: "We will send you a link to your E-Mail with which you can login."
     help:
         email_not_received: "Did you not receive an E-Mail? Please contact our IT support."
+  open_id_connect:
+    title: 'Switch AAI Login'
+    description: "Use the single sign on of VSETH"
 
 request_code:
   title: "Request E-Mail"
@@ -35,6 +38,9 @@ request_code:
 
       Best regards
       VSETH
+
+open_id_connect:
+  title: "Login"
 
 external:
   title: "Login as an external organisation"

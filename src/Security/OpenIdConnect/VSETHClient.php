@@ -12,6 +12,7 @@
 namespace App\Security\OpenIdConnect;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -49,7 +50,7 @@ class VSETHClient implements ClientInterface
     {
         $parameters = [];
         $parameters['client_id'] = $this->clientId;
-        $parameters['response_type'] = 'token';
+        $parameters['response_type'] = 'id_token';
         $parameters['redirect_uri'] = $redirectUrl;
         $parameters['scopes'] = 'roles vseth-profile';
         $parameters['state'] = $state;
@@ -59,7 +60,9 @@ class VSETHClient implements ClientInterface
             $queryies[] = $key . '=' . $value;
         }
 
-        return $this->baseEndpoint . '/auth?' . implode('&', $queryies);
+        $redirectUrl = $this->baseEndpoint . '/auth?' . implode('&', $queryies);
+
+        return new RedirectResponse($redirectUrl);
     }
 
     /**
