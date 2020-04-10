@@ -13,58 +13,7 @@
                 <p class="lead">{{ "entries.description"|trans }}</p>
             </div>
 
-            <div class="card">
-                <div class="card-body">
-                    <h2>{{ "entries.approved_entries"|trans }}</h2>
-
-                    <p>
-                        <a class="btn btn-outline-secondary d-print-none"
-                           href="{{ path('administration_entry_new', {"newsletter" : newsletter.id}) }}">
-                            {{ "new.title"|trans({}, "administration_entry") }}
-                        </a>
-                    </p>
-
-                    {% if approved_entries|length == 0 %}
-                        <hr/>
-                        <p>{{ "entries.no_approved_entries"|trans }}</p>
-                    {% else %}
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>{{ "name"|trans({}, "entity_organisation") }}</th>
-                                <th>{{ "title"|trans({}, "entity_entry") }}</th>
-                                <th>{{ "description"|trans({}, "entity_entry") }}</th>
-                                <th class="minimal-width d-print-none"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            {% for entry in approved_entries %}
-                                <tr>
-                                    <td><a href="mailto:{{ entry.organisation.email }}">{{ entry.organisation.name }}</a></td>
-                                    <td>{{ entry.header("de") }}</td>
-                                    <td>{{ entry.descriptionEn|truncate(50) }}</td>
-                                    <td class="d-print-none">
-                                        <div class="btn-group">
-                                            <a class="btn btn-outline-warning"
-                                               href="{{ path("administration_entry_disapprove", {"entry" : entry.id}) }}">
-                                                <i class="fal fa-minus"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %}
-                </div>
-            </div>
-
             {% if new_entries|length > 0 %}
-                <div class="p-1 mt-5 mb-2">
-                    <h2>{{ "entries.new_entries"|trans }}</h2>
-                </div>
-
                 {% for entry in new_entries %}
                     <div class="card mb-3">
                         <div class="card-header {% if entry.organisation.category == 5 %}bg-warning{% endif %}">
@@ -116,7 +65,57 @@
                         </div>
                     </div>
                 {% endfor %}
+                <div class="spacer mb-5">
+
+                </div>
             {% endif %}
+
+            <div class="card">
+                <div class="card-body">
+                    <h2>{{ "entries.approved_entries"|trans }}</h2>
+
+                    <p>
+                        <a class="btn btn-outline-secondary d-print-none"
+                           href="{{ path('administration_entry_new', {"newsletter" : newsletter.id}) }}">
+                            {{ "new.title"|trans({}, "administration_entry") }}
+                        </a>
+                    </p>
+
+                    {% if approved_entries|length == 0 %}
+                        <hr/>
+                        <p>{{ "entries.no_approved_entries"|trans }}</p>
+                    {% else %}
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>{{ "name"|trans({}, "entity_organisation") }}</th>
+                                <th>{{ "title"|trans({}, "entity_entry") }}</th>
+                                <th>{{ "description"|trans({}, "entity_entry") }}</th>
+                                <th class="minimal-width d-print-none"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for entry in approved_entries %}
+                                <tr>
+                                    <td><a href="mailto:{{ entry.organisation.email }}">{{ entry.organisation.name }}</a></td>
+                                    <td>{{ entry.header("de") }}</td>
+                                    <td>{{ entry.descriptionEn|truncate(50) }}</td>
+                                    <td class="d-print-none">
+                                        <div class="btn-group">
+                                            <a class="btn btn-outline-warning"
+                                               href="{{ path("administration_entry_disapprove", {"entry" : entry.id}) }}">
+                                                <i class="fal fa-minus"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </section>
 {% endblock %}
