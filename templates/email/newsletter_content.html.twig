@@ -45,9 +45,10 @@
                             {% if entry.location is not null or entry.startAt is not null %}
                                 <p>
                                     <i>
-                                        {{ entry|entryEventInfo("de")|nl2br }},
-                                        {% if entry.link(locale) is not null %} <a
-                                                href="{{ entry.link(locale) }}">{{ "newsletter.link"|trans({}, "email", locale) }}</a>
+                                        {{ entry|entryEventInfo("de")|nl2br }}{% if entry.link(locale) is not null %},
+                                            <a href="{{ entry.link(locale) }}">
+                                                {{ "newsletter.link"|trans({}, "email", locale) }}
+                                            </a>
                                         {% endif %}
                                     </i>
                                 </p>
