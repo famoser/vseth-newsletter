@@ -188,6 +188,12 @@ class EntryController extends BaseController
      */
     protected function getIndexBreadcrumbs()
     {
-        return $this->getNewsletterBreadcrumbs($this->newsletter);
+        return array_merge(
+            $this->getNewsletterBreadcrumbs($this->newsletter),
+            new Breadcrumb(
+                $this->generateUrl('administration_newsletter_entries', ['newsletter' => $this->newsletter->getId()]),
+                $this->getTranslator()->trans('entries.title', [], 'administration_newsletter')
+            )
+        );
     }
 }

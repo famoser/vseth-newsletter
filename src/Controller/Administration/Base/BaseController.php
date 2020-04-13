@@ -33,10 +33,6 @@ class BaseController extends BaseFormController
                     $this->generateUrl('administration_newsletter', ['newsletter' => $newsletter->getId()]),
                     $newsletter->getPlannedSendAt()->format('d.m.Y')
                 ),
-                new Breadcrumb(
-                    $this->generateUrl('administration_newsletter_entries', ['newsletter' => $newsletter->getId()]),
-                    $this->getTranslator()->trans('entries.title', [], 'administration_newsletter')
-                ),
             ]);
         }
 
