@@ -1,6 +1,7 @@
 index:
   title: 'newsletter'
   description: 'preview the newsletter'
+  send_testemail: 'send testemail'
 
 new:
   title: 'new newsletter'
