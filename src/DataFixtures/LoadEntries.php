@@ -67,8 +67,8 @@ class LoadEntries extends BaseFixture
                     $newsletterDate = clone $newsletter->getPlannedSendAt();
                     $start = clone $newsletterDate->add(new \DateInterval('P10D'));
                     $end = $newsletterDate->add(new \DateInterval('P10DT2H'));
-                    $entry->setStartAt($start);
-                    $entry->setEndAt($end);
+                    $entry->setStartDate($start);
+                    $entry->setEndDate($end);
                 }
 
                 $manager->persist($entry);
@@ -101,9 +101,21 @@ class LoadEntries extends BaseFixture
         $entry->setLinkEn($faker->text(30));
 
         if ($faker->numberBetween(0, 100) > 20) {
-            $entry->setStartAt($faker->dateTimeInInterval('now', '+30 days'));
+            $entry->setStartDate($faker->dateTimeInInterval('now', '+30 days'));
+
+            $withTime = $faker->numberBetween(0, 100) > 50;
+            if ($withTime) {
+                $entry->setStartTime($faker->time());
+            }
             if ($faker->numberBetween(0, 100) > 10) {
-                $entry->setEndAt((clone $entry->getStartAt())->add(new \DateInterval('PT2H')));
+                if ($faker->numberBetween(0, 100) > 10) {
+                    $entry->setEndDate((clone $entry->getStartDate())->add(new \DateInterval('PT2H')));
+                } else {
+                    $entry->setEndDate((clone $entry->getStartDate())->add(new \DateInterval('P1DT2H')));
+                }
+                if ($withTime) {
+                    $entry->setEndTime($faker->time());
+                }
             }
         }
 

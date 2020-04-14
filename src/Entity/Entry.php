@@ -80,16 +80,30 @@ class Entry extends BaseEntity
     /**
      * @var \DateTime|null
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
-    private $startAt;
+    private $startDate;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $startTime;
 
     /**
      * @var \DateTime|null
      *
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="date", nullable=true)
      */
-    private $endAt;
+    private $endDate;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $endTime;
 
     /**
      * @var string|null
@@ -237,24 +251,44 @@ class Entry extends BaseEntity
         $this->linkEn = $linkEn;
     }
 
-    public function getStartAt(): ?\DateTime
+    public function getStartDate(): ?\DateTime
     {
-        return $this->startAt;
+        return $this->startDate;
     }
 
-    public function setStartAt(?\DateTime $startAt): void
+    public function setStartDate(?\DateTime $startDate): void
     {
-        $this->startAt = $startAt;
+        $this->startDate = $startDate;
     }
 
-    public function getEndAt(): ?\DateTime
+    public function getStartTime(): ?string
     {
-        return $this->endAt;
+        return $this->startTime;
     }
 
-    public function setEndAt(?\DateTime $endAt): void
+    public function setStartTime(?string $startTime): void
     {
-        $this->endAt = $endAt;
+        $this->startTime = $startTime;
+    }
+
+    public function getEndDate(): ?\DateTime
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(?\DateTime $endDate): void
+    {
+        $this->endDate = $endDate;
+    }
+
+    public function getEndTime(): ?string
+    {
+        return $this->endTime;
+    }
+
+    public function setEndTime(?string $endTime): void
+    {
+        $this->endTime = $endTime;
     }
 
     public function getLocation(): ?string

@@ -42,7 +42,7 @@
                                 {{ entry.description(locale) }}
                             </p>
                             <spacer size="8"></spacer>
-                            {% if entry.location is not null or entry.startAt is not null %}
+                            {% if entry.location is not null or entry.startDate is not null %}
                                 <p>
                                     <i>
                                         {{ entry|entryEventInfo("de")|nl2br }}{% if entry.link(locale) is not null %},

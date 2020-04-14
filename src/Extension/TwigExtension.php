@@ -68,18 +68,31 @@ class TwigExtension extends AbstractExtension
 
     public function entryEventInfo(Entry $entry, string $locale): string
     {
-        $dateTimeFormat = $this->translator->trans('time.format.date_time', [], 'framework', $locale);
+        $dateFormat = $this->translator->trans('time.format.date', [], 'framework', $locale);
 
         $result = '';
-        if ($entry->getStartAt() !== null) {
-            $result .= $entry->getStartAt()->format($dateTimeFormat);
-            if ($entry->getEndAt() !== null) {
-                $endDateTime = $entry->getEndAt()->format($dateTimeFormat);
-                $start = mb_substr($endDateTime, 0, 10);
-                if (mb_strpos($result, $start) !== false) {
-                    $endDateTime = mb_substr($endDateTime, 11);
+        if ($entry->getStartDate() !== null) {
+            $startDate = $entry->getStartDate()->format($dateFormat);
+            $result .= $startDate;
+            if ($entry->getStartTime() !== null) {
+                $result .= ' ' . mb_substr($entry->getStartTime(), 0, 5);
+            }
+            if ($entry->getEndDate() !== null) {
+                $endDate = $entry->getEndDate()->format($dateFormat);
+                $showDate = $startDate !== $endDate;
+                $showTime = $entry->getEndTime() !== null;
+
+                if ($showDate || $showTime) {
+                    $result .= ' -';
+
+                    if ($showDate) {
+                        $result .= ' ' . $endDate;
+                    }
+
+                    if ($showTime) {
+                        $result .= ' ' . mb_substr($entry->getEndTime(), 0, 5);
+                    }
                 }
-                $result .= ' - ' . $endDateTime;
             }
         }
 

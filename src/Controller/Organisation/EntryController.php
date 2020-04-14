@@ -53,8 +53,10 @@ class EntryController extends BaseController
             $entry->setDescriptionEn($cloneEntry->getDescriptionEn());
             $entry->setLinkDe($cloneEntry->getLinkDe());
             $entry->setLinkEn($cloneEntry->getLinkEn());
-            $entry->setStartAt($cloneEntry->getStartAt());
-            $entry->setEndAt($cloneEntry->getEndAt());
+            $entry->setStartDate($cloneEntry->getStartDate());
+            $entry->setStartTime($cloneEntry->getStartTime());
+            $entry->setEndDate($cloneEntry->getEndDate());
+            $entry->setEndTime($cloneEntry->getEndTime());
             $entry->setLocation($cloneEntry->getLocation());
         }
 

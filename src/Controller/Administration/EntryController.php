@@ -190,10 +190,10 @@ class EntryController extends BaseController
     {
         return array_merge(
             $this->getNewsletterBreadcrumbs($this->newsletter),
-            new Breadcrumb(
+            [new Breadcrumb(
                 $this->generateUrl('administration_newsletter_entries', ['newsletter' => $this->newsletter->getId()]),
                 $this->getTranslator()->trans('entries.title', [], 'administration_newsletter')
-            )
+            )]
         );
     }
 }

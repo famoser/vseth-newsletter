@@ -41,12 +41,22 @@
     <div class="row">
         <div class="col-md">
             <div class="form-group">
-                {{ form_row(form.startAt) }}
+                {{ form_row(form.startDate) }}
             </div>
         </div>
         <div class="col-md">
             <div class="form-group">
-                {{ form_row(form.endAt) }}
+                {{ form_row(form.startTime) }}
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.endDate) }}
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.endTime) }}
             </div>
         </div>
     </div>

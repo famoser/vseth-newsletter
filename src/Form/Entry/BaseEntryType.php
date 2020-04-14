@@ -13,9 +13,10 @@ namespace App\Form\Entry;
 
 use App\Entity\Entry;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -29,8 +30,10 @@ class BaseEntryType extends AbstractType
         $builder->add('descriptionEn', TextareaType::class, ['attr' => ['maxlength' => '300']]);
         $builder->add('linkDe', TextType::class, ['required' => false]);
         $builder->add('linkEn', TextType::class, ['required' => false]);
-        $builder->add('startAt', DateTimeType::class, ['date_widget' => 'single_text', 'time_widget' => 'single_text', 'required' => false]);
-        $builder->add('endAt', DateTimeType::class, ['date_widget' => 'single_text', 'time_widget' => 'single_text', 'required' => false]);
+        $builder->add('startDate', DateType::class, ['widget' => 'single_text', 'required' => false]);
+        $builder->add('startTime', TimeType::class, ['widget' => 'single_text', 'input' => 'string', 'required' => false]);
+        $builder->add('endDate', DateType::class, ['widget' => 'single_text', 'required' => false]);
+        $builder->add('endTime', TimeType::class, ['widget' => 'single_text', 'input' => 'string', 'required' => false]);
         $builder->add('location', TextType::class, ['required' => false]);
     }
 
