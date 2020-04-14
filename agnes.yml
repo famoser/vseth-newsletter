@@ -22,6 +22,15 @@ application:
       - yarn run encore production
       - rm -rf node_modules
 
+      # backup source to VSETH deploy repository
+      - git clone git@gitlab.ethz.ch:vseth/0300-vs/newletter.git deploy
+      - mkdir ./deploy/source
+      - git bundle create ./deploy/source/source.git-bundle --all
+      - git --git-dir=./deploy/.git --work-tree=./deploy add ./source/source.git-bundle
+      - git --git-dir=./deploy/.git commit -m "update source bundle"
+      - git --git-dir=./deploy/.git push
+      - rm -rf deploy
+
     deploy:
       - php bin/console cache:clear -n
       - test $PREVIOUS_RELEASE_PATH != false && cp -r $PREVIOUS_RELEASE_PATH/var/transient var/transient
