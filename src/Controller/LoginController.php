@@ -129,6 +129,8 @@ class LoginController extends BaseFormController
     {
         dump($request);
 
+        throw new \Exception();
+
         return $this->redirectToRoute('index');
     }
 

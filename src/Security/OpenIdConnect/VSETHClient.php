@@ -45,15 +45,18 @@ class VSETHClient implements ClientInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws \Exception
      */
     public function redirect(string $redirectUrl, string $state)
     {
         $parameters = [];
         $parameters['client_id'] = $this->clientId;
-        $parameters['response_type'] = 'id_token';
+        $parameters['response_type'] = 'token';
         $parameters['redirect_uri'] = $redirectUrl;
         $parameters['scopes'] = 'roles vseth-profile';
         $parameters['state'] = $state;
+        $parameters['nonce'] = random_bytes(32);
 
         $queryies = [];
         foreach ($parameters as $key => $value) {
