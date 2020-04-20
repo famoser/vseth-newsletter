@@ -13,7 +13,7 @@ namespace App\Model;
 
 use App\Entity\Newsletter;
 
-class NewsletterModel
+class NewsletterSummaryModel
 {
     /**
      * @var Newsletter
