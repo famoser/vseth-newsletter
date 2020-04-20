@@ -75,44 +75,56 @@
 
                     <p>
                         <a class="btn btn-outline-secondary d-print-none"
-                           href="{{ path('administration_entry_new', {"newsletter" : newsletter.id}) }}">
+                           href="{{ path('administration_entry_new', {"newsletter" : newsletter.realId}) }}">
                             {{ "new.title"|trans({}, "administration_entry") }}
                         </a>
                     </p>
 
-                    {% if approved_entries|length == 0 %}
-                        <hr/>
-                        <p>{{ "entries.no_approved_entries"|trans }}</p>
-                    {% else %}
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>{{ "name"|trans({}, "entity_organisation") }}</th>
-                                <th>{{ "title"|trans({}, "entity_entry") }}</th>
-                                <th>{{ "description"|trans({}, "entity_entry") }}</th>
-                                <th class="minimal-width d-print-none"></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-
-                            {% for entry in approved_entries %}
-                                <tr>
-                                    <td><a href="mailto:{{ entry.organisation.email }}">{{ entry.organisation.name }}</a></td>
-                                    <td>{{ entry.header("de") }}</td>
-                                    <td>{{ entry.descriptionEn|truncate(50) }}</td>
-                                    <td class="d-print-none">
-                                        <div class="btn-group">
-                                            <a class="btn btn-outline-warning"
-                                               href="{{ path("administration_entry_disapprove", {"entry" : entry.id}) }}">
-                                                <i class="fal fa-minus"></i>
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    {% endif %}
+                    <form method="POST">
+                        {% for category in newsletter.categories %}
+                            <h3>{{ category.name("de") }}</h3>
+                            {% if category.entries|length == 0 %}
+                                <hr/>
+                                <p>{{ "entries.no_approved_entries"|trans }}</p>
+                            {% else %}
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th class="minimal-width d-print-none"></th>
+                                        <th>{{ "title"|trans({}, "entity_entry") }}</th>
+                                        <th>{{ "description"|trans({}, "entity_entry") }}</th>
+                                        <th class="minimal-width d-print-none"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="orderable">
+                                    {% for entry in category.entries %}
+                                        <tr>
+                                            <td>
+                                                <span class="btn btn-link">
+                                                    <i class="fal fa-grip-lines"></i>
+                                                </span>
+                                            </td>
+                                            <td>{{ entry.header("de") }}</td>
+                                            <td>{{ entry.description("de")|truncate(50) }}</td>
+                                            <td class="d-print-none">
+                                                <div class="btn-group">
+                                                    <a class="btn btn-outline-warning"
+                                                       href="{{ path("administration_entry_disapprove", {"entry" : entry.realId}) }}">
+                                                        <i class="fal fa-minus"></i>
+                                                    </a>
+                                                </div>
+                                                <input type="hidden" name="entry_id[]" value="{{ entry.realId }}">
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
+                        {% endfor %}
+                        <button type="submit" name="submit" class="btn-primary btn mt-4">
+                            {{ "change_priority.set_priority"|trans }}
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

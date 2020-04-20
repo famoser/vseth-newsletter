@@ -138,16 +138,43 @@ class NewsletterController extends BaseController
      *
      * @return Response
      */
-    public function entriesAction(Newsletter $newsletter)
+    public function entriesAction(Request $request, Newsletter $newsletter, NewsletterServiceInterface $newsletterService, TranslatorInterface $translator)
     {
-        /** @var Entry[] $approvedEntries */
-        $approvedEntries = [];
+        // TODO: continue refactor to use newsletter publish model
+
+        if ($request->request->has('submit')) {
+            $orderedIds = $request->request->get('entry_id');
+
+            /** @var Entry[][] $entryLookupByCategory */
+            $entryLookupByCategory = [];
+            foreach ($newsletter->getEntries() as $entry) {
+                if (\in_array($entry->getId(), $orderedIds, true)) {
+                    $categoryId = $entry->getCategory() !== null ? $entry->getCategory()->getId() : 'default';
+                    $entryLookupByCategory[$categoryId][$entry->getId()] = $entry;
+                }
+            }
+
+            foreach ($entryLookupByCategory as $categoryId => $entryLookup) {
+                $entryIds = [];
+                foreach ($orderedIds as $orderedId) {
+                    if (array_key_exists($orderedId, $entryLookup)) {
+                        $entryIds[] = $orderedId;
+                    }
+                }
+                $this->savePriorities($entryLookupByCategory[$categoryId], $entryIds);
+            }
+
+            $success = $translator->trans('entries.success.priorities_saved', [], 'administration_newsletter');
+            $this->displaySuccess($success);
+        }
+
+        $this->getDoctrine()->getManager()->refresh($newsletter);
+        $newsletterModel = $newsletterService->createPublishModel($newsletter);
+
         /** @var Entry[] $newEntries */
         $newEntries = [];
         foreach ($newsletter->getEntries() as $entry) {
-            if ($entry->getApprovedAt() !== null) {
-                $approvedEntries[] = $entry;
-            } elseif ($entry->getRejectReason() === null) {
+            if ($entry->getApprovedAt() === null && $entry->getRejectReason() === null) {
                 $newEntries[] = $entry;
             }
         }
@@ -155,41 +182,8 @@ class NewsletterController extends BaseController
         $this->newsletter = $newsletter;
 
         return $this->render('administration/newsletter/entries.html.twig', [
-            'newsletter' => $newsletter,
-            'approved_entries' => $approvedEntries,
+            'newsletter' => $newsletterModel,
             'new_entries' => $newEntries,
-        ]);
-    }
-
-    /**
-     * @Route("/{newsletter}/change_priority", name="administration_newsletter_change_priority")
-     *
-     * @return Response
-     */
-    public function changePriorityAction(Request $request, Newsletter $newsletter, TranslatorInterface $translator)
-    {
-        $entries = $this->getDoctrine()->getRepository(Entry::class)->findApprovedByNewsletter($newsletter->getId());
-
-        if ($request->request->has('entry_id')) {
-            /** @var Entry[] $entryLookup */
-            $entryLookup = [];
-            foreach ($entries as $entry) {
-                $entryLookup[$entry->getId()] = $entry;
-            }
-
-            $this->savePriorities($entryLookup, $request->request->get('entry_id'));
-
-            $success = $translator->trans('change_priority.success', [], 'administration_newsletter');
-            $this->displaySuccess($success);
-        }
-
-        $this->getDoctrine()->getManager()->refresh($newsletter);
-
-        $this->newsletter = $newsletter;
-
-        return $this->render('administration/newsletter/change_priority.html.twig', [
-            'newsletter' => $newsletter,
-            'entries' => $entries,
         ]);
     }
 
@@ -200,8 +194,8 @@ class NewsletterController extends BaseController
      */
     public function categoriesAction(Request $request, Newsletter $newsletter, TranslatorInterface $translator)
     {
-        if ($request->request->has('category_id')) {
-            /** @var Entry[] $categoryLookup */
+        if ($request->request->has('submit')) {
+            /** @var Category[] $categoryLookup */
             $categoryLookup = [];
             foreach ($newsletter->getCategories() as $category) {
                 $categoryLookup[$category->getId()] = $category;
@@ -298,7 +292,7 @@ class NewsletterController extends BaseController
         $currentLISIndex = \count($longestIncreasingSubsequence) - 1;
         $maxPriority = PHP_INT_MAX;
         for ($i = \count($orderedEntries) - 1; $i >= 0; --$i) {
-            if ($currentLISIndex >= 0 && $longestIncreasingSubsequence[$currentLISIndex] === $orderedEntries[$i]->getId()) {
+            if ($currentLISIndex >= 1 && $longestIncreasingSubsequence[$currentLISIndex] === $orderedEntries[$i]->getId()) {
                 --$currentLISIndex;
                 $maxPriority = $priorityLookup[$longestIncreasingSubsequence[$currentLISIndex]]->getPriority();
                 continue;

@@ -52,7 +52,7 @@ class Category extends BaseEntity
     /**
      * @var Entry[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Entry", mappedBy="newsletter")
+     * @ORM\OneToMany(targetEntity="App\Entity\Entry", mappedBy="category")
      * @ORM\OrderBy({"priority": "ASC"})
      */
     private $entries;

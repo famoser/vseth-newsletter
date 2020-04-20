@@ -166,15 +166,6 @@ class Entry extends BaseEntity
         $this->organizer = $organizer;
     }
 
-    public function getTitle(string $locale): ?string
-    {
-        if ($locale === 'de') {
-            return $this->titleDe;
-        }
-
-        return $this->titleEn;
-    }
-
     public function getTitleDe(): ?string
     {
         return $this->titleDe;
@@ -195,15 +186,6 @@ class Entry extends BaseEntity
         $this->titleEn = $titleEn;
     }
 
-    public function getDescription(string $locale): ?string
-    {
-        if ($locale === 'de') {
-            return $this->descriptionDe;
-        }
-
-        return $this->descriptionEn;
-    }
-
     public function getDescriptionDe(): ?string
     {
         return $this->descriptionDe;
@@ -222,15 +204,6 @@ class Entry extends BaseEntity
     public function setDescriptionEn(string $descriptionEn): void
     {
         $this->descriptionEn = $descriptionEn;
-    }
-
-    public function getLink(string $locale): ?string
-    {
-        if ($locale === 'de') {
-            return $this->linkDe;
-        }
-
-        return $this->linkEn;
     }
 
     public function getLinkDe(): ?string
@@ -353,15 +326,6 @@ class Entry extends BaseEntity
         $this->organisation = $organisation;
     }
 
-    public function getHeader(string $locale)
-    {
-        if ($this->organizer !== null) {
-            return $this->organizer . ': ' . $this->getTitle($locale);
-        }
-
-        return $this->getTitle($locale);
-    }
-
     public function getCategory(): ?Category
     {
         return $this->category;
@@ -370,5 +334,10 @@ class Entry extends BaseEntity
     public function setCategory(?Category $category): void
     {
         $this->category = $category;
+    }
+
+    public function shouldPublish()
+    {
+        return $this->approvedAt !== null;
     }
 }

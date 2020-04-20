@@ -17,6 +17,9 @@ entries:
   approved_entries: 'approved entries'
   no_approved_entries: 'no approved entries yet'
   new_entries: 'new entries'
+  set_priority: 'set priority'
+  success:
+    priorities_saved: 'priorities saved'
 
 categories:
   title: 'edit categories'

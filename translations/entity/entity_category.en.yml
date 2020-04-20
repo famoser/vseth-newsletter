@@ -1,6 +1,8 @@
 entity:
   name: 'Category'
   plural: 'Categories'
+  other:
+    name: 'Other'
 
 name: "name"
 name_de: "name (de)"

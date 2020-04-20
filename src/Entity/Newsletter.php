@@ -98,15 +98,6 @@ class Newsletter extends BaseEntity
         $this->sentAt = $sentAt;
     }
 
-    public function getIntroduction(string $locale): ?string
-    {
-        if ($locale === 'de') {
-            return $this->introductionDe;
-        }
-
-        return $this->introductionEn;
-    }
-
     public function getIntroductionDe(): ?string
     {
         return $this->introductionDe;
