@@ -11,19 +11,39 @@
 
 namespace App\Form\Entry;
 
+use App\Entity\Category;
 use App\Entity\Entry;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BaseEntryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            /** @var Entry $entry */
+            $entry = $event->getData();
+
+            $event->getForm()->add('category', EntityType::class, [
+                'class' => Category::class,
+                'choice_label' => function (Category $category) {
+                    return $category->getNameEn();
+                },
+                'choices' => $entry->getNewsletter()->getCategories(),
+                'required' => false,
+                'translation_domain' => 'entity_category',
+                'label' => 'entity.name',
+            ]);
+        });
+
         $builder->add('titleDe', TextType::class);
         $builder->add('titleEn', TextType::class);
         $builder->add('descriptionDe', TextareaType::class, ['attr' => ['maxlength' => '300']]);
