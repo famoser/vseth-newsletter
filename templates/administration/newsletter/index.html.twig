@@ -30,6 +30,13 @@
             </span>
 
             <span class="btn-group">
+                <a class="btn btn-outline-secondary"
+                   href="{{ path('administration_newsletter_categories', {"newsletter" : newsletter.id}) }}">
+                    {{ "categories.title"|trans }}
+                </a>
+            </span>
+
+            <span class="btn-group">
                 <a class="btn btn-primary"
                    href="{{ path('administration_newsletter_send', {"newsletter" : newsletter.id}) }}">
                     {{ "index.send_testemail"|trans }}

@@ -66,39 +66,39 @@ class CategoryController extends BaseController
     }
 
     /**
-     * @Route("/{entry}/edit", name="administration_category_edit")
+     * @Route("/{category}/edit", name="administration_category_edit")
      *
      * @return Response
      */
-    public function editAction(Request $request, Category $entry)
+    public function editAction(Request $request, Category $category)
     {
-        $this->denyAccessUnlessGranted(CategoryVoter::EDIT, $entry);
+        $this->denyAccessUnlessGranted(CategoryVoter::EDIT, $category);
 
-        $form = $this->handleUpdateForm($request, $entry);
+        $form = $this->handleUpdateForm($request, $category);
         if ($form instanceof Response) {
             return $form;
         }
 
-        $this->newsletter = $entry->getNewsletter();
+        $this->newsletter = $category->getNewsletter();
 
         return $this->render('administration/category/edit.html.twig', ['form' => $form->createView()]);
     }
 
     /**     *
-     * @Route("/{entry}/remove", name="administration_category_remove")
+     * @Route("/{category}/remove", name="administration_category_remove")
      *
      * @return Response
      */
-    public function removeAction(Request $request, Category $entry)
+    public function removeAction(Request $request, Category $category)
     {
-        $this->denyAccessUnlessGranted(EntryVoter::EDIT, $entry);
+        $this->denyAccessUnlessGranted(EntryVoter::EDIT, $category);
 
-        $form = $this->handleDeleteForm($request, $entry);
+        $form = $this->handleDeleteForm($request, $category);
         if ($form === null) {
-            return $this->redirectToRoute('administration_newsletter_categories', ['newsletter' => $this->newsletter->getId()]);
+            return $this->redirectToRoute('administration_newsletter_categories', ['newsletter' => $category->getNewsletter()->getId()]);
         }
 
-        $this->newsletter = $entry->getNewsletter();
+        $this->newsletter = $category->getNewsletter();
 
         return $this->render('administration/category/remove.html.twig', ['form' => $form->createView()]);
     }

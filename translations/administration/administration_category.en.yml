@@ -1,0 +1,11 @@
+new:
+  title: 'new category'
+  description: 'add a new category'
+
+edit:
+  title: 'edit category'
+  description: 'change the category'
+
+remove:
+  title: 'remove category'
+  description: 'remove the category and unset it from all entries'

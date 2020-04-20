@@ -18,6 +18,14 @@ entries:
   no_approved_entries: 'no approved entries yet'
   new_entries: 'new entries'
 
+categories:
+  title: 'edit categories'
+  description: 'update categories the entries can be put in'
+  no_categories: 'no categories yet'
+  set_priority: 'set priority'
+  success:
+    priorities_saved: 'priorities saved'
+
 preview:
   title: 'preview newsletter'
   description: 'see how the newsletter will be sent'

@@ -1,0 +1,7 @@
+entity:
+  name: 'Category'
+  plural: 'Categories'
+
+name: "name"
+name_de: "name (de)"
+name_en: "name (en)"

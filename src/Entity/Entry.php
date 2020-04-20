@@ -13,6 +13,7 @@ namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\PriorityTrait;
 use App\Entity\Traits\TimeTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,6 +26,7 @@ class Entry extends BaseEntity
 {
     use IdTrait;
     use TimeTrait;
+    use PriorityTrait;
 
     /**
      * @var string|null

@@ -15,6 +15,7 @@ import {faMinus} from '@fortawesome/pro-light-svg-icons/faMinus'
 import {faEnvelopeOpen} from '@fortawesome/pro-light-svg-icons/faEnvelopeOpen'
 import {faTimes} from '@fortawesome/pro-light-svg-icons/faTimes'
 import {faRedo} from '@fortawesome/pro-light-svg-icons/faRedo'
+import {faGripLines} from '@fortawesome/pro-light-svg-icons/faGripLines'
 
 // add icons
-library.add(faPlus, faTrash, faPencil, faEye, faChartArea, faEnvelope, faUser, faCopy, faEnvelope, faEnvelopeOpen, faMinus, faTimes, faEyeSlash, faRedo);
+library.add(faPlus, faTrash, faPencil, faEye, faChartArea, faEnvelope, faUser, faCopy, faEnvelope, faEnvelopeOpen, faMinus, faTimes, faEyeSlash, faRedo, faGripLines);
