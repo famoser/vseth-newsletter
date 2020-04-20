@@ -148,6 +148,13 @@ class Entry extends BaseEntity
     private $newsletter;
 
     /**
+     * @var Category
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="entries")
+     */
+    private $category;
+
+    /**
      * @var Organisation
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Organisation", inversedBy="entries")
@@ -368,5 +375,15 @@ class Entry extends BaseEntity
         }
 
         return $this->getTitle($locale);
+    }
+
+    public function getCategory(): Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): void
+    {
+        $this->category = $category;
     }
 }
