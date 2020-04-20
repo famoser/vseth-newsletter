@@ -113,13 +113,6 @@ class Entry extends BaseEntity
     private $location;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $priority;
-
-    /**
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -306,16 +299,6 @@ class Entry extends BaseEntity
     public function setLocation(?string $location): void
     {
         $this->location = $location;
-    }
-
-    public function getPriority(): int
-    {
-        return $this->priority;
-    }
-
-    public function setPriority(int $priority): void
-    {
-        $this->priority = $priority;
     }
 
     public function getApprovedAt(): ?\DateTime

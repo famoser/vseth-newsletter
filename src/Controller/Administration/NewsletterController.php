@@ -71,7 +71,7 @@ class NewsletterController extends BaseController
             return true;
         });
 
-        //copy categories
+        //copy categories on create
         if ($created && \count($lastNewsletters) > 0) {
             $newCategories = [];
             foreach ($lastNewsletters[0]->getCategories() as $category) {
@@ -169,8 +169,6 @@ class NewsletterController extends BaseController
     {
         $entries = $this->getDoctrine()->getRepository(Entry::class)->findApprovedByNewsletter($newsletter->getId());
 
-        $this->newsletter = $newsletter;
-
         if ($request->request->has('entry_id')) {
             $this->savePriorities($newsletter, $request->request->get('entry_id'));
 
@@ -179,6 +177,34 @@ class NewsletterController extends BaseController
         }
 
         $this->getDoctrine()->getManager()->refresh($newsletter);
+
+        $this->newsletter = $newsletter;
+
+        return $this->render('administration/newsletter/change_priority.html.twig', [
+            'newsletter' => $newsletter,
+            'entries' => $entries,
+        ]);
+    }
+
+    /**
+     * @Route("/{newsletter}/categories", name="administration_newsletter_categories")
+     *
+     * @return Response
+     */
+    public function categoriesAction(Request $request, Newsletter $newsletter, TranslatorInterface $translator)
+    {
+        $entries = $newsletter->getCategories();
+
+        if ($request->request->has('category_id')) {
+            $this->savePriorities($newsletter, $request->request->get('category_id'));
+
+            $success = $translator->trans('change_priority.success', [], 'administration_newsletter');
+            $this->displaySuccess($success);
+        }
+
+        $this->getDoctrine()->getManager()->refresh($newsletter);
+
+        $this->newsletter = $newsletter;
 
         return $this->render('administration/newsletter/change_priority.html.twig', [
             'newsletter' => $newsletter,
@@ -245,6 +271,7 @@ class NewsletterController extends BaseController
         return $this->getNewsletterBreadcrumbs($this->newsletter);
     }
 
+    // TODO: refactor to use priority trait
     private function savePriorities(Newsletter $newsletter, array $entryIds)
     {
         /** @var Entry[] $entryLookup */

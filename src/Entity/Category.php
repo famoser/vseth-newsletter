@@ -13,6 +13,7 @@ namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\PriorityTrait;
 use App\Entity\Traits\TimeTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,6 +26,7 @@ class Category extends BaseEntity
 {
     use IdTrait;
     use TimeTrait;
+    use PriorityTrait;
 
     /**
      * @var string
@@ -39,13 +41,6 @@ class Category extends BaseEntity
      * @ORM\Column(type="text")
      */
     private $nameEn;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $priority;
 
     /**
      * @var Newsletter
@@ -104,16 +99,6 @@ class Category extends BaseEntity
     public function setNewsletter(Newsletter $newsletter): void
     {
         $this->newsletter = $newsletter;
-    }
-
-    public function getPriority(): int
-    {
-        return $this->priority;
-    }
-
-    public function setPriority(int $priority): void
-    {
-        $this->priority = $priority;
     }
 
     /**

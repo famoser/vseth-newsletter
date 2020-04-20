@@ -57,11 +57,6 @@ class EntryController extends BaseController
             return $form;
         }
 
-        //process form
-        if ($form instanceof Response) {
-            return $form;
-        }
-
         $this->newsletter = $newsletter;
 
         return $this->render('administration/entry/new.html.twig', ['form' => $form->createView()]);
@@ -77,11 +72,6 @@ class EntryController extends BaseController
         $this->denyAccessUnlessGranted(EntryVoter::EDIT, $entry);
 
         $form = $this->handleUpdateForm($request, $entry);
-        if ($form instanceof Response) {
-            return $form;
-        }
-
-        //process form
         if ($form instanceof Response) {
             return $form;
         }
