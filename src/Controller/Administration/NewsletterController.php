@@ -12,6 +12,7 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
+use App\Entity\Category;
 use App\Entity\Entry;
 use App\Entity\Newsletter;
 use App\Model\Breadcrumb;
@@ -64,7 +65,28 @@ class NewsletterController extends BaseController
         }
 
         //process form
-        $myForm = $this->handleCreateForm($request, $newsletter);
+        $myForm = $this->handleCreateForm($request, $newsletter, function () use (&$created) {
+            $created = true;
+
+            return true;
+        });
+
+        //copy categories
+        if ($created && \count($lastNewsletters) > 0) {
+            $newCategories = [];
+            foreach ($lastNewsletters[0]->getCategories() as $category) {
+                $newCategory = new Category();
+                $newCategory->setNewsletter($newsletter);
+
+                $newCategory->setNameDe($category->getNameDe());
+                $newCategory->setNameEn($category->getNameEn());
+                $newCategory->setPriority($category->getPriority());
+
+                $newCategories[] = $newCategory;
+            }
+            $this->fastSave(...$newCategories);
+        }
+
         if ($myForm instanceof Response) {
             return $myForm;
         }
