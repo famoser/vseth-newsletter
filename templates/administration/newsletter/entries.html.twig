@@ -41,7 +41,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <p>
-                                        {{ entry|entryEventInfo("en") }}
+                                        {{ entry.location }}
+                                        {% if entry.startDate is not null %}
+                                            | {{ entry.startDate|dateFormat }} {{ entry.startTime }}
+                                        {% endif %}
+                                        {% if entry.endDate is not null %}
+                                            | {{ entry.endDate|dateFormat }} {{ entry.endTime }}
+                                        {% endif %}
                                     </p>
                                 </div>
                             </div>

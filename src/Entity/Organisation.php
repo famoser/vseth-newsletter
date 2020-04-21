@@ -166,7 +166,7 @@ class Organisation extends BaseEntity
      */
     public function generateAuthenticationCode()
     {
-        $this->authenticationCode = Uuid::uuid4();
+        $this->authenticationCode = Uuid::uuid4()->toString();
     }
 
     public function getLastAuthenticationCodeRequestAt(): ?DateTime

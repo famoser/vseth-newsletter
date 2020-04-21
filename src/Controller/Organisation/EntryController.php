@@ -19,6 +19,7 @@ use App\Security\Voter\EntryVoter;
 use App\Security\Voter\OrganisationVoter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -45,6 +46,10 @@ class EntryController extends BaseController
         if ($request->query->has('copy-id')) {
             /** @var Entry $cloneEntry */
             $cloneEntry = $this->getDoctrine()->getRepository(Entry::class)->find($request->query->get('copy-id'));
+            if ($cloneEntry === null) {
+                throw new NotFoundHttpException();
+            }
+
             $this->denyAccessUnlessGranted(EntryVoter::VIEW, $cloneEntry);
             $entry->setOrganizer($cloneEntry->getOrganizer());
             $entry->setTitleDe($cloneEntry->getTitleDe());
