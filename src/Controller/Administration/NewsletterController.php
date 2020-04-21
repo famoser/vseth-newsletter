@@ -146,7 +146,7 @@ class NewsletterController extends BaseController
             /** @var Entry[][] $entryLookupByCategory */
             $entryLookupByCategory = [];
             foreach ($newsletter->getEntries() as $entry) {
-                if (\in_array($entry->getId(), $orderedIds, true)) {
+                if (\in_array((string)$entry->getId(), $orderedIds, true)) {
                     $categoryId = $entry->getCategory() !== null ? $entry->getCategory()->getId() : 'default';
                     $entryLookupByCategory[$categoryId][$entry->getId()] = $entry;
                 }
