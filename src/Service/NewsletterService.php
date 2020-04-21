@@ -11,7 +11,11 @@
 
 namespace App\Service;
 
+use App\Entity\Category;
 use App\Entity\Newsletter;
+use App\Model\Publish\CategoryModel;
+use App\Model\Publish\EntryModel;
+use App\Model\Publish\NewsletterModel;
 use App\Service\Interfaces\NewsletterServiceInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -87,6 +91,66 @@ class NewsletterService implements NewsletterServiceInterface
         return $this->sendNewsletterTo($newsletter, $this->testNewsletterEmail);
     }
 
+    public function createPublishModel(Newsletter $newsletter): NewsletterModel
+    {
+        $refCounter = 0;
+
+        /** @var CategoryModel[] $categories */
+        $categories = [];
+        foreach ($newsletter->getCategories() as $category) {
+            $category = $this->createCategoryModel($category, $refCounter);
+            if ($category !== null) {
+                $categories[] = $category;
+            }
+        }
+
+        $defaultCategory = $this->createDefaultCategoryModel($newsletter, $refCounter);
+        if ($defaultCategory !== null) {
+            $categories[] = $defaultCategory;
+        }
+
+        return new NewsletterModel($newsletter, $categories);
+    }
+
+    /**
+     * @return CategoryModel
+     */
+    private function createCategoryModel(Category $category, int &$refCounter): ?CategoryModel
+    {
+        $entries = [];
+        foreach ($category->getEntries() as $entry) {
+            if ($entry->shouldPublish()) {
+                $entries[] = new EntryModel($entry, $refCounter++);
+            }
+        }
+
+        if (\count($entries) === 0) {
+            return null;
+        }
+
+        return new CategoryModel($category, $entries);
+    }
+
+    private function createDefaultCategoryModel(Newsletter $newsletter, &$refCounter): ?CategoryModel
+    {
+        $noCategoryEntries = [];
+        foreach ($newsletter->getEntries() as $entry) {
+            if ($entry->getCategory() === null && $entry->shouldPublish()) {
+                $noCategoryEntries[] = new EntryModel($entry, $refCounter++);
+            }
+        }
+
+        if (\count($noCategoryEntries) === 0) {
+            return null;
+        }
+
+        $category = new Category();
+        $category->setNameDe($this->translator->trans('entity.other.name', [], 'entity_category', 'de'));
+        $category->setNameEn($this->translator->trans('entity.other.name', [], 'entity_category', 'en'));
+
+        return new CategoryModel($category, $noCategoryEntries);
+    }
+
     /**
      * @param string[] $options
      *
@@ -102,7 +166,7 @@ class NewsletterService implements NewsletterServiceInterface
 
         $message->htmlTemplate('email/newsletter.html.twig')
             ->textTemplate('email/newsletter.txt.twig')
-            ->context(['newsletter' => $newsletter]);
+            ->context(['newsletter' => $this->createPublishModel($newsletter)]);
 
         //send message & check if at least one receiver was reached
         return $this->mailer->send($message) > 0;

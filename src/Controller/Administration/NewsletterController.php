@@ -12,8 +12,10 @@
 namespace App\Controller\Administration;
 
 use App\Controller\Administration\Base\BaseController;
+use App\Entity\Category;
 use App\Entity\Entry;
 use App\Entity\Newsletter;
+use App\Entity\Traits\PriorityTrait;
 use App\Model\Breadcrumb;
 use App\Security\Voter\NewsletterVoter;
 use App\Service\Interfaces\NewsletterServiceInterface;
@@ -64,7 +66,28 @@ class NewsletterController extends BaseController
         }
 
         //process form
-        $myForm = $this->handleCreateForm($request, $newsletter);
+        $myForm = $this->handleCreateForm($request, $newsletter, function () use (&$created) {
+            $created = true;
+
+            return true;
+        });
+
+        //copy categories on create
+        if ($created && \count($lastNewsletters) > 0) {
+            $newCategories = [];
+            foreach ($lastNewsletters[0]->getCategories() as $category) {
+                $newCategory = new Category();
+                $newCategory->setNewsletter($newsletter);
+
+                $newCategory->setNameDe($category->getNameDe());
+                $newCategory->setNameEn($category->getNameEn());
+                $newCategory->setPriority($category->getPriority());
+
+                $newCategories[] = $newCategory;
+            }
+            $this->fastSave(...$newCategories);
+        }
+
         if ($myForm instanceof Response) {
             return $myForm;
         }
@@ -115,16 +138,41 @@ class NewsletterController extends BaseController
      *
      * @return Response
      */
-    public function entriesAction(Newsletter $newsletter)
+    public function entriesAction(Request $request, Newsletter $newsletter, NewsletterServiceInterface $newsletterService, TranslatorInterface $translator)
     {
-        /** @var Entry[] $approvedEntries */
-        $approvedEntries = [];
+        if ($request->request->has('submit')) {
+            $orderedIds = $request->request->get('entry_id');
+
+            /** @var Entry[][] $entryLookupByCategory */
+            $entryLookupByCategory = [];
+            foreach ($newsletter->getEntries() as $entry) {
+                if (\in_array((string)$entry->getId(), $orderedIds, true)) {
+                    $categoryId = $entry->getCategory() !== null ? $entry->getCategory()->getId() : 'default';
+                    $entryLookupByCategory[$categoryId][$entry->getId()] = $entry;
+                }
+            }
+
+            foreach ($entryLookupByCategory as $categoryId => $entryLookup) {
+                $entryIds = [];
+                foreach ($orderedIds as $orderedId) {
+                    if (\array_key_exists($orderedId, $entryLookup)) {
+                        $entryIds[] = $orderedId;
+                    }
+                }
+                $this->savePriorities($entryLookup, $entryIds);
+            }
+
+            $success = $translator->trans('entries.success.priorities_saved', [], 'administration_newsletter');
+            $this->displaySuccess($success);
+        }
+
+        $this->getDoctrine()->getManager()->refresh($newsletter);
+        $newsletterModel = $newsletterService->createPublishModel($newsletter);
+
         /** @var Entry[] $newEntries */
         $newEntries = [];
         foreach ($newsletter->getEntries() as $entry) {
-            if ($entry->getApprovedAt() !== null) {
-                $approvedEntries[] = $entry;
-            } elseif ($entry->getRejectReason() === null) {
+            if ($entry->getApprovedAt() === null && $entry->getRejectReason() === null) {
                 $newEntries[] = $entry;
             }
         }
@@ -132,35 +180,37 @@ class NewsletterController extends BaseController
         $this->newsletter = $newsletter;
 
         return $this->render('administration/newsletter/entries.html.twig', [
-            'newsletter' => $newsletter,
-            'approved_entries' => $approvedEntries,
+            'newsletter' => $newsletterModel,
             'new_entries' => $newEntries,
         ]);
     }
 
     /**
-     * @Route("/{newsletter}/change_priority", name="administration_newsletter_change_priority")
+     * @Route("/{newsletter}/categories", name="administration_newsletter_categories")
      *
      * @return Response
      */
-    public function changePriorityAction(Request $request, Newsletter $newsletter, TranslatorInterface $translator)
+    public function categoriesAction(Request $request, Newsletter $newsletter, TranslatorInterface $translator)
     {
-        $entries = $this->getDoctrine()->getRepository(Entry::class)->findApprovedByNewsletter($newsletter->getId());
+        if ($request->request->has('submit')) {
+            /** @var Category[] $categoryLookup */
+            $categoryLookup = [];
+            foreach ($newsletter->getCategories() as $category) {
+                $categoryLookup[$category->getId()] = $category;
+            }
 
-        $this->newsletter = $newsletter;
+            $this->savePriorities($categoryLookup, $request->request->get('category_id'));
 
-        if ($request->request->has('entry_id')) {
-            $this->savePriorities($newsletter, $request->request->get('entry_id'));
-
-            $success = $translator->trans('change_priority.success', [], 'administration_newsletter');
+            $success = $translator->trans('categories.success.priorities_saved', [], 'administration_newsletter');
             $this->displaySuccess($success);
         }
 
         $this->getDoctrine()->getManager()->refresh($newsletter);
 
-        return $this->render('administration/newsletter/change_priority.html.twig', [
+        $this->newsletter = $newsletter;
+
+        return $this->render('administration/newsletter/categories.html.twig', [
             'newsletter' => $newsletter,
-            'entries' => $entries,
         ]);
     }
 
@@ -169,9 +219,9 @@ class NewsletterController extends BaseController
      *
      * @return Response
      */
-    public function previewAction(Newsletter $newsletter)
+    public function previewAction(Newsletter $newsletter, NewsletterServiceInterface $newsletterService)
     {
-        return $this->render('administration/newsletter/preview.html.twig', ['newsletter' => $newsletter]);
+        return $this->render('administration/newsletter/preview.html.twig', ['newsletter' => $newsletterService->createPublishModel($newsletter)]);
     }
 
     /**
@@ -223,28 +273,26 @@ class NewsletterController extends BaseController
         return $this->getNewsletterBreadcrumbs($this->newsletter);
     }
 
-    private function savePriorities(Newsletter $newsletter, array $entryIds)
+    /**
+     * @param PriorityTrait[] $priorityLookup
+     * @param string[] $newEntryIdOrder
+     */
+    private function savePriorities(array $priorityLookup, array $newEntryIdOrder)
     {
-        /** @var Entry[] $entryLookup */
-        $entryLookup = [];
-        foreach ($newsletter->getEntries() as $entry) {
-            $entryLookup[$entry->getId()] = $entry;
-        }
-
         /** @var Entry[] $orderedEntries */
         $orderedEntries = [];
-        foreach ($entryIds as $entryId) {
-            $orderedEntries[] = $entryLookup[$entryId];
+        foreach ($newEntryIdOrder as $entryId) {
+            $orderedEntries[] = $priorityLookup[$entryId];
         }
 
         // adapt order of all decreased priorities
-        $longestIncreasingSubsequence = $this->findLongestIncreasingSubsequenceWithLowestStart($entryIds);
+        $longestIncreasingSubsequence = $this->findLongestIncreasingSubsequenceWithLowestStart($newEntryIdOrder);
         $currentLISIndex = \count($longestIncreasingSubsequence) - 1;
         $maxPriority = PHP_INT_MAX;
         for ($i = \count($orderedEntries) - 1; $i >= 0; --$i) {
-            if ($currentLISIndex >= 0 && $longestIncreasingSubsequence[$currentLISIndex] === $orderedEntries[$i]->getId()) {
+            if ($currentLISIndex >= 1 && $longestIncreasingSubsequence[$currentLISIndex] === $orderedEntries[$i]->getId()) {
                 --$currentLISIndex;
-                $maxPriority = $entryLookup[$longestIncreasingSubsequence[$currentLISIndex]]->getPriority();
+                $maxPriority = $priorityLookup[$longestIncreasingSubsequence[$currentLISIndex]]->getPriority();
                 continue;
             }
 
@@ -267,10 +315,15 @@ class NewsletterController extends BaseController
         $this->fastSave(...$orderedEntries);
     }
 
-    private function findLongestIncreasingSubsequenceWithLowestStart(array $entries)
+    /**
+     * @param string[] $idOrder
+     *
+     * @return string[]
+     */
+    private function findLongestIncreasingSubsequenceWithLowestStart(array $idOrder)
     {
         $increasingSubsequences = [];
-        foreach ($entries as $key => $currentValue) {
+        foreach ($idOrder as $key => $currentValue) {
             $increasingSubsequences[$key][0] = $currentValue;
             for ($i = $key - 1; $i >= 0; --$i) {
                 $lastIndex = \count($increasingSubsequences[$i]) - 1;

@@ -1,0 +1,12 @@
+[
+  {
+    "nameDe": "Events",
+    "nameEn": "Events",
+    "priority": 1
+  },
+  {
+    "nameDe": "Sonstiges",
+    "nameEn": "Sonstiges",
+    "priority": 2
+  }
+]

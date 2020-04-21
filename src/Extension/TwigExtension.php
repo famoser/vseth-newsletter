@@ -11,7 +11,6 @@
 
 namespace App\Extension;
 
-use App\Entity\Entry;
 use App\Enum\BooleanType;
 use App\Enum\OrganisationCategoryType;
 use DateTime;
@@ -50,7 +49,6 @@ class TwigExtension extends AbstractExtension
             new TwigFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
             new TwigFilter('camelCaseToUnderscore', [$this, 'camelCaseToUnderscoreFilter']),
             new TwigFilter('leftTrimLines', [$this, 'leftTrimLines']),
-            new TwigFilter('entryEventInfo', [$this, 'entryEventInfo']),
         ];
     }
 
@@ -64,46 +62,6 @@ class TwigExtension extends AbstractExtension
         }
 
         return implode("\n", $resultLines);
-    }
-
-    public function entryEventInfo(Entry $entry, string $locale): string
-    {
-        $dateFormat = $this->translator->trans('time.format.date', [], 'framework', $locale);
-
-        $result = '';
-        if ($entry->getStartDate() !== null) {
-            $startDate = $entry->getStartDate()->format($dateFormat);
-            $result .= $startDate;
-            if ($entry->getStartTime() !== null) {
-                $result .= ' ' . mb_substr($entry->getStartTime(), 0, 5);
-            }
-            if ($entry->getEndDate() !== null) {
-                $endDate = $entry->getEndDate()->format($dateFormat);
-                $showDate = $startDate !== $endDate;
-                $showTime = $entry->getEndTime() !== null;
-
-                if ($showDate || $showTime) {
-                    $result .= ' -';
-
-                    if ($showDate) {
-                        $result .= ' ' . $endDate;
-                    }
-
-                    if ($showTime) {
-                        $result .= ' ' . mb_substr($entry->getEndTime(), 0, 5);
-                    }
-                }
-            }
-        }
-
-        if ($entry->getLocation() !== null) {
-            if (mb_strlen($result) > 0) {
-                $result .= ', ';
-            }
-            $result .= $entry->getLocation();
-        }
-
-        return $result;
     }
 
     /**

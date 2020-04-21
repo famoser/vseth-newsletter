@@ -11,12 +11,12 @@
 
 namespace App\Security\Voter;
 
-use App\Entity\Entry;
+use App\Entity\Category;
 use App\Model\UserModel;
 use App\Security\Voter\Base\NewsletterContentVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class EntryVoter extends NewsletterContentVoter
+class CategoryVoter extends NewsletterContentVoter
 {
     /**
      * @param string $attribute An attribute
@@ -26,13 +26,11 @@ class EntryVoter extends NewsletterContentVoter
      */
     protected function supports($attribute, $subject)
     {
-        return $subject instanceof Entry;
+        return $subject instanceof Category;
     }
 
     protected function canAccess($subject, TokenInterface $token)
     {
-        return
-            \in_array(UserModel::ROLE_ADMIN, $token->getRoleNames(), true) ||
-            $subject->getOrganisation()->getEmail() === $token->getUser()->getUsername();
+        return \in_array(UserModel::ROLE_ADMIN, $token->getRoleNames(), true);
     }
 }

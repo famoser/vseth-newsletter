@@ -77,12 +77,12 @@ class LoginController extends BaseFormController
      *
      * @return Response
      */
-    public function externalAction(Request $request, TranslatorInterface $translator, AuthenticationServiceInterface $authenticationService)
+    public function externalAction(Request $request, TranslatorInterface $translator)
     {
         $organisation = new Organisation();
         $organisation->setCategory(OrganisationCategoryType::EXTERNAL);
 
-        $myOnSuccessCallable = function () use ($organisation, $translator, $authenticationService) {
+        $myOnSuccessCallable = function () use ($organisation) {
             $existing = $this->getDoctrine()->getRepository(Organisation::class)->findOneBy(['email' => $organisation->getEmail()]);
             if ($existing === null) {
                 $organisation->generateAuthenticationCode();

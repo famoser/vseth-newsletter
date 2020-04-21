@@ -57,6 +57,14 @@ class Newsletter extends BaseEntity
     private $sentAt;
 
     /**
+     * @var Category[]|ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Category", mappedBy="newsletter")
+     * @ORM\OrderBy({"priority": "ASC"})
+     */
+    private $categories;
+
+    /**
      * @var Entry[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Entry", mappedBy="newsletter")
@@ -66,6 +74,7 @@ class Newsletter extends BaseEntity
 
     public function __construct()
     {
+        $this->categories = new ArrayCollection();
         $this->entries = new ArrayCollection();
     }
 
@@ -89,23 +98,6 @@ class Newsletter extends BaseEntity
         $this->sentAt = $sentAt;
     }
 
-    /**
-     * @return Entry[]|ArrayCollection
-     */
-    public function getEntries()
-    {
-        return $this->entries;
-    }
-
-    public function getIntroduction(string $locale): ?string
-    {
-        if ($locale === 'de') {
-            return $this->introductionDe;
-        }
-
-        return $this->introductionEn;
-    }
-
     public function getIntroductionDe(): ?string
     {
         return $this->introductionDe;
@@ -124,5 +116,21 @@ class Newsletter extends BaseEntity
     public function setIntroductionEn(?string $introductionEn): void
     {
         $this->introductionEn = $introductionEn;
+    }
+
+    /**
+     * @return Entry[]|ArrayCollection
+     */
+    public function getEntries()
+    {
+        return $this->entries;
+    }
+
+    /**
+     * @return Category[]|ArrayCollection
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }

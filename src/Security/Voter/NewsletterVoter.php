@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class NewsletterVoter extends BaseVoter
 {
     const ADD_ENTRY = 10;
+    const ADD_CATEGORY = 11;
 
     /**
      * @param string $attribute An attribute
@@ -50,6 +51,7 @@ class NewsletterVoter extends BaseVoter
                 return true;
             case self::ADD_ENTRY:
                 return $newsletterNotSent;
+            case self::ADD_CATEGORY:
             case self::EDIT:
                 return $newsletterNotSent && $isAdmin;
         }

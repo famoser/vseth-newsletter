@@ -1,0 +1,61 @@
+{% extends "single_content_base.html.twig" %}
+
+{% block title %}{{ "categories.title"|trans }}{% endblock %}
+{% block description %}{{ "categories.description"|trans }}{% endblock %}
+
+{% trans_default_domain "administration_newsletter" %}
+
+{% block single_content %}
+    <p>
+        <a class="btn btn-outline-secondary d-print-none"
+           href="{{ path('administration_category_new', {"newsletter" : newsletter.id}) }}">
+            {{ "new.title"|trans({}, "administration_category") }}
+        </a>
+    </p>
+
+    {% if newsletter.categories|length == 0 %}
+        <hr/>
+        <p>{{ "categories.no_categories"|trans }}</p>
+    {% else %}
+        <form method="POST">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th class="minimal-width d-print-none"></th>
+                    <th>{{ "name"|trans({}, "entity_category") }}</th>
+                    <th class="minimal-width d-print-none"></th>
+                </tr>
+                </thead>
+                <tbody class="orderable">
+
+                {% for category in newsletter.categories %}
+                    <tr>
+                        <td>
+                            <span class="btn btn-link">
+                                <i class="fal fa-grip-lines"></i>
+                            </span>
+                        </td>
+                        <td>{{ category.nameDe }}</td>
+                        <td class="d-print-none">
+                            <input type="hidden" name="category_id[]" value="{{ category.id }}">
+                            <div class="btn-group">
+                                <a class="btn btn-secondary"
+                                   href="{{ path("administration_category_edit", {"newsletter" : newsletter.id, "category": category.id}) }}">
+                                    <i class="fal fa-pencil"></i>
+                                </a>
+                                <a class="btn btn-danger"
+                                   href="{{ path("administration_category_remove", {"newsletter" : newsletter.id, "category": category.id}) }}">
+                                    <i class="fal fa-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" name="submit" class="btn-primary btn mt-4">
+                {{ "categories.set_priority"|trans }}
+            </button>
+        </form>
+    {% endif %}
+{% endblock %}

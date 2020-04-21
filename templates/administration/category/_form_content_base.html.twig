@@ -1,0 +1,22 @@
+{% extends "single_content_base.html.twig" %}
+
+{% form_theme form _self %}
+
+{% import "shared/forms.html.twig" as forms %}
+
+{% block single_content %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.nameDe) }}
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="form-group">
+                {{ form_row(form.nameEn) }}
+            </div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

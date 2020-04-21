@@ -5,18 +5,17 @@
 
 {{ newsletter.introduction(locale) }}
 
-{% set item_count = 0 %}
-{% for entry in newsletter.entries %}
-    {% if entry.approvedAt is not null %}
-- [{{ item_count }}] {{ entry.header(locale) }}
-        {% set item_count = item_count + 1 %}
-    {% endif %}
+{% for category in newsletter.categories %}
+
+{{ category.name(locale) }}
+    {% for entry in category.entries %}
+- [{{ entry.ref }}] {{ entry.header(locale) }}
+    {% endfor %}
 {% endfor %}
 
-{% set item_count = 0 %}
-{% for entry in newsletter.entries %}
-    {% if entry.approvedAt is not null %}
-        [{{ item_count }}]==================================================
+{% for category in newsletter.categories %}
+    {% for entry in category.entries %}
+        [{{ entry.ref }}]==================================================
 
         {{ entry.header(locale) }}
 
@@ -25,12 +24,11 @@
         {% if entry.link(locale) is not null %}
             {{ entry.link(locale) }}
         {% endif %}
-        {% if entry.location is not null or entry.startDate is not null %}
-            {{ entry|entryEventInfo(locale) }}
+        {% if entry.hasEventInfo %}
+            {{ entry.eventInfo(locale) }}
         {% endif %}
 
-        {% set item_count = item_count + 1 %}
-    {% endif %}
+    {% endfor %}
 {% endfor %}
 {% endmacro %}
 

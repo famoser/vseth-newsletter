@@ -13,6 +13,7 @@ namespace App\Entity;
 
 use App\Entity\Base\BaseEntity;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\PriorityTrait;
 use App\Entity\Traits\TimeTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,6 +26,7 @@ class Entry extends BaseEntity
 {
     use IdTrait;
     use TimeTrait;
+    use PriorityTrait;
 
     /**
      * @var string|null
@@ -113,13 +115,6 @@ class Entry extends BaseEntity
     private $location;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(type="integer")
-     */
-    private $priority;
-
-    /**
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -148,6 +143,13 @@ class Entry extends BaseEntity
     private $newsletter;
 
     /**
+     * @var Category|null
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="entries")
+     */
+    private $category;
+
+    /**
      * @var Organisation
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\Organisation", inversedBy="entries")
@@ -162,15 +164,6 @@ class Entry extends BaseEntity
     public function setOrganizer(string $organizer): void
     {
         $this->organizer = $organizer;
-    }
-
-    public function getTitle(string $locale): ?string
-    {
-        if ($locale === 'de') {
-            return $this->titleDe;
-        }
-
-        return $this->titleEn;
     }
 
     public function getTitleDe(): ?string
@@ -193,15 +186,6 @@ class Entry extends BaseEntity
         $this->titleEn = $titleEn;
     }
 
-    public function getDescription(string $locale): ?string
-    {
-        if ($locale === 'de') {
-            return $this->descriptionDe;
-        }
-
-        return $this->descriptionEn;
-    }
-
     public function getDescriptionDe(): ?string
     {
         return $this->descriptionDe;
@@ -220,15 +204,6 @@ class Entry extends BaseEntity
     public function setDescriptionEn(string $descriptionEn): void
     {
         $this->descriptionEn = $descriptionEn;
-    }
-
-    public function getLink(string $locale): ?string
-    {
-        if ($locale === 'de') {
-            return $this->linkDe;
-        }
-
-        return $this->linkEn;
     }
 
     public function getLinkDe(): ?string
@@ -301,16 +276,6 @@ class Entry extends BaseEntity
         $this->location = $location;
     }
 
-    public function getPriority(): int
-    {
-        return $this->priority;
-    }
-
-    public function setPriority(int $priority): void
-    {
-        $this->priority = $priority;
-    }
-
     public function getApprovedAt(): ?\DateTime
     {
         return $this->approvedAt;
@@ -361,12 +326,18 @@ class Entry extends BaseEntity
         $this->organisation = $organisation;
     }
 
-    public function getHeader(string $locale)
+    public function getCategory(): ?Category
     {
-        if ($this->organizer !== null) {
-            return $this->organizer . ': ' . $this->getTitle($locale);
-        }
+        return $this->category;
+    }
 
-        return $this->getTitle($locale);
+    public function setCategory(?Category $category): void
+    {
+        $this->category = $category;
+    }
+
+    public function shouldPublish()
+    {
+        return $this->approvedAt !== null;
     }
 }

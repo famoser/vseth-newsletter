@@ -12,6 +12,7 @@
 namespace App\Service\Interfaces;
 
 use App\Entity\Newsletter;
+use App\Model\Publish\NewsletterModel;
 
 interface NewsletterServiceInterface
 {
@@ -24,4 +25,6 @@ interface NewsletterServiceInterface
      * @return bool
      */
     public function sendTest(Newsletter $newsletter);
+
+    public function createPublishModel(Newsletter $newsletter): NewsletterModel;
 }
