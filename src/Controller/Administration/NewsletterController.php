@@ -159,7 +159,7 @@ class NewsletterController extends BaseController
                         $entryIds[] = $orderedId;
                     }
                 }
-                $this->savePriorities($entryLookupByCategory[$categoryId], $entryIds);
+                $this->savePriorities($entryLookup, $entryIds);
             }
 
             $success = $translator->trans('entries.success.priorities_saved', [], 'administration_newsletter');
