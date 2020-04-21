@@ -20,14 +20,70 @@ class EntryModel
      */
     private $entry;
 
-    public function __construct(Entry $entry)
+    /**
+     * @var int
+     */
+    private $ref;
+
+    public function __construct(Entry $entry, int $ref)
     {
         $this->entry = $entry;
+        $this->ref = $ref;
     }
 
-    public function realId()
+    public function getRef()
+    {
+        return $this->ref;
+    }
+
+    public function getRealId()
     {
         return $this->entry->getId();
+    }
+
+    public function hasEventInfo()
+    {
+        return $this->entry->getLocation() !== null || $this->entry->getStartTime() !== null;
+    }
+
+    public function getEventInfo()
+    {
+        $dateFormat = 'd.m.Y';
+
+        $result = '';
+        if ($this->entry->getStartDate() !== null) {
+            $startDate = $this->entry->getStartDate()->format($dateFormat);
+            $result .= $startDate;
+            if ($this->entry->getStartTime() !== null) {
+                $result .= ' ' . mb_substr($this->entry->getStartTime(), 0, 5);
+            }
+            if ($this->entry->getEndDate() !== null) {
+                $endDate = $this->entry->getEndDate()->format($dateFormat);
+                $showDate = $startDate !== $endDate;
+                $showTime = $this->entry->getEndTime() !== null;
+
+                if ($showDate || $showTime) {
+                    $result .= ' -';
+
+                    if ($showDate) {
+                        $result .= ' ' . $endDate;
+                    }
+
+                    if ($showTime) {
+                        $result .= ' ' . mb_substr($this->entry->getEndTime(), 0, 5);
+                    }
+                }
+            }
+        }
+
+        if ($this->entry->getLocation() !== null) {
+            if (mb_strlen($result) > 0) {
+                $result .= ', ';
+            }
+            $result .= $this->entry->getLocation();
+        }
+
+        return $result;
     }
 
     public function getHeader(string $locale)

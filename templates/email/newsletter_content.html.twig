@@ -7,34 +7,32 @@
                 <p>{{ newsletter.introduction(locale) }}</p>
             </columns>
         </row>
-        <spacer size="20"></spacer>
-        <row>
-            <columns small="12" large="12">
-                <ul>
-                    {% set item_count = 0 %}
-                    {% for entry in newsletter.entries %}
-                        {% if entry.approvedAt is not null %}
-                            {% set item_count = item_count + 1 %}
+        <spacer size="10"></spacer>
+        {% for category in newsletter.categories %}
+            <spacer size="10"></spacer>
+            <row>
+                <columns small="12" large="12">
+                    <p><b>{{ category.name(locale) }}</b></p>
+                    <spacer size="4"></spacer>
+                    <ul>
+                        {% for entry in category.entries %}
                             <li>
-                                <a href="#{{ entry.id }}-{{ locale }}">
+                                <a href="#{{ entry.ref }}-{{ locale }}">
                                     {{ entry.header(locale) }}
                                 </a>
                             </li>
-                            {% if item_count % 5 == 0 and not loop.last %}
-                                <spacer size="20"></spacer>
-                            {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </columns>
-        </row>
+                        {% endfor %}
+                    </ul>
+                </columns>
+            </row>
+        {% endfor %}
         <spacer size="20"></spacer>
     </container>
-    {% for entry in newsletter.entries %}
-        {% if entry.approvedAt is not null %}
+    {% for category in newsletter.categories %}
+        {% for entry in category.entries %}
             <spacer size="10"></spacer>
             <container>
-                <callout id="{{ entry.id }}-{{ locale }}" name="{{ entry.id }}-{{ locale }}" class="entry">
+                <callout id="{{ entry.ref }}-{{ locale }}" name="{{ entry.ref }}-{{ locale }}" class="entry">
                     <row>
                         <columns small="12">
                             <h4>{{ entry.header(locale) }}</h4>
@@ -42,10 +40,10 @@
                                 {{ entry.description(locale) }}
                             </p>
                             <spacer size="8"></spacer>
-                            {% if entry.location is not null or entry.startDate is not null %}
+                            {% if entry.hasEventInfo %}
                                 <p>
                                     <i>
-                                        {{ entry|entryEventInfo("de")|nl2br }}{% if entry.link(locale) is not null %},
+                                        {{ entry.eventInfo(locale) }}{% if entry.link(locale) is not null %},
                                             <a href="{{ entry.link(locale) }}">
                                                 {{ "newsletter.link"|trans({}, "email", locale) }}
                                             </a>
@@ -57,7 +55,8 @@
                     </row>
                 </callout>
             </container>
-        {% endif %}
+        {% endfor %}
+        <spacer size="20"></spacer>
     {% endfor %}
 {% endmacro %}
 

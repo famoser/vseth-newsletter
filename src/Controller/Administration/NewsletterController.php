@@ -140,8 +140,6 @@ class NewsletterController extends BaseController
      */
     public function entriesAction(Request $request, Newsletter $newsletter, NewsletterServiceInterface $newsletterService, TranslatorInterface $translator)
     {
-        // TODO: continue refactor to use newsletter publish model
-
         if ($request->request->has('submit')) {
             $orderedIds = $request->request->get('entry_id');
 
@@ -157,7 +155,7 @@ class NewsletterController extends BaseController
             foreach ($entryLookupByCategory as $categoryId => $entryLookup) {
                 $entryIds = [];
                 foreach ($orderedIds as $orderedId) {
-                    if (array_key_exists($orderedId, $entryLookup)) {
+                    if (\array_key_exists($orderedId, $entryLookup)) {
                         $entryIds[] = $orderedId;
                     }
                 }
@@ -221,9 +219,9 @@ class NewsletterController extends BaseController
      *
      * @return Response
      */
-    public function previewAction(Newsletter $newsletter)
+    public function previewAction(Newsletter $newsletter, NewsletterServiceInterface $newsletterService)
     {
-        return $this->render('administration/newsletter/preview.html.twig', ['newsletter' => $newsletter]);
+        return $this->render('administration/newsletter/preview.html.twig', ['newsletter' => $newsletterService->createPublishModel($newsletter)]);
     }
 
     /**

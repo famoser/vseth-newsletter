@@ -93,47 +93,62 @@ class NewsletterService implements NewsletterServiceInterface
 
     public function createPublishModel(Newsletter $newsletter): NewsletterModel
     {
+        $refCounter = 0;
+
         /** @var CategoryModel[] $categories */
         $categories = [];
         foreach ($newsletter->getCategories() as $category) {
-            $categories[] = $this->createCategoryModel($category);
-        }
-
-        $noCategoryEntries = [];
-        foreach ($newsletter->getEntries() as $entry) {
-            if ($entry->getCategory() === null && $entry->shouldPublish()) {
-                $noCategoryEntries[] = new EntryModel($entry);
+            $category = $this->createCategoryModel($category, $refCounter);
+            if ($category !== null) {
+                $categories[] = $category;
             }
         }
-        if (\count($noCategoryEntries) > 0) {
-            $categories[] = $this->createOtherCategoryModel($noCategoryEntries);
+
+        $defaultCategory = $this->createDefaultCategoryModel($newsletter, $refCounter);
+        if ($defaultCategory !== null) {
+            $categories[] = $defaultCategory;
         }
 
         return new NewsletterModel($newsletter, $categories);
     }
 
     /**
-     * @param EntryModel[] $noCategoryEntries
+     * @return CategoryModel
      */
-    private function createOtherCategoryModel(array $noCategoryEntries): CategoryModel
+    private function createCategoryModel(Category $category, int &$refCounter): ?CategoryModel
     {
+        $entries = [];
+        foreach ($category->getEntries() as $entry) {
+            if ($entry->shouldPublish()) {
+                $entries[] = new EntryModel($entry, $refCounter++);
+            }
+        }
+
+        if (\count($entries) === 0) {
+            return null;
+        }
+
+        return new CategoryModel($category, $entries);
+    }
+
+    private function createDefaultCategoryModel(Newsletter $newsletter, &$refCounter): ?CategoryModel
+    {
+        $noCategoryEntries = [];
+        foreach ($newsletter->getEntries() as $entry) {
+            if ($entry->getCategory() === null && $entry->shouldPublish()) {
+                $noCategoryEntries[] = new EntryModel($entry, $refCounter++);
+            }
+        }
+
+        if (\count($noCategoryEntries) === 0) {
+            return null;
+        }
+
         $category = new Category();
         $category->setNameDe($this->translator->trans('entity.other.name', [], 'entity_category', 'de'));
         $category->setNameEn($this->translator->trans('entity.other.name', [], 'entity_category', 'en'));
 
         return new CategoryModel($category, $noCategoryEntries);
-    }
-
-    private function createCategoryModel(Category $category): CategoryModel
-    {
-        $entries = [];
-        foreach ($category->getEntries() as $entry) {
-            if ($entry->shouldPublish()) {
-                $entries[] = new EntryModel($entry);
-            }
-        }
-
-        return new CategoryModel($category, $entries);
     }
 
     /**
@@ -151,7 +166,7 @@ class NewsletterService implements NewsletterServiceInterface
 
         $message->htmlTemplate('email/newsletter.html.twig')
             ->textTemplate('email/newsletter.txt.twig')
-            ->context(['newsletter' => $newsletter]);
+            ->context(['newsletter' => $this->createPublishModel($newsletter)]);
 
         //send message & check if at least one receiver was reached
         return $this->mailer->send($message) > 0;
